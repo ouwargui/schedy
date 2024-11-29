@@ -6,13 +6,32 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A18F76152CF9529200DC952A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76142CF9529200DC952A /* GoogleSignIn */; };
+		A18F76172CF9529200DC952A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76162CF9529200DC952A /* GoogleSignInSwift */; };
+		A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A18F75F32CF935C900DC952A /* schedy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = schedy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A18F760A2CF93ACF00DC952A /* Exceptions for "schedy" folder in "schedy" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A18F75F22CF935C900DC952A /* schedy */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A18F75F52CF935C900DC952A /* schedy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A18F760A2CF93ACF00DC952A /* Exceptions for "schedy" folder in "schedy" target */,
+			);
 			path = schedy;
 			sourceTree = "<group>";
 		};
@@ -23,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A18F76152CF9529200DC952A /* GoogleSignIn in Frameworks */,
+				A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */,
+				A18F76172CF9529200DC952A /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +87,9 @@
 			);
 			name = schedy;
 			packageProductDependencies = (
+				A18F76142CF9529200DC952A /* GoogleSignIn */,
+				A18F76162CF9529200DC952A /* GoogleSignInSwift */,
+				A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */,
 			);
 			productName = schedy;
 			productReference = A18F75F32CF935C900DC952A /* schedy.app */;
@@ -91,9 +116,14 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = A18F75EA2CF935C900DC952A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A18F76132CF9529200DC952A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A18F75F42CF935C900DC952A /* Products */;
 			projectDirPath = "";
@@ -184,6 +214,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -240,6 +271,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -257,6 +289,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = schedy/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -284,6 +318,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = schedy/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -319,6 +355,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A18F76132CF9529200DC952A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A18F76142CF9529200DC952A /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18F76132CF9529200DC952A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		A18F76162CF9529200DC952A /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18F76132CF9529200DC952A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForREST_Calendar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A18F75EB2CF935C900DC952A /* Project object */;
 }
