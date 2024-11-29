@@ -42,30 +42,30 @@ struct SettingsView: View {
     }
     
     private func signIn() {
-        GIDSignIn.sharedInstance.signIn(withPresenting: NSApplication.shared.keyWindow!) { response, error in
-                if let error = error {
+        GoogleAuthService.signIn() { response in
+            switch response {
+            case .success(let user):
+                self.isSignedIn = true
+                self.userEmail = user.profile?.email
+                break
+            case .failure(let error):
                 print("Error signing in: \(error.localizedDescription)")
-                return
+                break
             }
-            
-            self.isSignedIn = true
-            self.userEmail = response?.user.profile?.email
         }
     }
     
     private func signOut() {
-        GIDSignIn.sharedInstance.signOut()
+        GoogleAuthService.signOut()
         self.isSignedIn = false
         self.userEmail = nil
     }
     
     private func checkSignInStatus() {
-        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-                if let user = user {
-                    self.isSignedIn = true
-                    self.userEmail = user.profile?.email
-                }
+        GoogleAuthService.checkPreviousSignIn { user in
+            if let user = user {
+                self.isSignedIn = true
+                self.userEmail = user.profile?.email
             }
         }
     }

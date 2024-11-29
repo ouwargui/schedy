@@ -66,6 +66,7 @@
       }
     },
     "open-settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
