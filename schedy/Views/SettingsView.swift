@@ -11,8 +11,7 @@ import GoogleSignIn
 import GoogleSignInSwift
 
 struct SettingsView: View {
-    @State private var isSignedIn = false
-    @State private var userEmail: String?
+    @EnvironmentObject private var appDelegate: AppDelegate
     
     var body: some View {
         TabView {
@@ -21,8 +20,8 @@ struct SettingsView: View {
                     Text(LocalizedString.capitalized("settings"))
                         .font(.largeTitle)
                     
-                    if isSignedIn {
-                        Text("Signed as: \(userEmail ?? "Unknown")")
+                    if self.appDelegate.isSignedIn {
+                        Text("Signed as: \(self.appDelegate.user!.profile?.email ?? "Unknown")")
                         Button("Sign out", action: signOut)
                     } else {
                         GoogleSignInButton {
@@ -31,22 +30,28 @@ struct SettingsView: View {
                     }
                 }
             }
-            Tab("Advanced", systemImage: "star") {
-                Text("Advanced Settings")
+            if self.appDelegate.isSignedIn {
+                Tab("Calendars", systemImage: "calendar") {
+                    List(self.$appDelegate.calendars) { $calendar in
+                        Toggle(isOn: $calendar.isOn) {
+                            Text(calendar.calendar.summaryOverride ?? calendar.calendar.summary ?? "")
+                        }
+                    }
+                }
             }
         }
         .scenePadding()
         .frame(maxWidth: 350, minHeight: 250)
         .windowResizeBehavior(.enabled)
-        .onAppear(perform: checkSignInStatus)
     }
     
     private func signIn() {
         GoogleAuthService.signIn() { response in
             switch response {
             case .success(let user):
-                self.isSignedIn = true
-                self.userEmail = user.profile?.email
+                self.appDelegate.isSignedIn = true
+                self.appDelegate.user = user
+                self.fetchCalendar()
                 break
             case .failure(let error):
                 print("Error signing in: \(error.localizedDescription)")
@@ -55,18 +60,26 @@ struct SettingsView: View {
         }
     }
     
-    private func signOut() {
-        GoogleAuthService.signOut()
-        self.isSignedIn = false
-        self.userEmail = nil
+    private func fetchCalendar() {
+        if self.appDelegate.user == nil {
+            print("Error fetching calendars: User is nil")
+            return
+        }
+        
+        Task {
+            let (events, calendars) = await CalendarManager.shared.fetchAllCalendarEvents(
+                fetcherAuthorizer: self.appDelegate.user!.fetcherAuthorizer as! GTMSessionFetcherAuthorizer
+            )
+            self.appDelegate.events = events
+            self.appDelegate.calendars = calendars
+        }
     }
     
-    private func checkSignInStatus() {
-        GoogleAuthService.checkPreviousSignIn { user in
-            if let user = user {
-                self.isSignedIn = true
-                self.userEmail = user.profile?.email
-            }
-        }
+    private func signOut() {
+        GoogleAuthService.signOut()
+        self.appDelegate.isSignedIn = false
+        self.appDelegate.user = nil
+        self.appDelegate.calendars = []
+        self.appDelegate.events = []
     }
 }

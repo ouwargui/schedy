@@ -10,18 +10,10 @@ import SwiftUI
 
 @main
 struct schedyApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
-        MenuBarExtra("schedy") {
-            Text("Test")
-            Divider()
-            SettingsLink {
-                Text(LocalizedString.capitalized("open-preferences"))
-            }.keyboardShortcut(",", modifiers: [.command, .shift])
-            Button(LocalizedString.capitalized("quit")) {
-                NSApplication.shared.terminate(nil)
-            }.keyboardShortcut("q")
-        }
-        .menuBarExtraStyle(.menu)
+        MenuBarView()
         
         Settings {
             SettingsView()
