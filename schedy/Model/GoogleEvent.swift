@@ -22,6 +22,26 @@ class GoogleEvent: Identifiable {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func getStartHour() -> String {
+        let dateTime = self.getDateStartTime()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .none
+        
+        return dateFormatter.string(from: dateTime)
+    }
+    
+    func getEndHour() -> String {
+        let dateTime = self.getDateEndTime()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .none
+        
+        return dateFormatter.string(from: dateTime)
+    }
+    
     func getDateStartTime() -> Date {
         return self.convertGoogleDateTimeToDate(eventDateTime: self.event.start)!
     }

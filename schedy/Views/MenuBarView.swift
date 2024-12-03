@@ -16,7 +16,7 @@ struct MenuBarView: Scene {
         
         MenuBarExtra(currentOrNextGoogleEvent?.getMenuBarString() ?? "schedy") {
             ForEach(self.$appDelegate.events) { $googleEvent in
-                Text("\(googleEvent.event.summary ?? "")")
+                Text("\(googleEvent.getStartHour())        \(googleEvent.getEndHour())        \(googleEvent.event.summary ?? "")")
             }
             Divider()
             SettingsLink {
