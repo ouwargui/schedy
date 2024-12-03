@@ -14,6 +14,7 @@ struct schedyApp: App {
     
     var body: some Scene {
         MenuBarView()
+            .environmentObject(appDelegate)
         
         Settings {
             SettingsView()

@@ -12,8 +12,12 @@ struct MenuBarView: Scene {
     @EnvironmentObject private var appDelegate: AppDelegate
     
     var body: some Scene {
-        MenuBarExtra("schedy") {
-            Text("Test")
+        let currentOrNextGoogleEvent = self.appDelegate.events.getCurrentOrNextEvent()
+        
+        MenuBarExtra(currentOrNextGoogleEvent?.getMenuBarString() ?? "schedy") {
+            ForEach(self.$appDelegate.events) { $googleEvent in
+                Text("\(googleEvent.event.summary ?? "")")
+            }
             Divider()
             SettingsLink {
                 Text(LocalizedString.capitalized("open-preferences"))

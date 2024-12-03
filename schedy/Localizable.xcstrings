@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@" : {
+
+    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -54,6 +57,9 @@
         }
       }
     },
+    "in" : {
+
+    },
     "open-preferences" : {
       "localizations" : {
         "en" : {
@@ -104,6 +110,7 @@
       }
     },
     "schedy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -168,6 +175,7 @@
       }
     },
     "Test" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -8,7 +8,7 @@
 import Foundation
 import GoogleAPIClientForREST_Calendar
 
-struct GoogleCalendar: Identifiable {
+class GoogleCalendar: Identifiable {
     var calendar: GTLRCalendar_CalendarListEntry
     var isOn: Bool
     

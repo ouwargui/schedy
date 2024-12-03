@@ -18,17 +18,23 @@ class CalendarManager {
         return GIDSignIn.sharedInstance.hasPreviousSignIn()
     }
     
-    func fetchAllCalendarEvents(fetcherAuthorizer: GTMSessionFetcherAuthorizer) async -> (events: [GTLRCalendar_Event], calendars: [GoogleCalendar]) {
+    func fetchAllCalendarEvents(fetcherAuthorizer: GTMSessionFetcherAuthorizer) async -> (events: [GoogleEvent], calendars: [GoogleCalendar]) {
         if let result = try? await GoogleCalendarService.shared.fetchAllCalendarEvents(fetcherAuthorizer: fetcherAuthorizer) {
-            return (result.events, result.calendars.map({ calendar in
+            let calendars = result.calendars.map({ calendar in
                 return GoogleCalendar(calendar: calendar, isOn: true)
-            }))
+            })
+            
+            let events = result.events
+                .filter { event in
+                    return event.start?.dateTime != nil && event.end?.dateTime != nil
+                }
+                .map { event in
+                    return GoogleEvent(event: event)
+                }
+            
+            return (events, calendars)
         }
         
         return ([], [])
-    }
-    
-    func getCurrentEvent(events: [GTLRCalendar_Event]) async -> GTLRCalendar_Event? {        
-        return nil
     }
 }

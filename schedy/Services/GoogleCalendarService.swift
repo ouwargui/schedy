@@ -15,7 +15,7 @@ class GoogleCalendarService {
     func fetchEvents(for calendarId: String, fetcherAuthorizer: any GTMSessionFetcherAuthorizer) async throws -> [GTLRCalendar_Event] {
         let calendar = Calendar.current
         let startDate = Date()
-        let nextDay = calendar.date(byAdding: .day, value: 1, to: startDate)!
+        let nextDay = calendar.date(byAdding: .day, value: 2, to: startDate)!
         let endDate = calendar.startOfDay(for: nextDay)
         
         let query = GTLRCalendarQuery_EventsList.query(withCalendarId: calendarId)

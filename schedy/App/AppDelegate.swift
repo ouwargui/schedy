@@ -13,7 +13,7 @@ import GoogleAPIClientForREST_Calendar
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var isSignedIn: Bool = false
     @Published var user: GIDGoogleUser?
-    @Published var events: [GTLRCalendar_Event] = []
+    @Published var events: [GoogleEvent] = []
     @Published var calendars: [GoogleCalendar] = []
     
     func applicationDidFinishLaunching(_ notification: Notification) {
