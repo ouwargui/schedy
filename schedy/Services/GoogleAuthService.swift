@@ -5,37 +5,57 @@
 //  Created by Guilherme D'Alessandro on 29/11/24.
 //
 
-import GoogleSignIn
+import GTMAppAuth
+import AppAuth
+import Foundation
+import GTMSessionFetcherCore
 
 struct GoogleAuthService {
-    private static var ADDIITIONAL_SCOPES: [String] = [
-        "https://www.googleapis.com/auth/calendar.readonly",
-        "https://www.googleapis.com/auth/calendar.events.readonly"
-    ]
+    static let shared = GoogleAuthService()
     
-    static func signIn(completion: @escaping (Result<GIDGoogleUser, Error>) -> Void) {
-        GIDSignIn.sharedInstance.signIn(withPresenting: NSApplication.shared.keyWindow!, hint: nil, additionalScopes: ADDIITIONAL_SCOPES) { response, error in
+    enum SignInError: Error {
+        case noWindow
+    }
+    
+    private init() {}
+    
+    func signIn(appDelegate: AppDelegate) -> (OIDExternalUserAgentSession?) {
+        let configuration = AuthSession.configurationForGoogle()
+        
+        let request = OIDAuthorizationRequest(
+            configuration: configuration,
+            clientId: GoogleOAuthCredentials.clientId,
+            clientSecret: GoogleOAuthCredentials.clientSecret,
+            scopes: GoogleOAuthCredentials.scopes,
+            redirectURL: URL(string: GoogleOAuthCredentials.redirectURI)!,
+            responseType: OIDResponseTypeCode,
+            additionalParameters: nil
+        )
+        
+        guard let window = NSApplication.shared.windows.first else {
+            return nil
+        }
+        
+        return OIDAuthState.authState(byPresenting: request, presenting: window) { (authState, error) in
             if let error = error {
-                completion(.failure(error))
+                print(error.localizedDescription)
                 return
             }
-            if let user = response?.user {
-                completion(.success(user))
+            
+            if let authState = authState {
+                let auth = AuthSession(authState: authState)
+                
+                if auth.canAuthorize && (auth.userEmail != nil) {
+                    
+                    DispatchQueue.main.async {
+                        SessionManager.shared.createNewSession(auth: auth)
+                    }
+                }
             }
         }
     }
     
-    static func signOut() {
-        GIDSignIn.sharedInstance.signOut()
-    }
-    
-    static func checkPreviousSignIn(completion: @escaping (GIDGoogleUser?) -> Void) {
-        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { user, _ in
-                completion(user)
-            }
-        } else {
-            completion(nil)
-        }
+    func signOut(email: String) {
+        try? KeychainStore(itemName: email).removeAuthSession()
     }
 }

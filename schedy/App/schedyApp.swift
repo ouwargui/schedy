@@ -15,10 +15,13 @@ struct schedyApp: App {
     var body: some Scene {
         MenuBarView()
             .environmentObject(appDelegate)
+            .modelContainer(SwiftDataManager.shared.container)
         
         Settings {
             SettingsView()
         }
         .windowLevel(.floating)
+        .environmentObject(appDelegate)
+        .modelContainer(SwiftDataManager.shared.container)
     }
 }

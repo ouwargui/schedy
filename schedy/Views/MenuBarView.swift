@@ -10,14 +10,19 @@ import SwiftUI
 
 struct MenuBarView: Scene {
     @EnvironmentObject private var appDelegate: AppDelegate
+    @Environment(\.modelContext) var modelContext
     
     var body: some Scene {
         let currentOrNextGoogleEvent = self.appDelegate.events.getCurrentOrNextEvent()
         
         MenuBarExtra(currentOrNextGoogleEvent?.getMenuBarString() ?? "schedy") {
-            ForEach(self.$appDelegate.events) { $googleEvent in
-                Text("\(googleEvent.getStartHour())        \(googleEvent.getEndHour())        \(googleEvent.event.summary ?? "")")
+            Text("Today")
+            Divider()
+            ForEach(self.$appDelegate.users, id:\.self) { $user in
+                Text(user)
             }
+            Divider()
+            Text("Tomorrow")
             Divider()
             SettingsLink {
                 Text(LocalizedString.capitalized("open-preferences"))

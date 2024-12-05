@@ -1,16 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@        %@        %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@        %2$@        %3$@"
-          }
-        }
-      }
-    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -46,7 +36,14 @@
       }
     },
     "Calendars" : {
-
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendários"
+          }
+        }
+      }
     },
     "General" : {
       "localizations" : {
@@ -215,6 +212,9 @@
         }
       }
     },
+    "Today" : {
+
+    },
     "tomorrow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -231,6 +231,9 @@
           }
         }
       }
+    },
+    "Tomorrow" : {
+
     }
   },
   "version" : "1.0"

@@ -7,21 +7,33 @@
 
 import Foundation
 import GoogleAPIClientForREST_Calendar
+import SwiftData
 
-class GoogleEvent: Identifiable {
+@Model
+class GoogleEvent {
     var id: String
-    var event: GTLRCalendar_Event
+    var googleId: String
+    var title: String
+    var start: String
+    var end: String
+    var meetLink: String?
+    var htmlLink: String?
+    var eventDescription: String?
+    @Relationship(inverse: \GoogleCalendar.events) var calendar: GoogleCalendar?
     
     init(event: GTLRCalendar_Event) {
-        self.id = event.identifier ?? UUID().uuidString
-        self.event = event
+        self.id = event.identifier!
+        self.googleId = event.identifier!
+        self.title = event.summary!
+        self.start = event.start!.dateTime!.stringValue
+        self.end = event.end!.dateTime!.stringValue
+        self.meetLink = event.hangoutLink
+        self.htmlLink = event.htmlLink
+        self.eventDescription = event.descriptionProperty
     }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+}
+
+extension GoogleEvent {
     func getStartHour() -> String {
         let dateTime = self.getDateStartTime()
         
@@ -43,23 +55,19 @@ class GoogleEvent: Identifiable {
     }
     
     func getDateStartTime() -> Date {
-        return self.convertGoogleDateTimeToDate(eventDateTime: self.event.start)!
+        return self.convertGoogleDateTimeToDate(eventDateTime: self.start)!
     }
     
     func getDateEndTime() -> Date {
-        return self.convertGoogleDateTimeToDate(eventDateTime: self.event.end)!
+        return self.convertGoogleDateTimeToDate(eventDateTime: self.end)!
     }
     
     func getTimeUntilEvent() -> String {
-        return self.timeUntilEvent(eventDate: self.event.start)
+        return self.timeUntilEvent(eventDate: self.start)
     }
     
     func getMenuBarString() -> String {
-        guard let summary = self.event.summary else {
-            return "schedy"
-        }
-        
-        return "\(summary) (\(LocalizedString.localized("in")) \(self.getTimeUntilEvent()))"
+        return "\(self.title) (\(LocalizedString.localized("in")) \(self.getTimeUntilEvent()))"
     }
 }
 
@@ -81,7 +89,7 @@ extension Collection where Element == GoogleEvent {
 }
 
 private extension GoogleEvent {
-    func timeUntilEvent(eventDate: GTLRCalendar_EventDateTime?) -> String {
+    func timeUntilEvent(eventDate: String) -> String {
         let calendar = Calendar.current
         
         guard let datetime = convertGoogleDateTimeToDate(eventDateTime: eventDate) else {
@@ -106,12 +114,8 @@ private extension GoogleEvent {
         return result.trimmingCharacters(in: .whitespaces)
     }
     
-    func convertGoogleDateTimeToDate(eventDateTime: GTLRCalendar_EventDateTime?) -> Date? {
-        guard let dateTimeString = eventDateTime?.dateTime!.stringValue else {
-            return nil
-        }
-        
+    func convertGoogleDateTimeToDate(eventDateTime: String) -> Date? {
         let formatter = ISO8601DateFormatter()
-        return formatter.date(from: dateTimeString)
+        return formatter.date(from: eventDateTime)
     }
 }

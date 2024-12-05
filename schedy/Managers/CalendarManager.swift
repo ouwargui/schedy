@@ -21,7 +21,7 @@ class CalendarManager {
     func fetchAllCalendarEvents(fetcherAuthorizer: GTMSessionFetcherAuthorizer) async -> (events: [GoogleEvent], calendars: [GoogleCalendar]) {
         if let result = try? await GoogleCalendarService.shared.fetchAllCalendarEvents(fetcherAuthorizer: fetcherAuthorizer) {
             let calendars = result.calendars.map({ calendar in
-                return GoogleCalendar(calendar: calendar, isOn: true)
+                return GoogleCalendar(calendar: calendar)
             })
             
             let events = result.events

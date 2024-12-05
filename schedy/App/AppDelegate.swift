@@ -8,29 +8,30 @@
 import AppKit
 import SwiftUI
 import GoogleSignIn
+import AppAuth
 import GoogleAPIClientForREST_Calendar
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var isSignedIn: Bool = false
-    @Published var user: GIDGoogleUser?
+    @Published var users: [String] = []
     @Published var events: [GoogleEvent] = []
     @Published var calendars: [GoogleCalendar] = []
+    var currentAuthorizationFlow: OIDExternalUserAgentSession?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        GoogleAuthService.checkPreviousSignIn { user in
-            if let user = user {
-                self.isSignedIn = true
-                self.user = user
-                print("User has previous sign in")
-                Task {
-                    let (events, calendars) = await CalendarManager.shared.fetchAllCalendarEvents(fetcherAuthorizer: user.fetcherAuthorizer as! GTMSessionFetcherAuthorizer)
-                    self.events = events
-                    self.calendars = calendars
-                }
-                return
-            }
-            
-            print("User has no previous sign in")
+        NSAppleEventManager.shared()
+            .setEventHandler(self,
+                             andSelector: #selector(self.handleUrlEvent(getURLEvent:replyEvent:)),
+                             forEventClass: AEEventClass(kInternetEventClass),
+                             andEventID: AEEventID(kAEGetURL)
+            )
+    }
+    
+    @objc
+    private func handleUrlEvent(getURLEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+        if let string = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+           let url = URL(string: string) {
+            self.currentAuthorizationFlow?.resumeExternalUserAgentFlow(with: url)
         }
     }
 }
