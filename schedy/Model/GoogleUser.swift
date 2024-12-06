@@ -11,13 +11,16 @@ import GTMAppAuth
 
 @Model
 class GoogleUser {
-    var id: String
+    var googleId: String
     var email: String
     var isSessionActive: Bool
     @Relationship(deleteRule: .cascade, inverse: \GoogleCalendar.account) var calendars: [GoogleCalendar]
+    @Transient private var calendarSyncManager: CalendarSyncManager {
+        return CalendarSyncManager(user: self)
+    }
     
     init(id: String, email: String, calendars: [GoogleCalendar] = []) {
-        self.id = id
+        self.googleId = id
         self.email = email
         self.calendars = calendars
         self.isSessionActive = true
@@ -25,6 +28,14 @@ class GoogleUser {
 }
 
 extension GoogleUser {
+    func startSync() {
+        self.calendarSyncManager.startSync()
+    }
+    
+    func stopSync() {
+        self.calendarSyncManager.stopSync()
+    }
+    
     func getSession() -> AuthSession {
         return SessionManager.shared.getSession(for: self.email)!
     }

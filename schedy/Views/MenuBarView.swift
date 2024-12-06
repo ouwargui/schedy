@@ -7,19 +7,18 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 struct MenuBarView: Scene {
     @EnvironmentObject private var appDelegate: AppDelegate
-    @Environment(\.modelContext) var modelContext
+    @Query var events: [GoogleEvent]
     
     var body: some Scene {
-        let currentOrNextGoogleEvent = self.appDelegate.events.getCurrentOrNextEvent()
-        
-        MenuBarExtra(currentOrNextGoogleEvent?.getMenuBarString() ?? "schedy") {
+        MenuBarExtra("schedy") {
             Text("Today")
             Divider()
-            ForEach(self.$appDelegate.users, id:\.self) { $user in
-                Text(user)
+            ForEach(self.events) { event in
+                Text(event.title)
             }
             Divider()
             Text("Tomorrow")

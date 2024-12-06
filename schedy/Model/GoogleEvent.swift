@@ -11,7 +11,6 @@ import SwiftData
 
 @Model
 class GoogleEvent {
-    var id: String
     var googleId: String
     var title: String
     var start: String
@@ -22,7 +21,6 @@ class GoogleEvent {
     var calendar: GoogleCalendar
     
     init(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
-        self.id = event.identifier!
         self.googleId = event.identifier!
         self.title = event.summary!
         self.start = event.start!.dateTime!.stringValue
@@ -31,6 +29,16 @@ class GoogleEvent {
         self.htmlLink = event.htmlLink
         self.eventDescription = event.descriptionProperty
         self.calendar = calendar
+    }
+    
+    func update(event: GTLRCalendar_Event) {
+        self.googleId = event.identifier!
+        self.title = event.summary!
+        self.start = event.start!.dateTime!.stringValue
+        self.end = event.end!.dateTime!.stringValue
+        self.meetLink = event.hangoutLink
+        self.htmlLink = event.htmlLink
+        self.eventDescription = event.descriptionProperty
     }
 }
 

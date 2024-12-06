@@ -14,7 +14,6 @@ import SwiftData
 struct SettingsView: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Query var users: [GoogleUser]
-    @State var gCalendars: [GoogleCalendar] = []
     
     var body: some View {
         TabView {
@@ -25,10 +24,9 @@ struct SettingsView: View {
                     
                     if !self.users.isEmpty {
                         Text("Signed as: \(self.users.first?.email ?? "")")
-                        Button("Fetch calendars") {
-                            fetchCalendars(for: self.users.first!)
+                        Button("Sign out") {
+                            signOut(for: self.users.first!.email)
                         }
-                        Button("Sign out", action: signOut)
                     } else {
                         GoogleSignInButton {
                             signIn()
@@ -45,9 +43,13 @@ struct SettingsView: View {
                 }
             }
             
-            Tab("Teste", systemImage: "calendar") {
-                List(self.gCalendars) { calendar in
-                    Text(calendar.name)
+            if !self.users.isEmpty {
+                Tab("events", systemImage: "calendar") {
+                    let user = self.users.first!
+                    let events = user.calendars.flatMap(\.events)
+                    List(events) { event in
+                        Text(event.title)
+                    }
                 }
             }
         }
@@ -60,32 +62,7 @@ struct SettingsView: View {
         self.appDelegate.currentAuthorizationFlow = GoogleAuthService.shared.signIn(appDelegate: self.appDelegate)
     }
     
-//    private func fetchCalendar() {
-//        if self.appDelegate.users == nil {
-//            print("Error fetching calendars: User is nil")
-//            return
-//        }
-//        
-//        Task {
-//            let (events, calendars) = await CalendarManager.shared.fetchAllCalendarEvents(
-//                fetcherAuthorizer: self.appDelegate.user!.fetcherAuthorizer as! GTMSessionFetcherAuthorizer
-//            )
-//            self.appDelegate.events = events
-//            self.appDelegate.calendars = calendars
-//        }
-//    }
-    
-    private func fetchCalendars(for account: GoogleUser) {
-        Task {
-            self.gCalendars = await CalendarManager.shared.fetchUserCalendars(for: account)
-        }
-    }
-    
-    private func signOut() {
-        // GoogleAuthService.signOut()
-        self.appDelegate.isSignedIn = false
-//        self.appDelegate.user = nil
-        self.appDelegate.calendars = []
-        self.appDelegate.events = []
+    private func signOut(for email: String) {
+        GoogleAuthService.shared.signOut(email: email)
     }
 }

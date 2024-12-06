@@ -21,8 +21,17 @@ struct SwiftDataManager {
         self.container = try! ModelContainer(for: schema, configurations: [configuration])
     }
     
+    func fetchAll<T: PersistentModel>(fetchDescriptor: FetchDescriptor<T>) -> [T]? {
+        return try? self.container.mainContext.fetch(fetchDescriptor)
+    }
+    
     func insert<T: PersistentModel>(model: T) {
         self.container.mainContext.insert(model)
+        self.save()
+    }
+    
+    func delete<T: PersistentModel>(model: T) {
+        self.container.mainContext.delete(model)
         self.save()
     }
     
@@ -35,6 +44,10 @@ struct SwiftDataManager {
         models.forEach { model in
             self.container.mainContext.insert(model)
         }
+        self.save()
+    }
+    
+    func update() {
         self.save()
     }
     

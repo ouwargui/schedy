@@ -6,16 +6,10 @@
 //
 
 import AppKit
-import SwiftUI
-import GoogleSignIn
 import AppAuth
-import GoogleAPIClientForREST_Calendar
+import SwiftData
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
-    @Published var isSignedIn: Bool = false
-    @Published var users: [String] = []
-    @Published var events: [GoogleEvent] = []
-    @Published var calendars: [GoogleCalendar] = []
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -25,6 +19,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                              forEventClass: AEEventClass(kInternetEventClass),
                              andEventID: AEEventID(kAEGetURL)
             )
+        
+        let users = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        users?.forEach({ user in
+            user.startSync()
+        })
+    }
+    
+    func applicationWillTerminate(_ notification: Notification) {
+        let users = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        users?.forEach({ user in
+            user.stopSync()
+        })
     }
     
     @objc

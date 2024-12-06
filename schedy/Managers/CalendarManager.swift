@@ -19,21 +19,15 @@ class CalendarManager {
         return GIDSignIn.sharedInstance.hasPreviousSignIn()
     }
     
-    func fetchUserCalendars(for user: GoogleUser) async -> [GoogleCalendar] {
-        let authSession = user.getSession()
-        
-        do {
-            let result = try await GoogleCalendarService.shared.fetchUserCalendars(fetcherAuthorizer: authSession)
-            let googleCalendars = result.map { calendar in
-                let googleCalendar = GoogleCalendar(calendar: calendar, account: user)
-                return googleCalendar
-            }
-            
-            SwiftDataManager.shared.batchInsert(models: googleCalendars)
-            return googleCalendars
-        } catch (let error) {
-            print("Failed to fetch user calendars: \(error.localizedDescription)")
-            return []
+    func fetchCalendarEvents(for calendarId: String, with authSession: AuthSession, _ syncToken: String?) async -> GTLRCalendar_Events? {
+        guard let result = try? await GoogleCalendarService.shared.fetchEvents(
+            for: calendarId,
+            fetcherAuthorizer: authSession,
+            syncToken: syncToken
+        ) else {
+            return nil
         }
+        
+        return result
     }
 }
