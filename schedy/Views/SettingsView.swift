@@ -14,6 +14,7 @@ import SwiftData
 struct SettingsView: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Query var users: [GoogleUser]
+    @State var gCalendars: [GoogleCalendar] = []
     
     var body: some View {
         TabView {
@@ -24,6 +25,9 @@ struct SettingsView: View {
                     
                     if !self.users.isEmpty {
                         Text("Signed as: \(self.users.first?.email ?? "")")
+                        Button("Fetch calendars") {
+                            fetchCalendars(for: self.users.first!)
+                        }
                         Button("Sign out", action: signOut)
                     } else {
                         GoogleSignInButton {
@@ -32,13 +36,18 @@ struct SettingsView: View {
                     }
                 }
             }
-            if self.appDelegate.isSignedIn {
+            if !self.users.isEmpty {
                 Tab("Calendars", systemImage: "calendar") {
-//                    List(self.$appDelegate.calendars) { $calendar in
-//                        Toggle(isOn: $calendar.isOn) {
-//                            Text(calendar.calendar.summaryOverride ?? calendar.calendar.summary ?? "")
-//                        }
-//                    }
+                    let user = self.users.first!
+                    List(user.calendars) { calendar in
+                        Text(calendar.name)
+                    }
+                }
+            }
+            
+            Tab("Teste", systemImage: "calendar") {
+                List(self.gCalendars) { calendar in
+                    Text(calendar.name)
                 }
             }
         }
@@ -65,6 +74,12 @@ struct SettingsView: View {
 //            self.appDelegate.calendars = calendars
 //        }
 //    }
+    
+    private func fetchCalendars(for account: GoogleUser) {
+        Task {
+            self.gCalendars = await CalendarManager.shared.fetchUserCalendars(for: account)
+        }
+    }
     
     private func signOut() {
         // GoogleAuthService.signOut()

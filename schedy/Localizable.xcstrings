@@ -45,6 +45,9 @@
         }
       }
     },
+    "Fetch calendars" : {
+
+    },
     "General" : {
       "localizations" : {
         "en" : {
@@ -194,6 +197,9 @@
           }
         }
       }
+    },
+    "Teste" : {
+
     },
     "today" : {
       "extractionState" : "manual",

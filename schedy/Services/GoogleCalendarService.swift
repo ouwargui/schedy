@@ -7,12 +7,13 @@
 
 import Foundation
 import GoogleAPIClientForREST_Calendar
+import GTMAppAuth
 
 class GoogleCalendarService {
     static let shared = GoogleCalendarService()
     private let service = GTLRCalendarService()
     
-    func fetchEvents(for calendarId: String, fetcherAuthorizer: any GTMSessionFetcherAuthorizer) async throws -> [GTLRCalendar_Event] {
+    func fetchEvents(for calendarId: String, fetcherAuthorizer: AuthSession) async throws -> [GTLRCalendar_Event] {
         let calendar = Calendar.current
         let startDate = Date()
         let nextDay = calendar.date(byAdding: .day, value: 2, to: startDate)!
@@ -45,7 +46,7 @@ class GoogleCalendarService {
         }
     }
     
-    func fetchAllCalendarEvents(fetcherAuthorizer: any GTMSessionFetcherAuthorizer) async throws -> (events: [GTLRCalendar_Event], calendars: [GTLRCalendar_CalendarListEntry]) {
+    func fetchAllCalendarEvents(fetcherAuthorizer: AuthSession) async throws -> (events: [GTLRCalendar_Event], calendars: [GTLRCalendar_CalendarListEntry]) {
         // First get list of calendars
         let calendars = try await fetchUserCalendars(fetcherAuthorizer: fetcherAuthorizer)
         
@@ -68,7 +69,7 @@ class GoogleCalendarService {
         return (events: eventArrays.flatMap { $0 }, calendars: calendars)
     }
     
-    func fetchUserCalendars(fetcherAuthorizer: any GTMSessionFetcherAuthorizer) async throws -> [GTLRCalendar_CalendarListEntry] {
+    func fetchUserCalendars(fetcherAuthorizer: AuthSession) async throws -> [GTLRCalendar_CalendarListEntry] {
         let calendarListQuery = GTLRCalendarQuery_CalendarListList.query()
         service.authorizer = fetcherAuthorizer
         

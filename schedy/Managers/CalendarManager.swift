@@ -8,6 +8,7 @@
 import GoogleAPIClientForREST_Calendar
 import GoogleSignIn
 import AppKit
+import GTMAppAuth
 
 @MainActor
 class CalendarManager {
@@ -18,23 +19,21 @@ class CalendarManager {
         return GIDSignIn.sharedInstance.hasPreviousSignIn()
     }
     
-    func fetchAllCalendarEvents(fetcherAuthorizer: GTMSessionFetcherAuthorizer) async -> (events: [GoogleEvent], calendars: [GoogleCalendar]) {
-        if let result = try? await GoogleCalendarService.shared.fetchAllCalendarEvents(fetcherAuthorizer: fetcherAuthorizer) {
-            let calendars = result.calendars.map({ calendar in
-                return GoogleCalendar(calendar: calendar)
-            })
-            
-            let events = result.events
-                .filter { event in
-                    return event.start?.dateTime != nil && event.end?.dateTime != nil
-                }
-                .map { event in
-                    return GoogleEvent(event: event)
-                }
-            
-            return (events, calendars)
-        }
+    func fetchUserCalendars(for user: GoogleUser) async -> [GoogleCalendar] {
+        let authSession = user.getSession()
         
-        return ([], [])
+        do {
+            let result = try await GoogleCalendarService.shared.fetchUserCalendars(fetcherAuthorizer: authSession)
+            let googleCalendars = result.map { calendar in
+                let googleCalendar = GoogleCalendar(calendar: calendar, account: user)
+                return googleCalendar
+            }
+            
+            SwiftDataManager.shared.batchInsert(models: googleCalendars)
+            return googleCalendars
+        } catch (let error) {
+            print("Failed to fetch user calendars: \(error.localizedDescription)")
+            return []
+        }
     }
 }

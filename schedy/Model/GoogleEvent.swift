@@ -19,9 +19,9 @@ class GoogleEvent {
     var meetLink: String?
     var htmlLink: String?
     var eventDescription: String?
-    @Relationship(inverse: \GoogleCalendar.events) var calendar: GoogleCalendar?
+    var calendar: GoogleCalendar
     
-    init(event: GTLRCalendar_Event) {
+    init(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
         self.id = event.identifier!
         self.googleId = event.identifier!
         self.title = event.summary!
@@ -30,6 +30,7 @@ class GoogleEvent {
         self.meetLink = event.hangoutLink
         self.htmlLink = event.htmlLink
         self.eventDescription = event.descriptionProperty
+        self.calendar = calendar
     }
 }
 

@@ -55,7 +55,8 @@ struct GoogleAuthService {
         }
     }
     
+    @MainActor
     func signOut(email: String) {
-        try? KeychainStore(itemName: email).removeAuthSession()
+        SessionManager.shared.deleteSession(for: email)
     }
 }

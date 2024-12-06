@@ -15,14 +15,14 @@ class GoogleCalendar: Identifiable {
     var googleId: String
     var name: String
     var isEnabled: Bool
-    @Relationship(deleteRule: .cascade) var events: [GoogleEvent]
-    @Relationship(inverse: \GoogleUser.calendars) var account: GoogleUser?
+    var account: GoogleUser
+    @Relationship(deleteRule: .cascade) var events = [GoogleEvent]()
     
-    init(calendar: GTLRCalendar_CalendarListEntry, events: [GoogleEvent] = [], isEnabled: Bool = true) {
+    init(calendar: GTLRCalendar_CalendarListEntry, account: GoogleUser, isEnabled: Bool = true) {
         self.id = calendar.identifier!
         self.googleId = calendar.identifier!
         self.name = calendar.summaryOverride ?? calendar.summary!
-        self.events = events
         self.isEnabled = isEnabled
+        self.account = account
     }
 }
