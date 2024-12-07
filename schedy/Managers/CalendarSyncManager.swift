@@ -18,6 +18,7 @@ class CalendarSyncManager {
     private var authorizer: AuthSession {
         return user.getSession()
     }
+    private var timePassedSinceFirstSync: TimeInterval = 0
     
     init(user: GoogleUser) {
         self.user = user
@@ -28,6 +29,7 @@ class CalendarSyncManager {
             print("started syncing")
             await self.performCalendarSync()
             await self.performEventsSync()
+            await self.deleteOldEvents()
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { _ in
@@ -35,6 +37,12 @@ class CalendarSyncManager {
             Task {
                 await self.performCalendarSync()
                 await self.performEventsSync()
+                
+                self.timePassedSinceFirstSync += 600
+                
+                if self.timePassedSinceFirstSync >= 10_800 {
+                    await self.deleteOldEvents()
+                }
             }
         }
     }
@@ -145,5 +153,14 @@ class CalendarSyncManager {
         }
         
         return
+    }
+    
+    @MainActor
+    private func deleteOldEvents() {
+        let thresholdDate = Calendar.current.date(byAdding: .hour, value: -3, to: Date())!
+        
+        try? SwiftDataManager.shared.delete(model: GoogleEvent.self, where: #Predicate { event in
+            event.end < thresholdDate
+        })
     }
 }

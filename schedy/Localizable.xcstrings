@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -214,9 +224,6 @@
         }
       }
     },
-    "Today" : {
-
-    },
     "tomorrow" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -233,9 +240,6 @@
           }
         }
       }
-    },
-    "Tomorrow" : {
-
     }
   },
   "version" : "1.0"

@@ -13,20 +13,20 @@ import SwiftData
 class GoogleEvent {
     var googleId: String
     var title: String
-    var start: String
-    var end: String
+    var start: Date
+    var end: Date
     var meetLink: String?
-    var htmlLink: String?
+    var htmlLink: String
     var eventDescription: String?
     var calendar: GoogleCalendar
     
     init(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
         self.googleId = event.identifier!
         self.title = event.summary!
-        self.start = event.start!.dateTime!.stringValue
-        self.end = event.end!.dateTime!.stringValue
+        self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
+        self.end = ISO8601DateFormatter().date(from: event.end!.dateTime!.stringValue)!
         self.meetLink = event.hangoutLink
-        self.htmlLink = event.htmlLink
+        self.htmlLink = event.htmlLink!
         self.eventDescription = event.descriptionProperty
         self.calendar = calendar
     }
@@ -34,41 +34,66 @@ class GoogleEvent {
     func update(event: GTLRCalendar_Event) {
         self.googleId = event.identifier!
         self.title = event.summary!
-        self.start = event.start!.dateTime!.stringValue
-        self.end = event.end!.dateTime!.stringValue
+        self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
+        self.end = ISO8601DateFormatter().date(from: event.end!.dateTime!.stringValue)!
         self.meetLink = event.hangoutLink
-        self.htmlLink = event.htmlLink
+        self.htmlLink = event.htmlLink!
         self.eventDescription = event.descriptionProperty
     }
 }
 
+// predicates
 extension GoogleEvent {
-    func getStartHour() -> String {
-        let dateTime = self.getDateStartTime()
+    static var todaysPredicate: Predicate<GoogleEvent> {
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
         
+        return #Predicate<GoogleEvent> { event in
+            event.calendar.isEnabled &&
+            event.start >= startOfDay &&
+            event.start < endOfDay
+        }
+    }
+    
+    static var tomorrowsPredicate: Predicate<GoogleEvent> {
+        let startOfTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))!
+        let startOfDayAfterTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: startOfTomorrow)!
+        
+        return #Predicate<GoogleEvent> { event in
+            event.calendar.isEnabled &&
+            event.start >= startOfTomorrow &&
+            event.start < startOfDayAfterTomorrow
+        }
+    }
+}
+
+extension GoogleEvent {
+    func hasPassed() -> Bool {
+        self.end < Date()
+    }
+    
+    func getHtmlLinkWithAuthUser() -> URL {
+        let urlQueryItem = URLQueryItem(name: "authuser", value: self.calendar.account.email)
+        let urlQueryItems: [URLQueryItem] = [urlQueryItem]
+        
+        return URL(string: self.htmlLink)!
+            .appending(queryItems: urlQueryItems)
+    }
+    
+    func getStartHour() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
         dateFormatter.dateStyle = .none
         
-        return dateFormatter.string(from: dateTime)
+        return dateFormatter.string(from: self.start)
     }
     
     func getEndHour() -> String {
-        let dateTime = self.getDateEndTime()
-        
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
         dateFormatter.dateStyle = .none
         
-        return dateFormatter.string(from: dateTime)
-    }
-    
-    func getDateStartTime() -> Date {
-        return self.convertGoogleDateTimeToDate(eventDateTime: self.start)!
-    }
-    
-    func getDateEndTime() -> Date {
-        return self.convertGoogleDateTimeToDate(eventDateTime: self.end)!
+        return dateFormatter.string(from: self.end)
     }
     
     func getTimeUntilEvent() -> String {
@@ -85,27 +110,23 @@ extension Collection where Element == GoogleEvent {
         let now = Date()
         
         if let currentEvent = self.first(where: {
-            now >= $0.getDateStartTime() && now <= $0.getDateEndTime()
+            now >= $0.start && now <= $0.end
         }) {
             return currentEvent
         }
         
         return self
-            .filter { $0.getDateStartTime() > now }
-            .min { $0.getDateStartTime() < $1.getDateStartTime() }
+            .filter { $0.start > now }
+            .min { $0.start < $1.start }
             .self
     }
 }
 
 private extension GoogleEvent {
-    func timeUntilEvent(eventDate: String) -> String {
+    func timeUntilEvent(eventDate: Date) -> String {
         let calendar = Calendar.current
         
-        guard let datetime = convertGoogleDateTimeToDate(eventDateTime: eventDate) else {
-            return ""
-        }
-        
-        let components = calendar.dateComponents([.day, .hour, .minute], from: Date(), to: datetime)
+        let components = calendar.dateComponents([.day, .hour, .minute], from: Date(), to: eventDate)
         
         var result = ""
         if let days = components.day, days > 0 {
@@ -121,10 +142,5 @@ private extension GoogleEvent {
         }
         
         return result.trimmingCharacters(in: .whitespaces)
-    }
-    
-    func convertGoogleDateTimeToDate(eventDateTime: String) -> Date? {
-        let formatter = ISO8601DateFormatter()
-        return formatter.date(from: eventDateTime)
     }
 }
