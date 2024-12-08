@@ -22,18 +22,21 @@ class SessionManager {
         
         let user = GoogleUser(id: auth.userID!, email: auth.userEmail!)
         SwiftDataManager.shared.insert(model: user)
+        user.startSync()
     }
 
     @MainActor
-    func deleteSession(for email: String) -> Void {
+    func deleteSession(for user: GoogleUser) -> Void {
         do {
+            let email = user.email
             try KeychainStore(itemName: email).removeAuthSession()
+            user.stopSync()
             try SwiftDataManager.shared.delete(model: GoogleUser.self, where: #Predicate {
                 $0.email == email
             })
             return
         } catch (let error) {
-            print("Error deleting session for \(email): \(error.localizedDescription)")
+            print("Error deleting session for \(user.email): \(error.localizedDescription)")
             return
         }
     }

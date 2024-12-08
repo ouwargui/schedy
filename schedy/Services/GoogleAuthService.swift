@@ -56,7 +56,7 @@ struct GoogleAuthService {
     }
     
     @MainActor
-    func signOut(email: String) {
-        SessionManager.shared.deleteSession(for: email)
+    func signOut(user: GoogleUser) {
+        SessionManager.shared.deleteSession(for: user)
     }
 }

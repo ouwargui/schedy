@@ -25,7 +25,7 @@ struct SettingsView: View {
                     if !self.users.isEmpty {
                         Text("Signed as: \(self.users.first?.email ?? "")")
                         Button("Sign out") {
-                            signOut(for: self.users.first!.email)
+                            signOut(for: self.users.first!)
                         }
                     } else {
                         GoogleSignInButton {
@@ -62,7 +62,7 @@ struct SettingsView: View {
         self.appDelegate.currentAuthorizationFlow = GoogleAuthService.shared.signIn(appDelegate: self.appDelegate)
     }
     
-    private func signOut(for email: String) {
-        GoogleAuthService.shared.signOut(email: email)
+    private func signOut(for user: GoogleUser) {
+        GoogleAuthService.shared.signOut(user: user)
     }
 }
