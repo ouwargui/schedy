@@ -23,6 +23,7 @@ struct schedyApp: App {
         .commands {
             SidebarCommands()
         }
+        .windowResizability(.contentSize)
         .windowStyle(.titleBar)
         .environmentObject(appDelegate)
         .modelContainer(SwiftDataManager.shared.container)

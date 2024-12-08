@@ -17,6 +17,12 @@
     "Accounts" : {
 
     },
+    "Add a new account" : {
+
+    },
+    "Add your first account" : {
+
+    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -51,6 +57,9 @@
         }
       }
     },
+    "All calendars and events related to this account will be removed too." : {
+
+    },
     "Calendars" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -61,6 +70,9 @@
           }
         }
       }
+    },
+    "Cancel" : {
+
     },
     "General" : {
       "extractionState" : "stale",
@@ -82,7 +94,13 @@
     "in" : {
 
     },
+    "Last synced at: %@" : {
+
+    },
     "left" : {
+
+    },
+    "Not synced" : {
 
     },
     "open-preferences" : {
@@ -134,6 +152,15 @@
           }
         }
       }
+    },
+    "remove" : {
+
+    },
+    "Remove account" : {
+
+    },
+    "Remove account from Schedy?" : {
+
     },
     "schedy" : {
       "extractionState" : "stale",
@@ -255,6 +282,9 @@
           }
         }
       }
+    },
+    "You don't have any accounts yet" : {
+
     }
   },
   "version" : "1.0"

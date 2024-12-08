@@ -17,7 +17,6 @@ enum SettingsItem: String.LocalizationValue {
 }
 
 struct SettingsView: View {
-    @EnvironmentObject private var appDelegate: AppDelegate
     @Query var users: [GoogleUser]
     @State private var selectedItem: SettingsItem = .accounts
     
@@ -35,27 +34,19 @@ struct SettingsView: View {
             switch self.selectedItem {
             case .accounts:
                 AccountsView()
+                    .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             case .settings:
                 Text("settings")
             }
         }
         .navigationTitle(LocalizedString.capitalized(self.selectedItem.rawValue))
-        .frame(width: 500)
-    }
-    
-    private func signIn() {
-        self.appDelegate.currentAuthorizationFlow = GoogleAuthService.shared.signIn(appDelegate: self.appDelegate)
-    }
-    
-    private func signOut(for user: GoogleUser) {
-        GoogleAuthService.shared.signOut(user: user)
     }
 }
 
-#Preview {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    SettingsView()
-        .environmentObject(appDelegate)
-        .modelContainer(SwiftDataManager.shared.container)
-}
+//#Preview {
+//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+//    
+//    SettingsView()
+//        .environmentObject(appDelegate)
+//        .modelContainer(SwiftDataManager.shared.container)
+//}
