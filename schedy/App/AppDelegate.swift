@@ -8,6 +8,7 @@
 import AppKit
 import AppAuth
 import SwiftData
+import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?

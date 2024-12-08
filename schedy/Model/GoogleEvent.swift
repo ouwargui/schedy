@@ -44,6 +44,16 @@ class GoogleEvent {
 
 // predicates
 extension GoogleEvent {
+    static var currentsPredicate: Predicate<GoogleEvent> {
+        let now = Date()
+        
+        return #Predicate<GoogleEvent> {
+            $0.calendar.isEnabled &&
+            $0.start <= now &&
+            $0.end > now
+        }
+    }
+    
     static var todaysPredicate: Predicate<GoogleEvent> {
         let startOfDay = Calendar.current.startOfDay(for: Date())
         let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
@@ -80,6 +90,18 @@ extension GoogleEvent {
             .appending(queryItems: urlQueryItems)
     }
     
+    func getLinkDestination() -> URL? {
+        let urlQueryItem = URLQueryItem(name: "authuser", value: self.calendar.account.email)
+        let urlQueryItems: [URLQueryItem] = [urlQueryItem]
+        
+        if let meetLink = self.meetLink {
+            return URL(string: meetLink)!
+                .appending(queryItems: urlQueryItems)
+        }
+        
+        return nil
+    }
+    
     func getStartHour() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
@@ -96,12 +118,24 @@ extension GoogleEvent {
         return dateFormatter.string(from: self.end)
     }
     
-    func getTimeUntilEvent() -> String {
-        return self.timeUntilEvent(eventDate: self.start)
+    func getTimeUntilEvent(from: Date) -> String {
+        return self.timeUntilEvent(from: from)
     }
     
-    func getMenuBarString() -> String {
-        return "\(self.title) (\(LocalizedString.localized("in")) \(self.getTimeUntilEvent()))"
+    func getTimeToEnd(to: Date) -> String {
+        return self.timeUntilEnd(to: to)
+    }
+    
+    func getMenuBarString(currentTime: Date) -> String {
+        let isOnEvent = self.start <= currentTime && self.end >= currentTime
+        let time = isOnEvent ? self.getTimeToEnd(to: currentTime) : self.getTimeUntilEvent(from: currentTime)
+        let timeToEndString = "\(time) \(LocalizedString.localized("left"))"
+        let timeUntilString = "\(LocalizedString.localized("in")) \(time))"
+        let stringToUse = isOnEvent ? timeToEndString : timeUntilString
+        
+        let result = "\(self.title) (\(stringToUse))"
+        
+        return result
     }
 }
 
@@ -123,22 +157,43 @@ extension Collection where Element == GoogleEvent {
 }
 
 private extension GoogleEvent {
-    func timeUntilEvent(eventDate: Date) -> String {
+    func timeUntilEnd(to toEnd: Date) -> String {
         let calendar = Calendar.current
         
-        let components = calendar.dateComponents([.day, .hour, .minute], from: Date(), to: eventDate)
+        let components = calendar.dateComponents([.day, .hour, .minute], from: self.end, to: toEnd)
+        
+        var result = ""
+        if let days = components.day, days < 0 {
+            result += "\(abs(days))d "
+        }
+        
+        if let hours = components.hour, hours < 0 {
+            result += "\(abs(hours))h "
+        }
+        
+        if let minutes = components.minute, minutes < 0 {
+            result += "\(abs(minutes))m"
+        }
+        
+        return result.trimmingCharacters(in: .whitespaces)
+    }
+    
+    func timeUntilEvent(from fromDate: Date) -> String {
+        let calendar = Calendar.current
+        
+        let components = calendar.dateComponents([.day, .hour, .minute], from: fromDate, to: self.start)
         
         var result = ""
         if let days = components.day, days > 0 {
-            result += "\(days)d "
+            result += "\(abs(days))d "
         }
         
         if let hours = components.hour, hours > 0 {
-            result += "\(hours)h "
+            result += "\(abs(hours))h "
         }
         
         if let minutes = components.minute, minutes > 0 {
-            result += "\(minutes)m"
+            result += "\(abs(minutes))m"
         }
         
         return result.trimmingCharacters(in: .whitespaces)

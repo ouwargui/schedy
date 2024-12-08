@@ -11,16 +11,17 @@ import SwiftData
 
 struct MenuBarView: Scene {
     @EnvironmentObject private var appDelegate: AppDelegate
-    @Query(filter: GoogleEvent.todaysPredicate) var todayEvents: [GoogleEvent]
-    @Query(filter: GoogleEvent.tomorrowsPredicate) var tomorrowEvents: [GoogleEvent]
-    @State var today: Date
-    @State var tomorrow: Date
+    @ObservedObject private var viewModel: MenuBarViewModel = MenuBarViewModel()
+    
+    var tomorrow: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: self.viewModel.currentTime)!
+    }
     
     var todayFormatted: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM"
         formatter.locale = Locale.current
-        return formatter.string(from: self.today)
+        return formatter.string(from: self.viewModel.currentTime)
     }
     
     var tomorrowFormatted: String {
@@ -30,28 +31,18 @@ struct MenuBarView: Scene {
         return formatter.string(from: self.tomorrow)
     }
     
-    init() {
-        let today = Date()
-        self.today = today
-        self.tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
-    }
-    
     var body: some Scene {
-        MenuBarExtra("schedy") {
-            Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted))")
+        MenuBarExtra(self.viewModel.currentEvent?.getMenuBarString(currentTime: self.viewModel.currentTime) ?? "schedy") {
+            Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted)):")
             Divider()
-            ForEach(self.todayEvents) { event in
-                if (event.hasPassed()) {
-                    Text(event.title)
-                } else {
-                    Link(event.title, destination: event.getHtmlLinkWithAuthUser())
-                }
+            ForEach(self.viewModel.todaysEvents) { event in
+                MenuBarItemView(event: event, isCurrentEvent: self.viewModel.currentEvent?.googleId == event.googleId)
             }
             Divider()
-            Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted))")
+            Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted)):")
             Divider()
-            ForEach(self.tomorrowEvents) { event in
-                Link(event.title, destination: event.getHtmlLinkWithAuthUser())
+            ForEach(self.viewModel.tomorrowsEvents) { event in
+                MenuBarItemView(event: event)
             }
             Divider()
             SettingsLink {
