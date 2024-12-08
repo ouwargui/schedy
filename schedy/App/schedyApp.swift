@@ -17,10 +17,10 @@ struct schedyApp: App {
             .environmentObject(appDelegate)
             .modelContainer(SwiftDataManager.shared.container)
         
-        Settings {
+        Window("Settings", id: "settings") {
             SettingsView()
         }
-        .windowLevel(.floating)
+        .windowStyle(.titleBar)
         .environmentObject(appDelegate)
         .modelContainer(SwiftDataManager.shared.container)
     }

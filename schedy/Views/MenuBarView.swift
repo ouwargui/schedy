@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct MenuBarView: Scene {
+    @Environment(\.openWindow) private var openWindow
     @EnvironmentObject private var appDelegate: AppDelegate
     @ObservedObject private var viewModel: MenuBarViewModel = MenuBarViewModel()
     
@@ -45,10 +46,13 @@ struct MenuBarView: Scene {
                 MenuBarItemView(event: event)
             }
             Divider()
-            SettingsLink {
-                Text(LocalizedString.capitalized("open-preferences"))
+            Button("Settings") {
+                NSApplication.shared.setActivationPolicy(.regular)
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                openWindow(id: "settings")
             }.keyboardShortcut(",", modifiers: [.command, .shift])
             Button(LocalizedString.capitalized("quit")) {
+                self.appDelegate.shouldQuit = true
                 NSApplication.shared.terminate(nil)
             }.keyboardShortcut("q")
         }

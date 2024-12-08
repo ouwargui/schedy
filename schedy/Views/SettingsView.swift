@@ -17,22 +17,15 @@ struct SettingsView: View {
     
     var body: some View {
         TabView {
-            Tab("General", systemImage: "gear") {
-                VStack(spacing: 20) {
-                    Text(LocalizedString.capitalized("settings"))
-                        .font(.largeTitle)
-                    
-                    if !self.users.isEmpty {
-                        Text("Signed as: \(self.users.first?.email ?? "")")
-                        Button("Sign out") {
-                            signOut(for: self.users.first!)
-                        }
-                    } else {
-                        GoogleSignInButton {
-                            signIn()
+            Tab(LocalizedString.capitalized("accounts"), systemImage: "at") {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Form {
+                            
                         }
                     }
-                }
+                    Spacer()
             }
             if !self.users.isEmpty {
                 Tab("Calendars", systemImage: "calendar") {
@@ -54,7 +47,7 @@ struct SettingsView: View {
             }
         }
         .scenePadding()
-        .frame(maxWidth: 350, minHeight: 250)
+        .frame(maxWidth: 350, minHeight: 100)
         .windowResizeBehavior(.enabled)
     }
     
@@ -66,3 +59,11 @@ struct SettingsView: View {
         GoogleAuthService.shared.signOut(user: user)
     }
 }
+
+//#Preview {
+//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+//    
+//    SettingsView()
+//        .environmentObject(appDelegate)
+//        .modelContainer(SwiftDataManager.shared.container)
+//}

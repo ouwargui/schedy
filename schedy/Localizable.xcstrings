@@ -11,6 +11,9 @@
         }
       }
     },
+    "accounts" : {
+
+    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -59,6 +62,7 @@
 
     },
     "General" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -81,6 +85,7 @@
 
     },
     "open-preferences" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -147,6 +152,7 @@
       }
     },
     "settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -162,7 +168,11 @@
         }
       }
     },
+    "Settings" : {
+
+    },
     "Sign out" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -179,6 +189,7 @@
       }
     },
     "Signed as: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -12,6 +12,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
+    var shouldQuit = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSAppleEventManager.shared()
@@ -32,6 +33,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         users?.forEach({ user in
             user.stopSync()
         })
+    }
+    
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        if self.shouldQuit {
+            return .terminateNow
+        } else {
+            NSApplication.shared.setActivationPolicy(.accessory)
+            return .terminateCancel
+        }
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        NSApplication.shared.setActivationPolicy(.regular)
+        return true
     }
     
     @objc
