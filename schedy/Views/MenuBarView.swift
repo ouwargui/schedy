@@ -32,24 +32,32 @@ struct MenuBarView: Scene {
         return formatter.string(from: self.tomorrow)
     }
     
+    var isThereAnyEvents: Bool {
+        return !self.viewModel.todaysEvents.isEmpty && !self.viewModel.tomorrowsEvents.isEmpty
+    }
+    
     var body: some Scene {
         MenuBarExtra(self.viewModel.currentEvent?.getMenuBarString(currentTime: self.viewModel.currentTime) ?? "schedy") {
-            Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted)):")
-
-            Divider()
-
-            ForEach(self.viewModel.todaysEvents) { event in
-                MenuBarItemView(event: event, isCurrentEvent: self.viewModel.currentEvent?.googleId == event.googleId)
-            }
-
-            Divider()
-
-            Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted)):")
-
-            Divider()
-
-            ForEach(self.viewModel.tomorrowsEvents) { event in
-                MenuBarItemView(event: event)
+            if self.isThereAnyEvents {
+                Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted)):")
+                
+                Divider()
+                
+                ForEach(self.viewModel.todaysEvents) { event in
+                    MenuBarItemView(event: event, isCurrentEvent: self.viewModel.currentEvent?.googleId == event.googleId)
+                }
+                
+                Divider()
+                
+                Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted)):")
+                
+                Divider()
+                
+                ForEach(self.viewModel.tomorrowsEvents) { event in
+                    MenuBarItemView(event: event)
+                }
+            } else {
+                Text("You don't have any events for now")
             }
 
             Divider()

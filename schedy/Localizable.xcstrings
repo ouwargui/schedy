@@ -285,6 +285,9 @@
     },
     "You don't have any accounts yet" : {
 
+    },
+    "You don't have any events for now" : {
+
     }
   },
   "version" : "1.0"
