@@ -14,6 +14,9 @@
     "accounts" : {
 
     },
+    "Accounts" : {
+
+    },
     "Advanced" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -49,6 +52,7 @@
       }
     },
     "Calendars" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -57,9 +61,6 @@
           }
         }
       }
-    },
-    "events" : {
-
     },
     "General" : {
       "extractionState" : "stale",
@@ -152,7 +153,6 @@
       }
     },
     "settings" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

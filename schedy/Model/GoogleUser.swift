@@ -18,6 +18,7 @@ class GoogleUser {
     @Transient private var calendarSyncManager: CalendarSyncManager {
         return CalendarSyncManager(user: self)
     }
+    @Transient var lastSyncedAt: Date?
     
     init(id: String, email: String, calendars: [GoogleCalendar] = []) {
         self.googleId = id
@@ -38,5 +39,16 @@ extension GoogleUser {
     
     func getSession() -> AuthSession {
         return SessionManager.shared.getSession(for: self.email)!
+    }
+    
+    func getLastSyncRelativeTime() -> String? {
+        if let lastSyncedAt = self.lastSyncedAt {
+            let formatter = RelativeDateTimeFormatter()
+            formatter.unitsStyle = .full
+            let relativeDate = formatter.localizedString(for: lastSyncedAt, relativeTo: Date.now)
+            return relativeDate
+        }
+        
+        return nil
     }
 }

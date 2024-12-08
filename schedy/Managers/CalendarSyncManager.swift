@@ -30,6 +30,7 @@ class CalendarSyncManager {
             await self.performCalendarSync()
             await self.performEventsSync()
             await self.deleteOldEvents()
+            self.user.lastSyncedAt = Date()
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { _ in
@@ -43,6 +44,8 @@ class CalendarSyncManager {
                 if self.timePassedSinceFirstSync >= 10_800 {
                     await self.deleteOldEvents()
                 }
+                
+                self.user.lastSyncedAt = Date()
             }
         }
     }

@@ -20,6 +20,9 @@ struct schedyApp: App {
         Window("Settings", id: "settings") {
             SettingsView()
         }
+        .commands {
+            SidebarCommands()
+        }
         .windowStyle(.titleBar)
         .environmentObject(appDelegate)
         .modelContainer(SwiftDataManager.shared.container)

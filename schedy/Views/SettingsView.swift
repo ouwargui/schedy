@@ -11,44 +11,36 @@ import GoogleSignIn
 import GoogleSignInSwift
 import SwiftData
 
+enum SettingsItem: String.LocalizationValue {
+    case accounts
+    case settings
+}
+
 struct SettingsView: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Query var users: [GoogleUser]
+    @State private var selectedItem: SettingsItem = .accounts
     
     var body: some View {
-        TabView {
-            Tab(LocalizedString.capitalized("accounts"), systemImage: "at") {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Form {
-                            
-                        }
-                    }
-                    Spacer()
-            }
-            if !self.users.isEmpty {
-                Tab("Calendars", systemImage: "calendar") {
-                    let user = self.users.first!
-                    List(user.calendars) { calendar in
-                        Text(calendar.name)
-                    }
+        NavigationSplitView {
+            List(selection: self.$selectedItem) {
+                NavigationLink(value: SettingsItem.accounts) {
+                    Label("Accounts", systemImage: "at")
+                }
+                NavigationLink(value: SettingsItem.settings) {
+                    Label("Settings", systemImage: "gear")
                 }
             }
-            
-            if !self.users.isEmpty {
-                Tab("events", systemImage: "calendar") {
-                    let user = self.users.first!
-                    let events = user.calendars.flatMap(\.events)
-                    List(events) { event in
-                        Text(event.title)
-                    }
-                }
+        } detail: {
+            switch self.selectedItem {
+            case .accounts:
+                AccountsView()
+            case .settings:
+                Text("settings")
             }
         }
-        .scenePadding()
-        .frame(maxWidth: 350, minHeight: 100)
-        .windowResizeBehavior(.enabled)
+        .navigationTitle(LocalizedString.capitalized(self.selectedItem.rawValue))
+        .frame(width: 500)
     }
     
     private func signIn() {
@@ -60,10 +52,10 @@ struct SettingsView: View {
     }
 }
 
-//#Preview {
-//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-//    
-//    SettingsView()
-//        .environmentObject(appDelegate)
-//        .modelContainer(SwiftDataManager.shared.container)
-//}
+#Preview {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    SettingsView()
+        .environmentObject(appDelegate)
+        .modelContainer(SwiftDataManager.shared.container)
+}
