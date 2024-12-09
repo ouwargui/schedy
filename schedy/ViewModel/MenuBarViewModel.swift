@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftData
+import KeyboardShortcuts
+import SwiftUI
 
 @MainActor
 class MenuBarViewModel: ObservableObject {
@@ -17,6 +19,14 @@ class MenuBarViewModel: ObservableObject {
     private var timer: Timer?
     
     init() {
+        KeyboardShortcuts
+            .onKeyUp(for: .openEventUrl) { [self] in
+                print("got open event url shortcut")
+                if let currentEvent = self.currentEvent {
+                    NSWorkspace.shared.open(currentEvent.getLinkDestination() ?? currentEvent.getHtmlLinkWithAuthUser())
+                }
+            }
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             Task {
                 await self.update()

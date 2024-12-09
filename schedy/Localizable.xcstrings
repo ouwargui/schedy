@@ -60,6 +60,9 @@
     "All calendars and events related to this account will be removed too." : {
 
     },
+    "All users, calendars and events will be deleted" : {
+
+    },
     "Calendars" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -72,6 +75,12 @@
       }
     },
     "Cancel" : {
+
+    },
+    "Clear app data" : {
+
+    },
+    "Clear app data?" : {
 
     },
     "General" : {
@@ -101,6 +110,9 @@
 
     },
     "Not synced" : {
+
+    },
+    "Open event URL" : {
 
     },
     "open-preferences" : {

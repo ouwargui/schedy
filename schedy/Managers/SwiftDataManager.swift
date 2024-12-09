@@ -35,7 +35,10 @@ struct SwiftDataManager {
         self.save()
     }
     
-    func delete<T: PersistentModel>(model: T.Type, where predicate: Predicate<T>) throws {
+    /**
+     If called without Predicate, everything will be deleted for the model
+     */
+    func delete<T: PersistentModel>(model: T.Type, where predicate: Predicate<T>? = nil) throws {
         try self.container.mainContext.delete(model: model, where: predicate)
         self.save()
     }

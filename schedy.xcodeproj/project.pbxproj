@@ -11,6 +11,7 @@
 		A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */; };
 		A1AE79BE2D06B7E600DD7AA7 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BD2D06B7E600DD7AA7 /* AppAuth */; };
 		A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BF2D06B7E600DD7AA7 /* AppAuthCore */; };
+		A1AE79C72D06C6DB00DD7AA7 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79C62D06C6DB00DD7AA7 /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 			files = (
 				A1AE79BE2D06B7E600DD7AA7 /* AppAuth in Frameworks */,
 				A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */,
+				A1AE79C72D06C6DB00DD7AA7 /* KeyboardShortcuts in Frameworks */,
 				A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */,
 				A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */,
 			);
@@ -93,6 +95,7 @@
 				A17459542D011FEC0057BB31 /* GTMAppAuth */,
 				A1AE79BD2D06B7E600DD7AA7 /* AppAuth */,
 				A1AE79BF2D06B7E600DD7AA7 /* AppAuthCore */,
+				A1AE79C62D06C6DB00DD7AA7 /* KeyboardShortcuts */,
 			);
 			productName = schedy;
 			productReference = A18F75F32CF935C900DC952A /* schedy.app */;
@@ -128,6 +131,7 @@
 				A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */,
 				A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */,
 				A1AE79BC2D06B7E600DD7AA7 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
+				A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A18F75F42CF935C900DC952A /* Products */;
@@ -388,6 +392,14 @@
 				minimumVersion = 1.7.6;
 			};
 		};
+		A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -410,6 +422,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A1AE79BC2D06B7E600DD7AA7 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
 			productName = AppAuthCore;
+		};
+		A1AE79C62D06C6DB00DD7AA7 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -17,7 +17,7 @@ struct schedyApp: App {
             .modelContainer(SwiftDataManager.shared.container)
         
         Window("Settings", id: "settings") {
-            SettingsView()
+            MainWindowView()
         }
         .commands {
             SidebarCommands()

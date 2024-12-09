@@ -2,54 +2,55 @@
 //  SettingsView.swift
 //  schedy
 //
-//  Created by Guilherme D'Alessandro on 29/11/24.
+//  Created by Guilherme D'Alessandro on 09/12/24.
 //
 
-import Foundation
 import SwiftUI
-import SwiftData
-
-enum SettingsItem: String.LocalizationValue {
-    case accounts
-    case settings
-}
+import KeyboardShortcuts
 
 struct SettingsView: View {
-    @Query var events: [GoogleEvent]
-    @State private var selectedItem: SettingsItem = .accounts
+    @State private var isShowingClearAppDataAlert = false
     
     var body: some View {
-        NavigationSplitView {
-            List(selection: self.$selectedItem) {
-                NavigationLink(value: SettingsItem.accounts) {
-                    Label("Accounts", systemImage: "at")
-                }
-                NavigationLink(value: SettingsItem.settings) {
-                    Label("Settings", systemImage: "gear")
-                }
-            }
-        } detail: {
-            switch self.selectedItem {
-            case .accounts:
-                AccountsView()
-                    .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
-            case .settings:
-                List(self.events) { event in
-                    VStack {
-                        Text(event.title)
-                        Text(event.calendar.account.email)
+        Spacer()
+        HStack {
+            Spacer()
+            Form {
+                KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
+                
+                Spacer()
+                
+                Button("Clear app data", action: self.showClearAppDataAlert)
+                    .alert("Clear app data?", isPresented: self.$isShowingClearAppDataAlert) {
+                        Button("Clear app data", role: .destructive, action: self.clearAppData)
+                        Button("Cancel", role: .cancel, action: self.hideClearAppDataAlert)
+                    } message: {
+                        Text("All users, calendars and events will be deleted")
                     }
-                }
             }
         }
-        .navigationTitle(LocalizedString.capitalized(self.selectedItem.rawValue))
+        .padding(10)
+
+        Spacer()
+    }
+    
+    private func hideClearAppDataAlert() {
+        self.isShowingClearAppDataAlert = false
+    }
+    
+    private func showClearAppDataAlert() {
+        self.isShowingClearAppDataAlert = true
+    }
+    
+    private func clearAppData() {
+        try? SwiftDataManager.shared.delete(model: GoogleUser.self, where: nil)
     }
 }
 
 //#Preview {
 //    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 //    
-//    SettingsView()
+//    MainWindowView()
 //        .environmentObject(appDelegate)
 //        .modelContainer(SwiftDataManager.shared.container)
 //}

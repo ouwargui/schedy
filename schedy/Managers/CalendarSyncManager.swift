@@ -131,10 +131,10 @@ class CalendarSyncManager {
             
             if event.status == "cancelled" {
                 self.handleCanceledEvent(event: event, calendar: calendar)
-                return
+                continue
             } else {
                 self.handleChangedEvent(event: event, calendar: calendar)
-                return
+                continue
             }
         }
     }
