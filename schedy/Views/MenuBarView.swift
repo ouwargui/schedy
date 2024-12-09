@@ -33,7 +33,7 @@ struct MenuBarView: Scene {
     }
     
     var isThereAnyEvents: Bool {
-        return !self.viewModel.todaysEvents.isEmpty && !self.viewModel.tomorrowsEvents.isEmpty
+        return !self.viewModel.todaysEvents.isEmpty || !self.viewModel.tomorrowsEvents.isEmpty
     }
     
     var body: some Scene {

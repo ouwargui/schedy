@@ -17,7 +17,7 @@ enum SettingsItem: String.LocalizationValue {
 }
 
 struct SettingsView: View {
-    @Query var users: [GoogleUser]
+    @Query var events: [GoogleEvent]
     @State private var selectedItem: SettingsItem = .accounts
     
     var body: some View {
@@ -36,7 +36,9 @@ struct SettingsView: View {
                 AccountsView()
                     .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             case .settings:
-                Text("settings")
+                List(self.events) { event in
+                    Text(event.title)
+                }
             }
         }
         .navigationTitle(LocalizedString.capitalized(self.selectedItem.rawValue))

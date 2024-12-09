@@ -15,7 +15,7 @@ class GoogleUser {
     var email: String
     var isSessionActive: Bool
     @Relationship(deleteRule: .cascade, inverse: \GoogleCalendar.account) var calendars: [GoogleCalendar]
-    @Transient private var calendarSyncManager: CalendarSyncManager {
+    @Transient @MainActor private var calendarSyncManager: CalendarSyncManager {
         return CalendarSyncManager(user: self)
     }
     @Transient var lastSyncedAt: Date?
@@ -29,10 +29,12 @@ class GoogleUser {
 }
 
 extension GoogleUser {
+    @MainActor
     func startSync() {
         self.calendarSyncManager.startSync()
     }
     
+    @MainActor
     func stopSync() {
         self.calendarSyncManager.stopSync()
     }

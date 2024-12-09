@@ -10,6 +10,7 @@ import SwiftData
 import GTMAppAuth
 import GoogleAPIClientForREST_Calendar
 
+@MainActor
 class CalendarSyncManager {
     private var eventSyncTokens = [String: String]()
     private var calendarSyncToken: String?
@@ -29,20 +30,22 @@ class CalendarSyncManager {
             print("started syncing")
             await self.performCalendarSync()
             await self.performEventsSync()
-            await self.deleteOldEvents()
+            self.deleteOldEvents()
             self.user.lastSyncedAt = Date()
         }
         
-        timer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { _ in
+        let TIMER_INTERVAL: Double = 30
+        
+        timer = Timer.scheduledTimer(withTimeInterval: TIMER_INTERVAL, repeats: true) { _ in
             print("syncing")
-            Task {
+            Task { @MainActor in
                 await self.performCalendarSync()
                 await self.performEventsSync()
                 
-                self.timePassedSinceFirstSync += 600
+                self.timePassedSinceFirstSync += TIMER_INTERVAL
                 
                 if self.timePassedSinceFirstSync >= 10_800 {
-                    await self.deleteOldEvents()
+                    self.deleteOldEvents()
                 }
                 
                 self.user.lastSyncedAt = Date()
@@ -63,7 +66,7 @@ class CalendarSyncManager {
         
         self.calendarSyncToken = calendars.nextSyncToken
         
-        await self.processCalendars(calendars.items ?? [])
+        self.processCalendars(calendars.items ?? [])
     }
     
     private func performEventsSync() async {
@@ -71,14 +74,14 @@ class CalendarSyncManager {
         
         await withTaskGroup(of: Void.self) { group in
             for calendar in calendars {
-                group.addTask {
+                group.addTask { @MainActor in
                     guard let events = try? await GoogleCalendarService.shared.fetchEvents(for: calendar.googleId, fetcherAuthorizer: self.authorizer, syncToken: self.eventSyncTokens[calendar.googleId]) else {
                         return
                     }
                     
                     self.eventSyncTokens[calendar.googleId] = events.nextSyncToken
                     
-                    await self.processEvents(events.items ?? [], for: calendar)
+                    self.processEvents(events.items ?? [], for: calendar)
                 }
             }
             
