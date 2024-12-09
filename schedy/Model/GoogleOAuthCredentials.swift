@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import AppAuth
+import AppAuthCore
 
 class GoogleOAuthCredentials {
     static let clientId: String = {

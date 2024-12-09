@@ -7,8 +7,6 @@
 
 import Foundation
 import SwiftUI
-import GoogleSignIn
-import GoogleSignInSwift
 import SwiftData
 
 enum SettingsItem: String.LocalizationValue {
@@ -37,7 +35,10 @@ struct SettingsView: View {
                     .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             case .settings:
                 List(self.events) { event in
-                    Text(event.title)
+                    VStack {
+                        Text(event.title)
+                        Text(event.calendar.account.email)
+                    }
                 }
             }
         }

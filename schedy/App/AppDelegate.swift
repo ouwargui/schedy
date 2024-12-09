@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import AppAuth
+import AppAuthCore
 import SwiftData
 import SwiftUI
 
