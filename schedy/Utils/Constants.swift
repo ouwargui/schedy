@@ -9,5 +9,5 @@ import Foundation
 import KeyboardShortcuts
 
 extension KeyboardShortcuts.Name {
-    static let openEventUrl = Self("openEventUrl")
+    static let openEventUrl = Self("openEventUrl", default: .init(.m, modifiers: [.command, .shift]))
 }
