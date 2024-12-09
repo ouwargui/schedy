@@ -39,14 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if self.shouldQuit {
             return .terminateNow
         } else {
-            NSApplication.shared.setActivationPolicy(.accessory)
+            NSApplication.shared.setActivationPolicy(.prohibited)
             return .terminateCancel
         }
-    }
-    
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        NSApplication.shared.setActivationPolicy(.regular)
-        return true
     }
     
     @objc

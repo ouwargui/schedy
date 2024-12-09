@@ -22,6 +22,7 @@ struct schedyApp: App {
         .commands {
             SidebarCommands()
         }
+        .windowLevel(.normal)
         .windowResizability(.contentSize)
         .windowStyle(.titleBar)
         .environmentObject(appDelegate)

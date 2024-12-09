@@ -10,20 +10,16 @@ import SwiftUI
 
 struct MenuBarItemView: View {
     var event: GoogleEvent
-    var isCurrentEvent: Bool? = false
     
     var body: some View {
         let label = "\(event.getStartHour()) - \(event.getEndHour())   \(event.title)"
         
         if (event.hasPassed()) {
             Text(label)
+                .font(Font.system(size: 12).monospacedDigit())
         } else {
-            if (self.isCurrentEvent == true) {
-                Link(label, destination: event.getLinkDestination() ?? event.getHtmlLinkWithAuthUser())
-                    .keyboardShortcut("j", modifiers: [.command, .shift])
-            } else {
-                Link(label, destination: event.getHtmlLinkWithAuthUser())
-            }
+            Link(label, destination: event.getLinkDestination() ?? event.getHtmlLinkWithAuthUser())
+                .font(Font.system(size: 12).monospacedDigit())
         }
     }
 }

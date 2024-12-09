@@ -15,7 +15,7 @@ class GoogleCalendarService {
     
     func fetchEvents(for calendarId: String, fetcherAuthorizer: AuthSession, syncToken: String?) async throws -> GTLRCalendar_Events {
         let calendar = Calendar.current
-        let startDate = Date()
+        let startDate = calendar.date(byAdding: .hour, value: -3, to: Date())!
         let nextDay = calendar.date(byAdding: .day, value: 2, to: startDate)!
         let endDate = calendar.startOfDay(for: nextDay)
         
@@ -25,6 +25,7 @@ class GoogleCalendarService {
         query.orderBy = kGTLRCalendarOrderByStartTime
         query.singleEvents = true
         query.syncToken = syncToken
+        query.showDeleted = true
         query.maxResults = 20
         
         service.authorizer = fetcherAuthorizer

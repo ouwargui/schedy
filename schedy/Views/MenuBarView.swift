@@ -32,6 +32,17 @@ struct MenuBarView: Scene {
         return formatter.string(from: self.tomorrow)
     }
     
+    var todaysEventsWithoutCurrent: [GoogleEvent] {
+        let currentEventGoogleId = self.viewModel.currentEvent?.googleId ?? ""
+        if let eventsWithouCurrent = try? self.viewModel.todaysEvents.filter(#Predicate<GoogleEvent> {
+            $0.googleId != currentEventGoogleId
+        }) {
+            return eventsWithouCurrent
+        }
+        
+        return self.viewModel.todaysEvents
+    }
+    
     var isThereAnyEvents: Bool {
         return !self.viewModel.todaysEvents.isEmpty || !self.viewModel.tomorrowsEvents.isEmpty
     }
@@ -39,22 +50,26 @@ struct MenuBarView: Scene {
     var body: some Scene {
         MenuBarExtra(self.viewModel.currentEvent?.getMenuBarString(currentTime: self.viewModel.currentTime) ?? "schedy") {
             if self.isThereAnyEvents {
-                Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted)):")
-                
-                Divider()
-                
-                ForEach(self.viewModel.todaysEvents) { event in
-                    MenuBarItemView(event: event, isCurrentEvent: self.viewModel.currentEvent?.googleId == event.googleId)
+                if !self.todaysEventsWithoutCurrent.isEmpty {
+                    Text("\(LocalizedString.capitalized("today")) (\(self.todayFormatted)):")
+                    
+                    Divider()
+                    
+                    ForEach(self.todaysEventsWithoutCurrent) { event in
+                        MenuBarItemView(event: event)
+                    }
+                    
+                    Divider()
                 }
                 
-                Divider()
-                
-                Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted)):")
-                
-                Divider()
-                
-                ForEach(self.viewModel.tomorrowsEvents) { event in
-                    MenuBarItemView(event: event)
+                if !self.viewModel.tomorrowsEvents.isEmpty {
+                    Text("\(LocalizedString.capitalized("tomorrow")) (\(self.tomorrowFormatted)):")
+                    
+                    Divider()
+                    
+                    ForEach(self.viewModel.tomorrowsEvents) { event in
+                        MenuBarItemView(event: event)
+                    }
                 }
             } else {
                 Text("You don't have any events for now")
