@@ -45,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if self.shouldQuit {
             return .terminateNow
         } else {
-            NSApplication.shared.setActivationPolicy(.prohibited)
+            NSApplication.shared.setActivationPolicy(.accessory)
             return .terminateCancel
         }
     }
