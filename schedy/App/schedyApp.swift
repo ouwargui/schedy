@@ -20,9 +20,12 @@ struct schedyApp: App {
             MainWindowView()
         }
         .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: self.appDelegate.updaterController.updater)
+            }
+            
             SidebarCommands()
         }
-        .windowLevel(.normal)
         .windowResizability(.contentSize)
         .windowStyle(.titleBar)
         .environmentObject(appDelegate)

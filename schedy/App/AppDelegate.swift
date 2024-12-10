@@ -9,10 +9,16 @@ import AppKit
 import AppAuthCore
 import SwiftData
 import SwiftUI
+import Sparkle
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
     var shouldQuit = false
+    let updaterController: SPUStandardUpdaterController
+    
+    override init() {
+        self.updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSAppleEventManager.shared()
