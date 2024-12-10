@@ -8,7 +8,7 @@
             <sparkle:version>3</sparkle:version>
             <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14</sparkle:minimumSystemVersion>
-            <enclosure url="https://ouwargui.github.io./schedy/Schey-test.dmg" length="1720740" type="application/octet-stream" sparkle:edSignature="LE+ufmS+lNRTSmclmRdH8c2DJdPwXKJhH4xo6yY09vEBrlZWUt/aeu3KARrz9CQ+ebmbxcBSk2mpVZ1V49i9Bw=="/>
+            <enclosure url="https://github.com/ouwargui/schedy/releases/latest/download/SchedyInstaller.dmg" length="1720740" type="application/octet-stream" sparkle:edSignature="LE+ufmS+lNRTSmclmRdH8c2DJdPwXKJhH4xo6yY09vEBrlZWUt/aeu3KARrz9CQ+ebmbxcBSk2mpVZ1V49i9Bw=="/>
         </item>
     </channel>
 </rss>
