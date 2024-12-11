@@ -163,10 +163,14 @@ class CalendarSyncManager {
     
     @MainActor
     private func deleteOldEvents() {
-        let thresholdDate = Calendar.current.date(byAdding: .hour, value: -3, to: Date())!
+        let thresholdDate = Calendar.current.startOfDay(for: Date())
+        let descriptor = FetchDescriptor<GoogleEvent>(
+            predicate: #Predicate { event in
+                event.end < thresholdDate
+            }
+        )
         
-        try? SwiftDataManager.shared.delete(model: GoogleEvent.self, where: #Predicate { event in
-            event.end < thresholdDate
-        })
+        let eventsToBeDeleted = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
+        eventsToBeDeleted?.forEach(SwiftDataManager.shared.delete)
     }
 }
