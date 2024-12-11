@@ -1,16 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ (%@):" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ (%2$@):"
-          }
-        }
-      }
-    },
     "accounts" : {
 
     },
@@ -86,6 +76,9 @@
     "Clear app data?" : {
 
     },
+    "earlier today" : {
+
+    },
     "General" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -112,7 +105,13 @@
     "left" : {
 
     },
+    "next" : {
+
+    },
     "Not synced" : {
+
+    },
+    "now" : {
 
     },
     "Open event URL" : {

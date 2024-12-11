@@ -16,10 +16,11 @@ struct MenuBarItemView: View {
         
         if (event.hasPassed()) {
             Text(label)
-                .font(Font.system(size: 12).monospacedDigit())
+        } else if (event.isHappening()) {
+            Link(label, destination: event.getLinkDestination() ?? event.getHtmlLinkWithAuthUser())
+                .globalKeyboardShortcut(.openEventUrl)
         } else {
             Link(label, destination: event.getLinkDestination() ?? event.getHtmlLinkWithAuthUser())
-                .font(Font.system(size: 12).monospacedDigit())
         }
     }
 }

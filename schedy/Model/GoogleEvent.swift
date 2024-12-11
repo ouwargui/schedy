@@ -44,6 +44,30 @@ class GoogleEvent {
 
 // predicates
 extension GoogleEvent {
+    static var todaysNextPredicate
+    : Predicate<GoogleEvent> {
+        let now = Date()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
+        let startOfTomorrow = Calendar.current.startOfDay(for: tomorrow)
+        
+        return #Predicate<GoogleEvent> {
+            $0.calendar.isEnabled &&
+            $0.start >= now &&
+            $0.start < startOfTomorrow
+        }
+    }
+    
+    static var pastPredicate: Predicate<GoogleEvent> {
+        let now = Date()
+        let startOfDay = Calendar.current.startOfDay(for: now)
+        
+        return #Predicate<GoogleEvent> {
+            $0.calendar.isEnabled &&
+            $0.end < now &&
+            $0.start >= startOfDay
+        }
+    }
+    
     static var currentsPredicate: Predicate<GoogleEvent> {
         let now = Date()
         
@@ -78,6 +102,10 @@ extension GoogleEvent {
 }
 
 extension GoogleEvent {
+    func isHappening() -> Bool {
+        self.start < Date() && self.end > Date()
+    }
+    
     func hasPassed() -> Bool {
         self.end < Date()
     }
@@ -160,7 +188,7 @@ private extension GoogleEvent {
     func timeUntilEnd(to toEnd: Date) -> String {
         let calendar = Calendar.current
         
-        let components = calendar.dateComponents([.day, .hour, .minute], from: self.end, to: toEnd)
+        let components = calendar.dateComponents([.day, .hour, .minute, .second], from: self.end, to: toEnd)
         
         var result = ""
         if let days = components.day, days < 0 {
@@ -173,6 +201,10 @@ private extension GoogleEvent {
         
         if let minutes = components.minute, minutes < 0 {
             result += "\(abs(minutes))m"
+        } else {
+            if let seconds = components.second {
+                result += "\(abs(seconds))s"
+            }
         }
         
         return result.trimmingCharacters(in: .whitespaces)
@@ -194,6 +226,10 @@ private extension GoogleEvent {
         
         if let minutes = components.minute, minutes > 0 {
             result += "\(abs(minutes))m"
+        } else {
+            if let seconds = components.second {
+                result += "\(abs(seconds))s"
+            }
         }
         
         return result.trimmingCharacters(in: .whitespaces)
