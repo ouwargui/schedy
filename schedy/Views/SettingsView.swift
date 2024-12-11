@@ -11,12 +11,31 @@ import KeyboardShortcuts
 struct SettingsView: View {
     @State private var isShowingClearAppDataAlert = false
     
+    var appVersion: String {
+        if let releaseVersion = Bundle.main.releaseVersion, let buildVersion = Bundle.main.buildVersion {
+            return "\(releaseVersion).\(buildVersion)"
+        }
+        
+        return ""
+    }
+    
     var body: some View {
         Spacer()
-        HStack {
+        VStack {
+            HStack {
+                Spacer()
+                
+                Form {
+                    KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
+                }
+            }
+            
             Spacer()
-            Form {
-                KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
+            
+            HStack {
+                Text("Schedy \(self.appVersion)")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
                 
                 Spacer()
                 

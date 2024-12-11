@@ -2,15 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SUFeedURL</key>
-	<string>https://ouwargui.github.io./schedy/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>tckWNC2xZo2Qig1VL7y9VfYOkWYvh9iPqSeS5wwmP2E=</string>
-	<key>SUEnableInstallerLauncherService</key>
-	<true/>
 	<key>GIDClientID</key>
 	<string>135978216728-lmd9gle3f9gnv0cvqsjcfjr4r6qsusth.apps.googleusercontent.com</string>
 	<key>GIDRedirectURI</key>
 	<string>com.googleusercontent.apps.135978216728-lmd9gle3f9gnv0cvqsjcfjr4r6qsusth:/oauthredirect</string>
+	<key>SUEnableInstallerLauncherService</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://ouwargui.github.io./schedy/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>tckWNC2xZo2Qig1VL7y9VfYOkWYvh9iPqSeS5wwmP2E=</string>
 </dict>
 </plist>
