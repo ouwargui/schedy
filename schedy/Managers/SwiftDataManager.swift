@@ -21,8 +21,8 @@ struct SwiftDataManager {
         self.container = try! ModelContainer(for: schema, configurations: [configuration])
     }
     
-    func fetchAll<T: PersistentModel>(fetchDescriptor: FetchDescriptor<T>) -> [T]? {
-        return try? self.container.mainContext.fetch(fetchDescriptor)
+    func fetchAll<T: PersistentModel>(fetchDescriptor: FetchDescriptor<T>) -> Result<[T], Error> {
+        return Result { try self.container.mainContext.fetch(fetchDescriptor) }
     }
     
     func insert<T: PersistentModel>(model: T) {
