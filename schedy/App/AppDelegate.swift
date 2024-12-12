@@ -10,6 +10,7 @@ import AppAuthCore
 import SwiftData
 import SwiftUI
 import Sparkle
+import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
@@ -21,22 +22,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        self.setEventHandlers()
+        self.startSyncingUsers()
+    }
+    
+    @MainActor
+    private func startSyncingUsers() {
+        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        
+        if case .failure(let error) = result {
+            SentrySDK.capture(error: error)
+            return
+        }
+        
+        let users = try! result.get()
+        users.forEach({ user in
+            user.startSync()
+        })
+    }
+    
+    private func setEventHandlers() {
         NSAppleEventManager.shared()
             .setEventHandler(self,
                              andSelector: #selector(self.handleUrlEvent(getURLEvent:replyEvent:)),
                              forEventClass: AEEventClass(kInternetEventClass),
                              andEventID: AEEventID(kAEGetURL)
             )
-        
-        let users = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
-        users?.forEach({ user in
-            user.startSync()
-        })
     }
     
     func applicationWillTerminate(_ notification: Notification) {
-        let users = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
-        users?.forEach({ user in
+        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        
+        if case .failure(let error) = result {
+            SentrySDK.capture(error: error)
+            return
+        }
+        
+        let users = try! result.get()
+        users.forEach({ user in
             user.stopSync()
         })
     }

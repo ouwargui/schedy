@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 import GTMAppAuth
 import GoogleAPIClientForREST_Calendar
+import Sentry
 
 @MainActor
 class CalendarSyncManager {
@@ -170,7 +171,14 @@ class CalendarSyncManager {
             }
         )
         
-        let eventsToBeDeleted = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        eventsToBeDeleted?.forEach(SwiftDataManager.shared.delete)
+        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
+        
+        if case .failure(let failure) = result {
+            SentrySDK.capture(error: failure)
+            return
+        }
+        
+        let eventsToBeDeleted = try! result.get()
+        eventsToBeDeleted.forEach(SwiftDataManager.shared.delete)
     }
 }

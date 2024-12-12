@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A17459542D011FEC0057BB31 /* GTMAppAuth */; };
+		A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BC2D0A8E3400475CCA /* Sentry */; };
+		A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */; };
 		A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */; };
 		A1AE79BE2D06B7E600DD7AA7 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BD2D06B7E600DD7AA7 /* AppAuth */; };
 		A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BF2D06B7E600DD7AA7 /* AppAuthCore */; };
@@ -50,6 +52,8 @@
 				A1AE79C72D06C6DB00DD7AA7 /* KeyboardShortcuts in Frameworks */,
 				A1B774E02D080D9F005AB4C2 /* Sparkle in Frameworks */,
 				A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */,
+				A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */,
+				A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */,
 				A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +103,8 @@
 				A1AE79BF2D06B7E600DD7AA7 /* AppAuthCore */,
 				A1AE79C62D06C6DB00DD7AA7 /* KeyboardShortcuts */,
 				A1B774DF2D080D9F005AB4C2 /* Sparkle */,
+				A18007BC2D0A8E3400475CCA /* Sentry */,
+				A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */,
 			);
 			productName = schedy;
 			productReference = A18F75F32CF935C900DC952A /* schedy.app */;
@@ -136,6 +142,7 @@
 				A1AE79BC2D06B7E600DD7AA7 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
 				A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				A1B774DE2D080D9F005AB4C2 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A18F75F42CF935C900DC952A /* Products */;
@@ -396,6 +403,14 @@
 				minimumVersion = 4.1.1;
 			};
 		};
+		A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.41.0;
+			};
+		};
 		A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest";
@@ -435,6 +450,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */;
 			productName = GTMAppAuth;
+		};
+		A18007BC2D0A8E3400475CCA /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
 		};
 		A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */ = {
 			isa = XCSwiftPackageProductDependency;

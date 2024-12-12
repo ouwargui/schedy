@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import SentrySwiftUI
 
 struct MenuBarView: Scene {
     @Environment(\.openWindow) private var openWindow
