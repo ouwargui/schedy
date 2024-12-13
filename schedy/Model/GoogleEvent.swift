@@ -162,7 +162,7 @@ extension GoogleEvent {
         let isOnEvent = self.start <= currentTime && self.end >= currentTime
         let time = isOnEvent ? self.getTimeToEnd(to: currentTime) : self.getTimeUntilEvent(from: currentTime)
         let timeToEndString = "\(time) \(LocalizedString.localized("left"))"
-        let timeUntilString = "\(LocalizedString.localized("in")) \(time))"
+        let timeUntilString = "\(LocalizedString.localized("in")) \(time)"
         let stringToUse = isOnEvent ? timeToEndString : timeUntilString
 
         let result = "\(self.title) (\(stringToUse))"
