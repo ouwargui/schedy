@@ -13,6 +13,7 @@ import Sentry
 
 @MainActor
 class CalendarSyncManager {
+    private let TIMER_INTERVAL: Double = 30
     private var eventSyncTokens = [String: String]()
     private var calendarSyncToken: String?
     private var timer: Timer?
@@ -21,11 +22,11 @@ class CalendarSyncManager {
         return user.getSession()
     }
     private var timePassedSinceFirstSync: TimeInterval = 0
-    
+
     init(user: GoogleUser) {
         self.user = user
     }
-    
+
     func startSync() {
         Task {
             print("started syncing")
@@ -34,66 +35,71 @@ class CalendarSyncManager {
             self.deleteOldEvents()
             self.user.lastSyncedAt = Date()
         }
-        
-        let TIMER_INTERVAL: Double = 30
-        
-        timer = Timer.scheduledTimer(withTimeInterval: TIMER_INTERVAL, repeats: true) { _ in
+
+        timer = Timer.scheduledTimer(withTimeInterval: self.TIMER_INTERVAL, repeats: true) { [weak self] _ in
             print("syncing")
             Task { @MainActor in
-                await self.performCalendarSync()
-                await self.performEventsSync()
-                
-                self.timePassedSinceFirstSync += TIMER_INTERVAL
-                
-                if self.timePassedSinceFirstSync >= 10_800 {
-                    self.deleteOldEvents()
+                await self?.performCalendarSync()
+                await self?.performEventsSync()
+
+                self?.timePassedSinceFirstSync += self?.TIMER_INTERVAL ?? 0
+
+                if self?.timePassedSinceFirstSync ?? 0 >= 10_800 {
+                    self?.deleteOldEvents()
                 }
-                
-                self.user.lastSyncedAt = Date()
+
+                self?.user.lastSyncedAt = Date()
             }
         }
     }
-    
+
     func stopSync() {
         print("stopped syncing")
         timer?.invalidate()
         timer = nil
     }
-    
+
     private func performCalendarSync() async {
-        guard let calendars = try? await GoogleCalendarService.shared.fetchUserCalendars(fetcherAuthorizer: self.authorizer, syncToken: self.calendarSyncToken) else {
+        guard let calendars = try? await GoogleCalendarService.shared.fetchUserCalendars(
+            fetcherAuthorizer: self.authorizer,
+            syncToken: self.calendarSyncToken
+        ) else {
             return
         }
-        
+
         self.calendarSyncToken = calendars.nextSyncToken
-        
+
         self.processCalendars(calendars.items ?? [])
     }
-    
+
     private func performEventsSync() async {
         let calendars = self.user.calendars
-        
+
         await withTaskGroup(of: Void.self) { group in
             for calendar in calendars {
                 group.addTask { @MainActor in
-                    guard let events = try? await GoogleCalendarService.shared.fetchEvents(for: calendar.googleId, fetcherAuthorizer: self.authorizer, syncToken: self.eventSyncTokens[calendar.googleId]) else {
+                    guard let events = try? await GoogleCalendarService.shared.fetchEvents(
+                        for: calendar.googleId,
+                        fetcherAuthorizer: self.authorizer,
+                        syncToken: self.eventSyncTokens[calendar.googleId]
+                    ) else {
                         return
                     }
-                    
+
                     self.eventSyncTokens[calendar.googleId] = events.nextSyncToken
-                    
+
                     self.processEvents(events.items ?? [], for: calendar)
                 }
             }
-            
+
             await group.waitForAll()
         }
     }
-    
+
     @MainActor
     private func processCalendars(_ calendars: [GTLRCalendar_CalendarListEntry]) {
         let storedCalendars = self.user.calendars
-        
+
         for calendar in calendars {
             if calendar.deleted == true {
                 self.handleCalendarDeleted(storedCalendars: storedCalendars, calendar: calendar)
@@ -102,7 +108,7 @@ class CalendarSyncManager {
             }
         }
     }
-    
+
     @MainActor
     private func handleCalendarDeleted(storedCalendars: [GoogleCalendar], calendar: GTLRCalendar_CalendarListEntry) {
         if let storedCalendar = storedCalendars.first(where: {
@@ -111,7 +117,7 @@ class CalendarSyncManager {
             SwiftDataManager.shared.delete(model: storedCalendar)
         }
     }
-    
+
     @MainActor
     private func handleChangedCalendar(storedCalendars: [GoogleCalendar], calendar: GTLRCalendar_CalendarListEntry) {
         if let storedCalendar = storedCalendars.first(where: { $0.googleId == calendar.identifier }) {
@@ -122,14 +128,14 @@ class CalendarSyncManager {
             SwiftDataManager.shared.insert(model: newCalendar)
         }
     }
-    
+
     @MainActor
     private func processEvents(_ events: [GTLRCalendar_Event], for calendar: GoogleCalendar) {
         for event in events {
             if event.start?.dateTime == nil || event.end?.dateTime == nil {
                 continue
             }
-            
+
             if event.status == "cancelled" {
                 self.handleCanceledEvent(event: event, calendar: calendar)
                 continue
@@ -139,7 +145,7 @@ class CalendarSyncManager {
             }
         }
     }
-    
+
     @MainActor
     private func handleCanceledEvent(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
         if let storedEvent = calendar.events.first(where: {
@@ -148,7 +154,7 @@ class CalendarSyncManager {
             SwiftDataManager.shared.delete(model: storedEvent)
         }
     }
-    
+
     @MainActor
     private func handleChangedEvent(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
         if let storedEvent = calendar.events.first(where: { $0.googleId == event.identifier }) {
@@ -158,10 +164,10 @@ class CalendarSyncManager {
             let newEvent = GoogleEvent(event: event, calendar: calendar)
             SwiftDataManager.shared.insert(model: newEvent)
         }
-        
+
         return
     }
-    
+
     @MainActor
     private func deleteOldEvents() {
         let thresholdDate = Calendar.current.startOfDay(for: Date())
@@ -170,15 +176,11 @@ class CalendarSyncManager {
                 event.end < thresholdDate
             }
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let failure) = result {
-            SentrySDK.capture(error: failure)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             return
         }
-        
-        let eventsToBeDeleted = try! result.get()
-        eventsToBeDeleted.forEach(SwiftDataManager.shared.delete)
+
+        events.forEach(SwiftDataManager.shared.delete)
     }
 }

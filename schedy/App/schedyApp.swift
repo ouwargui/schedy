@@ -9,14 +9,14 @@ import SwiftUI
 import Sentry
 
 @main
-struct schedyApp: App {
+struct SchedyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     init() {
         SentrySDK.start { options in
-            options.dsn = "https://9c3d6ee2586dbfa3a58e08fdeff5fa64@o4508453036359680.ingest.us.sentry.io/4508453145018368"
+            options.dsn = Constants.sentryIngestUrl
             options.debug = false
-            
+
             options.tracesSampler = { context in
                 if context.transactionContext.name == "update-earlier-events" {
                     return 0.1
@@ -29,15 +29,15 @@ struct schedyApp: App {
             options.enableCrashHandler = true
             options.enableUncaughtNSExceptionReporting = true
         }
-        
+
         SentrySDK.startProfiler()
     }
-    
+
     var body: some Scene {
         MenuBarView()
             .environmentObject(appDelegate)
             .modelContainer(SwiftDataManager.shared.container)
-        
+
         Window("Settings", id: "settings") {
             MainWindowView()
         }
@@ -45,7 +45,7 @@ struct schedyApp: App {
             CommandGroup(after: .appInfo) {
                 CheckForUpdatesView(updater: self.appDelegate.updaterController.updater)
             }
-            
+
             SidebarCommands()
         }
         .windowResizability(.contentSize)

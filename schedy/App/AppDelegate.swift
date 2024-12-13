@@ -16,31 +16,35 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
     var shouldQuit = false
     let updaterController: SPUStandardUpdaterController
-    
+
     override init() {
-        self.updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
     }
-    
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         self.setEventHandlers()
         self.startSyncingUsers()
     }
-    
+
     @MainActor
     private func startSyncingUsers() {
         let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
-        
+
         if case .failure(let error) = result {
             SentrySDK.capture(error: error)
-            return
         }
-        
-        let users = try! result.get()
-        users.forEach({ user in
-            user.startSync()
-        })
+
+        if case .success(let users) = result {
+            users.forEach({ user in
+                user.startSync()
+            })
+        }
     }
-    
+
     private func setEventHandlers() {
         NSAppleEventManager.shared()
             .setEventHandler(self,
@@ -49,21 +53,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                              andEventID: AEEventID(kAEGetURL)
             )
     }
-    
+
     func applicationWillTerminate(_ notification: Notification) {
         let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
-        
+
         if case .failure(let error) = result {
             SentrySDK.capture(error: error)
             return
         }
-        
-        let users = try! result.get()
-        users.forEach({ user in
-            user.stopSync()
-        })
+
+        if case .success(let users) = result {
+            users.forEach({ user in
+                user.stopSync()
+            })
+        }
     }
-    
+
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if self.shouldQuit {
             return .terminateNow
@@ -72,7 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             return .terminateCancel
         }
     }
-    
+
     @objc
     private func handleUrlEvent(getURLEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
         if let string = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
