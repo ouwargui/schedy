@@ -10,13 +10,13 @@ import SwiftUI
 
 struct MenuBarItemView: View {
     var event: GoogleEvent
-    
+
     var body: some View {
         let label = "\(event.getStartHour()) - \(event.getEndHour())   \(event.title)"
-        
-        if (event.hasPassed()) {
+
+        if event.hasPassed() {
             Text(label)
-        } else if (event.isHappening()) {
+        } else if event.isHappening() {
             Link(label, destination: event.getLinkDestination() ?? event.getHtmlLinkWithAuthUser())
                 .globalKeyboardShortcut(.openEventUrl)
         } else {

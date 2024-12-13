@@ -14,19 +14,23 @@ struct MenuBarView: Scene {
     @Environment(\.openWindow) private var openWindow
     @EnvironmentObject private var appDelegate: AppDelegate
     @ObservedObject private var viewModel: MenuBarViewModel = MenuBarViewModel()
-    
+
     var body: some Scene {
-        MenuBarExtra(self.viewModel.titleBarEvent?.getMenuBarString(currentTime: self.viewModel.currentTime) ?? "schedy") {
+        MenuBarExtra(
+            self.viewModel.titleBarEvent?.getMenuBarString(
+                currentTime: self.viewModel.currentTime
+            ) ?? "schedy"
+        ) {
             if self.viewModel.isThereAnyEvents {
                 if !self.viewModel.todaysPastEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("earlier today"))",
                         events: self.viewModel.todaysPastEvents
                     )
-                    
+
                     Divider()
                 }
-                
+
                 if let currentEvent = self.viewModel.currentEvent {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("now"))",
@@ -35,22 +39,24 @@ struct MenuBarView: Scene {
 
                     Divider()
                 }
-                
+
                 if !self.viewModel.todaysNextEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("next")):",
                         events: self.viewModel.todaysNextEvents
                     )
-                    
+
                     Divider()
                 }
-                
+
                 if !self.viewModel.tomorrowsEvents.isEmpty {
+                    // swiftlint:disable line_length
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("tomorrow")) (\(self.viewModel.tomorrowFormatted)):",
+                    // swiftlint:enable line_length
                         events: self.viewModel.tomorrowsEvents
                     )
-                    
+
                     Divider()
                 }
             } else {
@@ -68,7 +74,7 @@ struct MenuBarView: Scene {
         }
         .menuBarExtraStyle(.menu)
     }
-    
+
     func quitApp() {
         self.appDelegate.shouldQuit = true
         NSApplication.shared.terminate(nil)

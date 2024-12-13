@@ -11,13 +11,13 @@ import SwiftUI
 struct AccountView: View {
     @Bindable var user: GoogleUser
     @State private var isDeleteAccountAlertPresented: Bool = false
-    
+
     var body: some View {
         HStack {
             Image(systemName: "person.fill")
             VStack(alignment: .leading) {
                 Text(user.email)
-                
+
                 if let lastSyncedString = user.getLastSyncRelativeTime() {
                     Text("Last synced at: \(lastSyncedString)")
                 } else {
@@ -31,8 +31,13 @@ struct AccountView: View {
             .buttonBorderShape(.roundedRectangle(radius: 5))
             .alert("Remove account from Schedy?", isPresented: self.$isDeleteAccountAlertPresented, actions: {
                 HStack {
-                    Button("Remove account", systemImage: "exclamationmark.triangle.fill", role: .destructive, action: self.signOut)
-                    
+                    Button(
+                        "Remove account",
+                        systemImage: "exclamationmark.triangle.fill",
+                        role: .destructive,
+                        action: self.signOut
+                    )
+
                     Button("Cancel", role: .cancel, action: self.hideDeleteAccountAlert)
                 }
             }, message: {
@@ -40,15 +45,15 @@ struct AccountView: View {
             })
         }
     }
-    
+
     private func hideDeleteAccountAlert() {
         self.isDeleteAccountAlertPresented = false
     }
-    
+
     private func showDeleteAccountAlert() {
         self.isDeleteAccountAlertPresented = true
     }
-    
+
     private func signOut() {
         GoogleAuthService.shared.signOut(user: self.user)
     }

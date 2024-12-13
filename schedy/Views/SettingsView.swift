@@ -10,35 +10,35 @@ import KeyboardShortcuts
 
 struct SettingsView: View {
     @State private var isShowingClearAppDataAlert = false
-    
+
     var appVersion: String {
         if let releaseVersion = Bundle.main.releaseVersion, let buildVersion = Bundle.main.buildVersion {
             return "\(releaseVersion).\(buildVersion)"
         }
-        
+
         return ""
     }
-    
+
     var body: some View {
         Spacer()
         VStack {
             HStack {
                 Spacer()
-                
+
                 Form {
                     KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
                 }
             }
-            
+
             Spacer()
-            
+
             HStack {
                 Text("Schedy \(self.appVersion)")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
-                
+
                 Spacer()
-                
+
                 Button("Clear app data", action: self.showClearAppDataAlert)
                     .alert("Clear app data?", isPresented: self.$isShowingClearAppDataAlert) {
                         Button("Clear app data", role: .destructive, action: self.clearAppData)
@@ -52,24 +52,24 @@ struct SettingsView: View {
 
         Spacer()
     }
-    
+
     private func hideClearAppDataAlert() {
         self.isShowingClearAppDataAlert = false
     }
-    
+
     private func showClearAppDataAlert() {
         self.isShowingClearAppDataAlert = true
     }
-    
+
     private func clearAppData() {
         try? SwiftDataManager.shared.delete(model: GoogleUser.self, where: nil)
     }
 }
 
-//#Preview {
+// #Preview {
 //    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 //    
 //    MainWindowView()
 //        .environmentObject(appDelegate)
 //        .modelContainer(SwiftDataManager.shared.container)
-//}
+// }

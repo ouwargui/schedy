@@ -20,25 +20,25 @@ class MenuBarViewModel: ObservableObject {
     @Published var todaysEvents: [GoogleEvent] = []
     @Published var tomorrowsEvents: [GoogleEvent] = []
     private var timer: Timer?
-    
+
     var tomorrow: Date {
         return Calendar.current.date(byAdding: .day, value: 1, to: self.currentTime)!
     }
-    
+
     var todayFormatted: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM"
         formatter.locale = Locale.current
         return formatter.string(from: self.currentTime)
     }
-    
+
     var tomorrowFormatted: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM"
         formatter.locale = Locale.current
         return formatter.string(from: self.tomorrow)
     }
-    
+
     var todaysEventsWithoutCurrent: [GoogleEvent] {
         let currentEventGoogleId = self.currentEvent?.googleId ?? ""
         if let eventsWithouCurrent = try? self.todaysEvents.filter(#Predicate<GoogleEvent> {
@@ -46,19 +46,19 @@ class MenuBarViewModel: ObservableObject {
         }) {
             return eventsWithouCurrent
         }
-        
+
         return self.todaysEvents
     }
-    
+
     var isThereAnyEvents: Bool {
         return !self.todaysEvents.isEmpty || !self.tomorrowsEvents.isEmpty
     }
-    
+
     var titleBarEvent: GoogleEvent? {
         return self.currentEvent ?? self.todaysNextEvents.first
     }
-    
-    init() {        
+
+    init() {
         KeyboardShortcuts
             .onKeyUp(for: .openEventUrl) { [self] in
                 print("got open event url shortcut")
@@ -66,19 +66,19 @@ class MenuBarViewModel: ObservableObject {
                     NSWorkspace.shared.open(currentEvent.getLinkDestination() ?? currentEvent.getHtmlLinkWithAuthUser())
                 }
             }
-        
+
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             Task {
                 await self.update()
             }
         }
     }
-    
+
     deinit {
         timer?.invalidate()
         timer = nil
     }
-    
+
     private func update() {
         let transaction = SentrySDK.startTransaction(name: "update-menubar", operation: "update-call")
         self.currentTime = Date()
@@ -89,103 +89,83 @@ class MenuBarViewModel: ObservableObject {
         self.updateTomorrowsEvents(transaction)
         transaction.finish()
     }
-    
+
     private func updateEarlierEvents(_ transaction: any Span) {
         let span = transaction.startChild(operation: "update-earlier-events")
         let descriptor = FetchDescriptor<GoogleEvent>(
             predicate: GoogleEvent.pastPredicate,
             sortBy: [SortDescriptor(\.start)]
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let error) = result {
-            SentrySDK.capture(error: error)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             span.finish(status: .internalError)
             return
         }
 
-        let events = try! result.get()
         self.todaysPastEvents = events
         span.finish(status: .ok)
     }
-    
+
     private func updateCurrentEvent(_ transaction: any Span) {
         let span = transaction.startChild(operation: "update-current-event")
         let descriptor = FetchDescriptor<GoogleEvent>(
             predicate: GoogleEvent.currentsPredicate,
             sortBy: [SortDescriptor(\.end)]
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let error) = result {
-            SentrySDK.capture(error: error)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             span.finish(status: .internalError)
             return
         }
 
-        let events = try! result.get()
         self.currentEvent = events.first
         span.finish(status: .ok)
     }
-    
+
     private func updateTodaysNextEvents(_ transaction: any Span) {
         let span = transaction.startChild(operation: "update-next-event")
         let descriptor = FetchDescriptor<GoogleEvent>(
             predicate: GoogleEvent.todaysNextPredicate,
             sortBy: [SortDescriptor(\.start)]
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let error) = result {
-            SentrySDK.capture(error: error)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             span.finish(status: .internalError)
             return
         }
 
-        let events = try! result.get()
         self.todaysNextEvents = events
         span.finish(status: .ok)
     }
-    
+
     private func updateTodaysEvents(_ transaction: any Span) {
         let span = transaction.startChild(operation: "update-todays-events")
         let descriptor = FetchDescriptor<GoogleEvent>(
             predicate: GoogleEvent.todaysPredicate,
             sortBy: [SortDescriptor(\.start)]
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let error) = result {
-            SentrySDK.capture(error: error)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             span.finish(status: .internalError)
             return
         }
 
-        let events = try! result.get()
         self.todaysEvents = events
         span.finish(status: .ok)
     }
-    
+
     private func updateTomorrowsEvents(_ transaction: any Span) {
         let span = transaction.startChild(operation: "update-tomorrows-events")
         let descriptor = FetchDescriptor<GoogleEvent>(
             predicate: GoogleEvent.tomorrowsPredicate,
             sortBy: [SortDescriptor(\.start)]
         )
-        
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor)
-        
-        if case .failure(let error) = result {
-            SentrySDK.capture(error: error)
+
+        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             span.finish(status: .internalError)
             return
         }
 
-        let events = try! result.get()
         self.tomorrowsEvents = events
         span.finish(status: .ok)
     }

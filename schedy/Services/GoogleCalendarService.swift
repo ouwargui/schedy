@@ -12,13 +12,17 @@ import GTMAppAuth
 class GoogleCalendarService {
     static let shared = GoogleCalendarService()
     private let service = GTLRCalendarService()
-    
-    func fetchEvents(for calendarId: String, fetcherAuthorizer: AuthSession, syncToken: String?) async throws -> GTLRCalendar_Events {
+
+    func fetchEvents(
+        for calendarId: String,
+        fetcherAuthorizer: AuthSession,
+        syncToken: String?
+    ) async throws -> GTLRCalendar_Events {
         let calendar = Calendar.current
         let startDate = calendar.date(byAdding: .hour, value: -3, to: Date())!
         let nextDay = calendar.date(byAdding: .day, value: 2, to: startDate)!
         let endDate = calendar.startOfDay(for: nextDay)
-        
+
         let query = GTLRCalendarQuery_EventsList.query(withCalendarId: calendarId)
         query.timeMin = GTLRDateTime(date: startDate)
         query.timeMax = GTLRDateTime(date: endDate)
@@ -27,17 +31,19 @@ class GoogleCalendarService {
         query.syncToken = syncToken
         query.showDeleted = true
         query.maxResults = 20
-        
+
         service.authorizer = fetcherAuthorizer
-        
+
+        // swiftlint:disable line_length
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<GTLRCalendar_Events, Error>) in
+        // swiftlint:enable line_length
             service.executeQuery(query) { (_, result, error) in
                 if let error = error {
                     print("Error executing query: \(error.localizedDescription)")
                     continuation.resume(throwing: error)
                     return
                 }
-                
+
                 guard let eventList = result as? GTLRCalendar_Events else {
                     print("Error getting events result")
                     continuation.resume(throwing: NSError(domain: "", code: -1))
@@ -47,14 +53,19 @@ class GoogleCalendarService {
             }
         }
     }
-    
-    func fetchUserCalendars(fetcherAuthorizer: AuthSession, syncToken: String?) async throws -> GTLRCalendar_CalendarList {
+
+    func fetchUserCalendars(
+        fetcherAuthorizer: AuthSession,
+        syncToken: String?
+    ) async throws -> GTLRCalendar_CalendarList {
         let calendarListQuery = GTLRCalendarQuery_CalendarListList.query()
         calendarListQuery.syncToken = syncToken
         calendarListQuery.showDeleted = true
         service.authorizer = fetcherAuthorizer
-        
+
+        // swiftlint:disable line_length
         let calendars = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<GTLRCalendar_CalendarList, Error>) in
+        // swiftlint:enable line_length
             service.executeQuery(calendarListQuery) { (_, result, error) in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -67,7 +78,7 @@ class GoogleCalendarService {
                 continuation.resume(returning: calendarList)
             }
         }
-        
+
         return calendars
     }
 }

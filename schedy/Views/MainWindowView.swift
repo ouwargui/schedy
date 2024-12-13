@@ -16,7 +16,7 @@ enum SettingsItem: String.LocalizationValue {
 
 struct MainWindowView: View {
     @State private var selectedItem: SettingsItem = .accounts
-    
+
     var body: some View {
         NavigationSplitView {
             List(selection: self.$selectedItem) {

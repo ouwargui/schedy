@@ -12,7 +12,7 @@ import SwiftData
 struct AccountsView: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Query var users: [GoogleUser]
-    
+
     var body: some View {
         if self.users.isEmpty {
             ContentUnavailableView {
@@ -38,13 +38,13 @@ struct AccountsView: View {
             }
         }
     }
-    
+
     private func signIn() {
         self.appDelegate.currentAuthorizationFlow = GoogleAuthService.shared.signIn(appDelegate: self.appDelegate)
     }
 }
 
-//#Preview {
+// #Preview {
 //    AccountsView()
 //        .modelContainer(SwiftDataManager.shared.container)
-//}
+// }
