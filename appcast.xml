@@ -4,14 +4,25 @@
         <title>Schedy App Changelog</title>
         <item>
             <title>1.2</title>
-            <pubDate>Wed, 12 Dec 2024 03:10:50 -0300</pubDate>
-            <sparkle:version>9</sparkle:version>
+            <pubDate>Wed, 18 Dec 2024 21:50:50 -0300</pubDate>
+            <sparkle:version>10</sparkle:version>
             <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14</sparkle:minimumSystemVersion>
             <sparkle:releaseNotesLink>
                 https://github.com/ouwargui/schedy/releases/latest
             </sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/ouwargui/schedy/releases/latest/download/SchedyInstaller.dmg" length="2580718" type="application/octet-stream" sparkle:edSignature="o5wR7z6UBO9ZPUqxe5eFMOuPeZXJ4bpFSoacrZrus+md0AtYMVd8tp17KvI3wbrIMyj7rAqkXC4Qdb5RK3d9CQ=="/>
+            <enclosure url="https://github.com/ouwargui/schedy/releases/latest/download/SchedyInstaller.dmg" length="3207253" type="application/octet-stream" sparkle:edSignature="NfE7DUrQkTFmR1SakAR5Mg5O/Bh58pd2JBRMFdbsjgskcZm053Ftvf6hwa2YAx8ps8W0/0pOEm4KbPIwGzs4AA=="/>
+        </item>
+        <item>
+            <title>1.2</title>
+            <pubDate>Wed, 12 Dec 2024 03:10:50 -0300</pubDate>
+            <sparkle:version>9</sparkle:version>
+            <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>
+                https://github.com/ouwargui/schedy/releases/v1.2.8-alpha
+            </sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/ouwargui/schedy/releases/download/v1.2.8-alpha/SchedyInstaller.dmg" length="2580718" type="application/octet-stream" sparkle:edSignature="o5wR7z6UBO9ZPUqxe5eFMOuPeZXJ4bpFSoacrZrus+md0AtYMVd8tp17KvI3wbrIMyj7rAqkXC4Qdb5RK3d9CQ=="/>
         </item>
         <item>
             <title>1.1</title>
