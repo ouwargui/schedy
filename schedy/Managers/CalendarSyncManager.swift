@@ -37,18 +37,19 @@ class CalendarSyncManager {
         }
 
         timer = Timer.scheduledTimer(withTimeInterval: self.TIMER_INTERVAL, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             print("syncing")
             Task { @MainActor in
-                await self?.performCalendarSync()
-                await self?.performEventsSync()
+                await self.performCalendarSync()
+                await self.performEventsSync()
 
-                self?.timePassedSinceFirstSync += self?.TIMER_INTERVAL ?? 0
+                self.timePassedSinceFirstSync += self.TIMER_INTERVAL
 
-                if self?.timePassedSinceFirstSync ?? 0 >= 10_800 {
-                    self?.deleteOldEvents()
+                if self.timePassedSinceFirstSync >= 10_800 {
+                    self.deleteOldEvents()
                 }
 
-                self?.user.lastSyncedAt = Date()
+                self.user.lastSyncedAt = Date()
             }
         }
     }
@@ -75,7 +76,8 @@ class CalendarSyncManager {
     private func performEventsSync() async {
         let calendars = self.user.calendars
 
-        await withTaskGroup(of: Void.self) { group in
+        await withTaskGroup(of: Void.self) { [weak self] group in
+            guard let self = self else { return }
             for calendar in calendars {
                 group.addTask { @MainActor in
                     guard let events = try? await GoogleCalendarService.shared.fetchEvents(
