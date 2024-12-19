@@ -67,7 +67,8 @@ class MenuBarViewModel: ObservableObject {
                 }
             }
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             Task {
                 await self.update()
             }
