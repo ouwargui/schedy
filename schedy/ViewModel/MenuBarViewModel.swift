@@ -16,6 +16,7 @@ class MenuBarViewModel: ObservableObject {
     @Published private(set) var currentTime = Date()
     @Published var todaysPastEvents: [GoogleEvent] = []
     @Published var currentEvent: GoogleEvent?
+    @Published var currentEvents: [GoogleEvent] = []
     @Published var todaysNextEvents: [GoogleEvent] = []
     @Published var todaysEvents: [GoogleEvent] = []
     @Published var tomorrowsEvents: [GoogleEvent] = []
@@ -120,6 +121,7 @@ class MenuBarViewModel: ObservableObject {
         }
 
         self.currentEvent = events.first
+        self.currentEvents = events
         span.finish(status: .ok)
     }
 

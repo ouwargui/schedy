@@ -31,10 +31,10 @@ struct MenuBarView: Scene {
                     Divider()
                 }
 
-                if let currentEvent = self.viewModel.currentEvent {
+                if !self.viewModel.currentEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("now"))",
-                        events: [currentEvent]
+                        events: self.viewModel.currentEvents
                     )
 
                     Divider()
