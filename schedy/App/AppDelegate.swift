@@ -5,12 +5,12 @@
 //  Created by Guilherme D'Alessandro on 29/11/24.
 //
 
-import AppKit
 import AppAuthCore
+import AppKit
+import Sentry
+import Sparkle
 import SwiftData
 import SwiftUI
-import Sparkle
-import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
@@ -32,7 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     @MainActor
     private func startSyncingUsers() {
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        let result = SwiftDataManager.shared.fetchAll(
+            fetchDescriptor: FetchDescriptor<GoogleUser>())
 
         if case .failure(let error) = result {
             SentrySDK.capture(error: error)
@@ -47,15 +48,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     private func setEventHandlers() {
         NSAppleEventManager.shared()
-            .setEventHandler(self,
-                             andSelector: #selector(self.handleUrlEvent(getURLEvent:replyEvent:)),
-                             forEventClass: AEEventClass(kInternetEventClass),
-                             andEventID: AEEventID(kAEGetURL)
+            .setEventHandler(
+                self,
+                andSelector: #selector(self.handleUrlEvent(getURLEvent:replyEvent:)),
+                forEventClass: AEEventClass(kInternetEventClass),
+                andEventID: AEEventID(kAEGetURL)
             )
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        let result = SwiftDataManager.shared.fetchAll(fetchDescriptor: FetchDescriptor<GoogleUser>())
+        let result = SwiftDataManager.shared.fetchAll(
+            fetchDescriptor: FetchDescriptor<GoogleUser>())
 
         if case .failure(let error) = result {
             SentrySDK.capture(error: error)
@@ -73,16 +76,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if self.shouldQuit {
             return .terminateNow
         } else {
+            NotificationCenter.default.post(
+                name: NSNotification.Name("close-settings"), object: self)
             NSApplication.shared.setActivationPolicy(.accessory)
             return .terminateCancel
         }
     }
 
     @objc
-    private func handleUrlEvent(getURLEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+    private func handleUrlEvent(
+        getURLEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor
+    ) {
         if let string = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
            let url = URL(string: string) {
-            self.currentAuthorizationFlow?.resumeExternalUserAgentFlow(with: url)
-        }
+               self.currentAuthorizationFlow?.resumeExternalUserAgentFlow(with: url)
+           }
+    }
+}
+
+extension AppDelegate: SPUUpdaterDelegate, SPUStandardUserDriverDelegate {
+    func updaterWillRelaunchApplication(_ updater: SPUUpdater) {
+        self.shouldQuit = true
     }
 }

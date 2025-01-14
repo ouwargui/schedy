@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 enum SettingsItem: String.LocalizationValue {
     case accounts
@@ -15,7 +15,10 @@ enum SettingsItem: String.LocalizationValue {
 }
 
 struct MainWindowView: View {
+    @Environment(\.dismissWindow) var dismissWindow
     @State private var selectedItem: SettingsItem = .accounts
+    private let pub = NotificationCenter.default.publisher(
+        for: NSNotification.Name("close-settings"))
 
     var body: some View {
         NavigationSplitView {
@@ -36,6 +39,9 @@ struct MainWindowView: View {
                 SettingsView()
                     .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             }
+        }
+        .onReceive(pub) { _ in
+            dismissWindow(id: "settings")
         }
         .navigationTitle(LocalizedString.capitalized(self.selectedItem.rawValue))
     }
