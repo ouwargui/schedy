@@ -1,10 +1,9 @@
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
       - release_cicd_test
-
-  workflow_dispatch: {}
 
 name: Release Stable
 
@@ -45,7 +44,7 @@ jobs:
 
       - name: Build Schedy
         run: |
-          xcodebuild -target schedy -configuration Release
+          xcodebuild -target schedy -configuration Release CODE_SIGNING_REQUIRED=NO
 
       - name: Update Info.plist
         env:
