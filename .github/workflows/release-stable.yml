@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build-macos:
-    runs-on: macos-latest-xlarge
+    runs-on: macos-latest
     timeout-minutes: 90
     steps:
       - name: Checkout Code
