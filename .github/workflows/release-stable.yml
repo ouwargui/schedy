@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Schedy
         run: |
-          xcodebuild -target Schedy -configuration Release
+          xcodebuild -target schedy -configuration Release
 
       - name: Update Info.plist
         env:
