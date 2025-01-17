@@ -91,7 +91,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A142BB7C2D0BF40000048866 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A18F75F52CF935C900DC952A /* schedy */,
@@ -144,7 +143,6 @@
 				A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				A1B774DE2D080D9F005AB4C2 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
-				A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A18F75F42CF935C900DC952A /* Products */;
@@ -175,13 +173,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A142BB7C2D0BF40000048866 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = A142BB7B2D0BF40000048866 /* SwiftLintBuildToolPlugin */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A18F76002CF935CB00DC952A /* Debug */ = {
@@ -406,14 +397,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.57.1;
-			};
-		};
 		A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GTMAppAuth.git";
@@ -465,11 +448,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A142BB7B2D0BF40000048866 /* SwiftLintBuildToolPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
-			productName = "plugin:SwiftLintBuildToolPlugin";
-		};
 		A17459542D011FEC0057BB31 /* GTMAppAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */;
