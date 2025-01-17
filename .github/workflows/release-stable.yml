@@ -1,6 +1,8 @@
 on:
-  workflow_run:
-    branches: [main, release_cicd_test]
+  push:
+    branches:
+      - main
+      - release_cicd_test
 
   workflow_dispatch: {}
 
