@@ -61,7 +61,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Schedy_${{ $SCHEDY_COMMIT }}.app
+          name: Schedy.app
 
     # - name: Codesign app bundle
     #    env:
