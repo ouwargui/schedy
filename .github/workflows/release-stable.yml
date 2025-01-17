@@ -1,0 +1,80 @@
+on:
+  workflow_run:
+    branches: [main, release_cicd_test]
+
+  workflow_dispatch: {}
+
+name: Release Stable
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build-macos:
+    if: |
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.conclusion == 'success' &&
+          github.repository_owner == 'ouwargui' &&
+          github.ref_name == 'main'
+        )
+      }}
+    runs-on: macOS
+    timeout-minutes: 90
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: XCode Select
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
+
+      - name: Setup Sparkle
+        env:
+          SPARKLE_VERSION: 2.6.3
+        run: |
+          mkdir -p .action/sparkle
+          cd .action/sparkle
+          curl -L https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-for-Swift-Package-Manager.zip > sparkle.zip
+          unzip sparkle.zip
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+
+      - name: Build Number
+        run: |
+          echo "SCHEDY_BUILD=$(git rev-list --count head)" >> $GITHUB_ENV
+          echo "SCHEDY_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "SCHEDY_COMMIT_LONG=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Build Schedy
+        run: |
+          xcodebuild -target Schedy -configuration Release
+
+      - name: Update Info.plist
+        env:
+          SPARKLE_KEY_PUB: ${{ secrets.PROD_MACOS_SPARKLE_KEY_PUB }}
+        run: |
+          # Version Info
+          /usr/libexec/PlistBuddy -c "Set :GhosttyCommit $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
+
+          # Updater
+          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Delete :SUEnableAutomaticChecks" "build/Release/Schedy.app/Contents/Info.plist"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Schedy_${{ SCHEDY_COMMIT }}.app
+
+    # - name: Codesign app bundle
+    #    env:
+    #      MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
+    #      MACOS_CERTIFICATE_PWD: ${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}
+    #      MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
+    #      MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
+    #    run: |
+    #
