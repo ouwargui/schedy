@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A157B36A2D3B6056002AA282 /* GoogleAPIClientForRESTCore in Frameworks */ = {isa = PBXBuildFile; productRef = A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */; };
 		A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A17459542D011FEC0057BB31 /* GTMAppAuth */; };
 		A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BC2D0A8E3400475CCA /* Sentry */; };
 		A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */; };
@@ -54,6 +55,7 @@
 				A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */,
 				A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */,
 				A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */,
+				A157B36A2D3B6056002AA282 /* GoogleAPIClientForRESTCore in Frameworks */,
 				A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +107,7 @@
 				A1B774DF2D080D9F005AB4C2 /* Sparkle */,
 				A18007BC2D0A8E3400475CCA /* Sentry */,
 				A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */,
+				A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */,
 			);
 			productName = schedy;
 			productReference = A18F75F32CF935C900DC952A /* schedy.app */;
@@ -306,13 +309,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = schedy/schedy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"schedy/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = JF8DW7C5A2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -342,13 +346,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = schedy/schedy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"schedy/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = JF8DW7C5A2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -415,8 +420,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.0;
 			};
 		};
 		A1AE79BC2D06B7E600DD7AA7 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
@@ -446,6 +451,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForRESTCore;
+		};
 		A17459542D011FEC0057BB31 /* GTMAppAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */;
