@@ -67,27 +67,27 @@ jobs:
 
       - name: Build Schedy
         run: |
-          xcodebuild -scheme schedy archive -archivePath schedy.xcarchive
-          xcodebuild -exportArchive -archivePath schedy.xcarchive -exportOptionsPlist schedy/exportOptions.plist -exportPath SchedyArchive
-          mv SchedyArchive/schedy.app Schedy.app
+          xcodebuild -scheme schedy -configuration Release
+          mv build/Release/schedy.app build/Release/Schedy.app
 
       - name: Update Info.plist
         env:
           SPARKLE_KEY_PUB: ${{ secrets.PROD_MACOS_SPARKLE_KEY_PUB }}
         run: |
           # Version Info
-          /usr/libexec/PlistBuddy -c "Set :GhosttyCommit $SCHEDY_COMMIT" "Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :GhosttyCommit $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
 
           # Updater
-          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Delete :SUEnableAutomaticChecks" "Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Delete :SUEnableAutomaticChecks" "build/Release/Schedy.app/Contents/Info.plist"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Schedy.app
+          path: build/Release/Schedy.app
 
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
