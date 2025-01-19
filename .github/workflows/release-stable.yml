@@ -75,7 +75,7 @@ jobs:
           SPARKLE_KEY_PUB: ${{ secrets.PROD_MACOS_SPARKLE_KEY_PUB }}
         run: |
           # Version Info
-          /usr/libexec/PlistBuddy -c "Set :GhosttyCommit $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :SchedyCommit $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "build/Release/Schedy.app/Contents/Info.plist"
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
 
