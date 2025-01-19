@@ -65,7 +65,7 @@ elem.text = f"{commit} ({now.strftime('%Y-%m-%d')})"
 elem = ET.SubElement(item, "sparkle:minimumSystemVersion")
 elem.text = "14"
 elem = ET.SubElement(item, "sparkle:releaseNotesLink")
-elem.text = "https://github.com/ouwargui/schedy/releases/latest"
+elem.text = f"https://github.com/ouwargui/schedy/releases/{build}"
 elem = ET.SubElement(item, "enclosure")
 elem.set("url", f"https://github.com/ouwargui/schedy/releases/download/{build}/SchedyInstaller.dmg")
 elem.set("type", "application/octet-stream")
