@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A157B36A2D3B6056002AA282 /* GoogleAPIClientForRESTCore in Frameworks */ = {isa = PBXBuildFile; productRef = A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */; };
 		A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A17459542D011FEC0057BB31 /* GTMAppAuth */; };
 		A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BC2D0A8E3400475CCA /* Sentry */; };
 		A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */; };
@@ -54,6 +55,7 @@
 				A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */,
 				A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */,
 				A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */,
+				A157B36A2D3B6056002AA282 /* GoogleAPIClientForRESTCore in Frameworks */,
 				A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,7 +93,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A142BB7C2D0BF40000048866 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A18F75F52CF935C900DC952A /* schedy */,
@@ -106,6 +107,7 @@
 				A1B774DF2D080D9F005AB4C2 /* Sparkle */,
 				A18007BC2D0A8E3400475CCA /* Sentry */,
 				A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */,
+				A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */,
 			);
 			productName = schedy;
 			productReference = A18F75F32CF935C900DC952A /* schedy.app */;
@@ -144,7 +146,6 @@
 				A1AE79C52D06C6DB00DD7AA7 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				A1B774DE2D080D9F005AB4C2 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				A18007BB2D0A8E3400475CCA /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
-				A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A18F75F42CF935C900DC952A /* Products */;
@@ -175,13 +176,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A142BB7C2D0BF40000048866 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = A142BB7B2D0BF40000048866 /* SwiftLintBuildToolPlugin */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A18F76002CF935CB00DC952A /* Debug */ = {
@@ -239,7 +233,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -299,7 +293,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -314,14 +308,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = schedy/schedy.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"schedy/Preview Content\"";
-				DEVELOPMENT_TEAM = JF8DW7C5A2;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = JF8DW7C5A2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -350,14 +344,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = schedy/schedy.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"schedy/Preview Content\"";
-				DEVELOPMENT_TEAM = JF8DW7C5A2;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = JF8DW7C5A2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -404,14 +398,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.57.1;
-			};
-		};
 		A17459532D011FEC0057BB31 /* XCRemoteSwiftPackageReference "GTMAppAuth" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GTMAppAuth.git";
@@ -432,8 +418,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.0;
 			};
 		};
 		A1AE79BC2D06B7E600DD7AA7 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
@@ -463,10 +449,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A142BB7B2D0BF40000048866 /* SwiftLintBuildToolPlugin */ = {
+		A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A142BB7A2D0BF39000048866 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
-			productName = "plugin:SwiftLintBuildToolPlugin";
+			package = A18F76182CF9535200DC952A /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForRESTCore;
 		};
 		A17459542D011FEC0057BB31 /* GTMAppAuth */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,2 +1,5 @@
 archives/**
 releases/**
+build/**
+DerivedData/**
+

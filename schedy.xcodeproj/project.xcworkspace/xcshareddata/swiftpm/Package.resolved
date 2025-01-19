@@ -1,5 +1,5 @@
 {
-  "originHash" : "3d107d524b8f19f498af1f30d5c01cd98089349b2aad85bf0d53e8b22ca8fb7e",
+  "originHash" : "98f016044693f1e0575e9b6bda8e5720e3383adfbc30372cca5d59bf8bd3613c",
   "pins" : [
     {
       "identity" : "appauth-ios",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/google-api-objectivec-client-for-rest",
       "state" : {
-        "branch" : "main",
-        "revision" : "d264873297034fc593ba85a5e04078d799b964aa"
+        "revision" : "33160c97b7b669783e71a54660d57cfe83152593",
+        "version" : "4.1.0"
       }
     },
     {
@@ -62,15 +62,6 @@
       "state" : {
         "revision" : "0ef1ee0220239b3776f433314515fd849025673f",
         "version" : "2.6.4"
-      }
-    },
-    {
-      "identity" : "swiftlintplugins",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SimplyDanny/SwiftLintPlugins",
-      "state" : {
-        "revision" : "f9731bef175c3eea3a0ca960f1be78fcc2bc7853",
-        "version" : "0.57.1"
       }
     }
   ],
