@@ -1,9 +1,11 @@
+# Inspired by https://github.com/ghostty-org/ghostty/blob/main/.github/workflows/release-tip.yml
+# thanks mitchell
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - release_cicd_test
 
 name: Release Stable
 
