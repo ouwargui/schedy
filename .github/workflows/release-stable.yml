@@ -67,7 +67,7 @@ jobs:
 
       - name: Build Schedy
         run: |
-          xcodebuild -scheme schedy -configuration Release
+          xcodebuild -scheme schedy -configuration Release -derivedDataPath $(PWD)/DerivedData BUILD_DIR=$(PWD)/build SYMROOT=$(PWD)/build/Products
           mv build/Release/schedy.app build/Release/Schedy.app
 
       - name: Update Info.plist
