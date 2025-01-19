@@ -81,7 +81,6 @@ jobs:
 
           # Updater
           /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "build/Release/Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Delete :SUEnableAutomaticChecks" "build/Release/Schedy.app/Contents/Info.plist"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
