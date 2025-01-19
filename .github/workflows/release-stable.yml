@@ -130,8 +130,15 @@ jobs:
           SPARKLE_KEY: ${{ secrets.PROD_MACOS_SPARKLE_KEY }}
         run: |
           echo $SPARKLE_KEY > signing.key
+
+          echo "Signing sparkle update"
           sign_update -f signing.key SchedyInstaller.dmg > sign_update.txt
+          cat sign_update.txt
+
+          echo "Fetching appcast.xml from R2"
           curl -L https://files.schedy.io/appcast.xml > appcast.xml
+
+          echo "Updating appcast with python script"
           python3 scripts/update_appcast.py
           test -f appcast_new.xml
 
