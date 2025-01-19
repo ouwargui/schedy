@@ -81,6 +81,7 @@ jobs:
           --dmg-title="Schedy Installer" \
           build/Release/Schedy.app \
           ./
+          mv ./Schedy*.dmg ./SchedyInstaller.dmg
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -90,7 +91,7 @@ jobs:
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
         run: |
-          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          security delete-keychain build.keychain
 
     # - name: Codesign app bundle
     #    env:
