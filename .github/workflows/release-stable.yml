@@ -113,6 +113,43 @@ jobs:
           xcrun stapler staple "SchedyInstaller.dmg"
           xcrun stapler staple "build/Release/Schedy.app"
 
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.SCHEDY_BUILD }}
+          tag_name: ${{ env.SCHEDY_BUILD }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          make_latest: "true"
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+          files: |
+            SchedyInstaller.dmg
+
+      - name: Generate appcast
+        env:
+          SPARKLE_KEY: ${{ secrets.PROD_MACOS_SPARKLE_KEY }}
+        run: |
+          echo $SPARKLE_KEY > signing.key
+          sign_update -f signing.key SchedyInstaller.dmg > sign_update.txt
+          curl -L https://files.schedy.io/appcast.xml > appcast.xml
+          python3 scripts/update_appcast.py
+          test -f appcast_new.xml
+
+      - name: Prepare R2 Storage
+        run: |
+          mkdir blob
+          cp appcast_new.xml blob/appcast.xml
+
+      - name: Upload to R2
+        uses: ryand56/r2-upload-action@latest
+        with:
+          r2-account-id: ${{ secrets.CF_R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }
+          r2-secret-access-key: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+          r2-bucket: schedy
+          source-dir: blob
+          destination-dir: ./
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

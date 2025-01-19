@@ -11,7 +11,7 @@
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://ouwargui.github.io./schedy/appcast.xml</string>
+	<string>https://files.schedy.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>tckWNC2xZo2Qig1VL7y9VfYOkWYvh9iPqSeS5wwmP2E=</string>
 	<key>SchedyCommit</key>
