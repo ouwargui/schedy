@@ -83,21 +83,30 @@ jobs:
           ./
           mv ./Schedy*.dmg ./SchedyInstaller.dmg
 
+      - name: Notarize DMG
+        env:
+          PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}
+          PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}
+          PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}
+        run: |
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
+
+          echo "Submit DMG to notarization"
+          xcrun notarytool submit "SchedyInstaller.dmg" --keychain-profile "notarytool-profile" --wait
+
+          echo "Attach Staple"
+          xcrun stapler staple "SchedyInstaller.dmg"
+          xcrun stapler staple "build/Release/Schedy.app"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: SchedyInstaller
           path: SchedyInstaller.dmg
 
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
         run: |
           security delete-keychain build.keychain
-
-    # - name: Codesign app bundle
-    #    env:
-    #      MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
-    #      MACOS_CERTIFICATE_PWD: ${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}
-    #      MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
-    #      MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
-    #    run: |
-    #
+          security delete-keychain notarytool-profile
