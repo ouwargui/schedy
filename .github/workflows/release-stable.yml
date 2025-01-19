@@ -144,7 +144,7 @@ jobs:
         uses: ryand56/r2-upload-action@latest
         with:
           r2-account-id: ${{ secrets.CF_R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }
+          r2-access-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
           r2-secret-access-key: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
           r2-bucket: schedy
           source-dir: blob
