@@ -2,23 +2,43 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SentryDSN</key>
-	<string>https://9c3d6ee2586dbfa3a58e08fdeff5fa64@o4508453036359680.ingest.us.sentry.io/4508453145018368</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Schedy</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>GIDClientID</key>
 	<string>135978216728-lmd9gle3f9gnv0cvqsjcfjr4r6qsusth.apps.googleusercontent.com</string>
 	<key>GIDRedirectURI</key>
 	<string>com.googleusercontent.apps.135978216728-lmd9gle3f9gnv0cvqsjcfjr4r6qsusth:/oauthredirect</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://files.schedy.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>tckWNC2xZo2Qig1VL7y9VfYOkWYvh9iPqSeS5wwmP2E=</string>
+	<key>SentryDSN</key>
+	<string>https://9c3d6ee2586dbfa3a58e08fdeff5fa64@o4508453036359680.ingest.us.sentry.io/4508453145018368</string>
 	<key>SchedyCommit</key>
 	<string></string>
 	<key>CFBundleVersion</key>
-	<string></string>
+	<string>123</string>
 	<key>CFBundleShortVersionString</key>
-	<string></string>
+	<string>123</string>
 </dict>
 </plist>
