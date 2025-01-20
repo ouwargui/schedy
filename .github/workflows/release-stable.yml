@@ -73,11 +73,14 @@ jobs:
 
       - name: Archive Schedy
         run: |
+          mkdir $(PWD)/DerivedData
+          mkdir -p $(PWD)/build/Products
           xcodebuild archive -scheme schedy -configuration Release -archivePath ./schedy.xcarchive -derivedDataPath $(PWD)/DerivedData BUILD_DIR=$(PWD)/build SYMROOT=$(PWD)/build/Products
 
       - name: Export Schedy archive
         run: |
-          xcodebuild -exportArchive -archivePath ./schedy.xcarchive -exportOptionsPlist schedy/exportOptions.plist -exportPath ./build/Release
+          mkdir -p $(PWD)/build/Release
+          xcodebuild -exportArchive -archivePath $(PWD)/schedy.xcarchive -exportOptionsPlist $(PWD)/exportOptions.plist -exportPath $(PWD)/build/Release
           mv build/Release/schedy.app build/Release/Schedy.app
 
       - name: Create DMG
