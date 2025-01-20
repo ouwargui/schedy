@@ -53,6 +53,15 @@
     "All users, calendars and events will be deleted" : {
 
     },
+    "Automatically check for updates" : {
+
+    },
+    "Automatically download updates" : {
+
+    },
+    "Build %@" : {
+
+    },
     "Calendars" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -74,6 +83,9 @@
 
     },
     "Clear app data?" : {
+
+    },
+    "Commit SHA %@" : {
 
     },
     "earlier today" : {
@@ -192,9 +204,6 @@
           }
         }
       }
-    },
-    "Schedy %@" : {
-
     },
     "settings" : {
       "localizations" : {

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import Sparkle
 
 enum SettingsItem: String.LocalizationValue {
     case accounts
@@ -15,10 +16,16 @@ enum SettingsItem: String.LocalizationValue {
 }
 
 struct MainWindowView: View {
+    private let updater: SPUUpdater
+
     @Environment(\.dismissWindow) var dismissWindow
     @State private var selectedItem: SettingsItem = .accounts
     private let pub = NotificationCenter.default.publisher(
         for: NSNotification.Name("close-settings"))
+
+    init(updater: SPUUpdater) {
+        self.updater = updater
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -36,7 +43,7 @@ struct MainWindowView: View {
                 AccountsView()
                     .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             case .settings:
-                SettingsView()
+                SettingsView(updater: self.updater)
                     .navigationSplitViewColumnWidth(min: 200, ideal: 400, max: 600)
             }
         }

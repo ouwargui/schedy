@@ -39,7 +39,7 @@ struct SchedyApp: App {
             .modelContainer(SwiftDataManager.shared.container)
 
         Window("Settings", id: "settings") {
-            MainWindowView()
+            MainWindowView(updater: self.appDelegate.updaterController.updater)
         }
         .commands {
             CommandGroup(after: .appInfo) {
