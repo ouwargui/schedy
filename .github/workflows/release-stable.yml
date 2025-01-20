@@ -80,8 +80,8 @@ jobs:
         env:
           MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
         run: |
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
           /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
+          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime --preserve-metadata=entitlements "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
           /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
           /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
           /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework"
