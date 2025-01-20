@@ -61,7 +61,21 @@ struct MenuBarView: Scene {
                 }
             } else {
                 Text("You don't have any events for now")
+
+                Divider()
             }
+
+            if self.appDelegate.isUpdateAvailable {
+                Button("Version \(self.appDelegate.updateData?.versionString ?? "") available!") {
+                    self.appDelegate.updaterController.checkForUpdates(nil)
+                }
+            } else {
+                Button("Check for updates") {
+                    self.appDelegate.updaterController.checkForUpdates(nil)
+                }
+            }
+
+            Divider()
 
             Button("Settings") {
                 NSApplication.shared.setActivationPolicy(.regular)

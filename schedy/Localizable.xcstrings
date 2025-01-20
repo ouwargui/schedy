@@ -76,6 +76,9 @@
     "Cancel" : {
 
     },
+    "Check for updates" : {
+
+    },
     "Check for Updates…" : {
 
     },
@@ -308,6 +311,9 @@
           }
         }
       }
+    },
+    "Version %@ available!" : {
+
     },
     "You don't have any accounts yet" : {
 
