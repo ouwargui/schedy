@@ -59,36 +59,26 @@ jobs:
           echo "SCHEDY_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "SCHEDY_COMMIT_LONG=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-      - name: Build Schedy
-        run: |
-          xcodebuild -scheme schedy -configuration Release -derivedDataPath $(PWD)/DerivedData BUILD_DIR=$(PWD)/build SYMROOT=$(PWD)/build/Products
-          mv build/Release/schedy.app build/Release/Schedy.app
-
       - name: Update Info.plist
         env:
           SPARKLE_KEY_PUB: ${{ secrets.PROD_MACOS_SPARKLE_KEY_PUB }}
         run: |
           # Version Info
-          /usr/libexec/PlistBuddy -c "Set :SchedyCommit $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "build/Release/Schedy.app/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :SchedyCommit $SCHEDY_COMMIT" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "schedy/Info.plist"
 
           # Updater
-          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "build/Release/Schedy.app/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "schedy/Info.plist"
 
-      - name: Codesign app bundle
-        env:
-          MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
+      - name: Archive Schedy
         run: |
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime --preserve-metadata=entitlements "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sparkle.framework"
+          xcodebuild archive -scheme schedy -configuration Release -archivePath ./schedy.xcarchive -derivedDataPath $(PWD)/DerivedData BUILD_DIR=$(PWD)/build SYMROOT=$(PWD)/build/Products
 
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime "build/Release/Schedy.app/Contents/Frameworks/Sentry.framework"
-
-          /usr/bin/codesign --verbose -f -s "$MACOS_CERTIFICATE_NAME" -o runtime --entitlements "schedy/schedy.entitlements" build/Release/Schedy.app
+      - name: Export Schedy archive
+        run: |
+          xcodebuild -exportArchive -archivePath ./schedy.xcarchive -exportOptionsPlist schedy/exportOptions.plist -exportPath ./build/Release
+          mv build/Release/schedy.app build/Release/Schedy.app
 
       - name: Create DMG
         run: |
