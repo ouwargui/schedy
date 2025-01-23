@@ -19,7 +19,7 @@ struct MenuBarView: Scene {
         MenuBarExtra(
             self.viewModel.titleBarEvent?.getMenuBarString(
                 currentTime: self.viewModel.currentTime
-            ) ?? "schedy"
+            ).truncated() ?? "schedy"
         ) {
             if self.viewModel.isThereAnyEvents {
                 if !self.viewModel.todaysPastEvents.isEmpty {
