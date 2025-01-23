@@ -165,7 +165,7 @@ extension GoogleEvent {
         let timeUntilString = "\(LocalizedString.localized("in")) \(time)"
         let stringToUse = isOnEvent ? timeToEndString : timeUntilString
 
-        let result = "\(self.title) (\(stringToUse))"
+        let result = "\(self.title.truncated()) (\(stringToUse))"
 
         return result
     }

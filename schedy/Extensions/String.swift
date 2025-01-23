@@ -8,8 +8,8 @@
 import Foundation
 
 extension String {
-    func truncated() -> Substring {
-        let truncatedString = prefix(15)
+    func truncated(maxLength: Int = 25) -> Substring {
+        let truncatedString = prefix(maxLength)
         if truncatedString.count < 15 {
             return truncatedString
         } else {
