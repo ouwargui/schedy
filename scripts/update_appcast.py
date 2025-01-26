@@ -1,6 +1,11 @@
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
+import argparse
+
+parser = argparse.ArgumentParser(description="Update appcast XML file")
+parser.add_argument('--beta', action='store_true', help='Set this as a beta channel release')
+args = parser.parse_args()
 
 now = datetime.now(timezone.utc)
 build = os.environ["SCHEDY_BUILD"]
@@ -61,9 +66,16 @@ elem.text = now.strftime(pubdate_format)
 elem = ET.SubElement(item, "sparkle:version")
 elem.text = build
 elem = ET.SubElement(item, "sparkle:shortVersionString")
-elem.text = f"{commit} ({now.strftime('%Y-%m-%d')})"
+if args.beta:
+    elem.text = f"{commit} (beta) ({now.strftime('%Y-%m-%d')})"
+else:
+    elem.text = f"{commit} ({now.strftime('%Y-%m-%d')})"
+
 elem = ET.SubElement(item, "sparkle:minimumSystemVersion")
 elem.text = "14"
+if args.beta:
+    elem = ET.SubElement(item, "sparkle:channel")
+    elem.text = "beta"
 elem = ET.SubElement(item, "sparkle:releaseNotesLink")
 elem.text = f"https://github.com/ouwargui/schedy/releases/{build}"
 elem = ET.SubElement(item, "enclosure")

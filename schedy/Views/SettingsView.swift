@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State private var isShowingClearAppDataAlert = false
     @State private var automaticallyChecksForUpdates: Bool
     @State private var automaticallyDownloadsUpdates: Bool
+    @AppStorage("allowed-beta-updates") var allowedBetaUpdates: Bool = false
 
     init(updater: SPUUpdater) {
         self.updater = updater
@@ -35,6 +36,10 @@ struct SettingsView: View {
         return ""
     }
 
+    var isBeta: Bool {
+        return Bundle.main.isBeta ?? false
+    }
+
     var body: some View {
         Spacer()
         VStack {
@@ -44,7 +49,9 @@ struct SettingsView: View {
                 Form {
                     KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
 
-                    VStack {
+                    VStack(alignment: .leading) {
+                        Toggle("Receive nightly updates", isOn: self.$allowedBetaUpdates)
+
                         Toggle("Automatically check for updates", isOn: self.$automaticallyChecksForUpdates)
                             .onChange(of: self.automaticallyChecksForUpdates) { newValue, _ in
                                 updater.automaticallyChecksForUpdates = newValue
@@ -62,9 +69,15 @@ struct SettingsView: View {
 
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Build \(self.buildVersion)")
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                    if self.isBeta {
+                        Text("Build \(self.buildVersion) (Beta)")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("Build \(self.buildVersion)")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.secondary)
+                    }
 
                     let commitUrl = URL(string: "https://github.com/ouwargui/schedy/commit/\(self.commitSha)")
                     if let commitUrl = commitUrl {

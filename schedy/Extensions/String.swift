@@ -8,12 +8,7 @@
 import Foundation
 
 extension String {
-    func truncated(maxLength: Int = 25) -> Substring {
-        let truncatedString = prefix(maxLength)
-        if truncatedString.count < 15 {
-            return truncatedString
-        } else {
-            return "\(truncatedString)..."
-        }
+    func truncated(maxLength: Int = 25, trailing: String = "...") -> String {
+        return (self.count > maxLength) ? self.prefix(maxLength) + trailing : self
     }
 }

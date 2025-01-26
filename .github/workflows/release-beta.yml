@@ -1,0 +1,162 @@
+# Inspired by https://github.com/ghostty-org/ghostty/blob/main/.github/workflows/release-tip.yml
+# thanks mitchell
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - beta
+
+name: Release Beta
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "16.1"
+
+      - name: Setup Apple Certificates and Provisioning Profiles
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          echo $BUILD_CERTIFICATE_BASE64 | base64 --decode > certificate.p12
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+
+      - name: Setup Sparkle
+        env:
+          SPARKLE_VERSION: 2.6.3
+        run: |
+          mkdir -p .action/sparkle
+          cd .action/sparkle
+          curl -L https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-for-Swift-Package-Manager.zip > sparkle.zip
+          unzip sparkle.zip
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+
+      - name: Build Number
+        run: |
+          echo "SCHEDY_BUILD=$(git rev-list --count head)" >> $GITHUB_ENV
+          echo "SCHEDY_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "SCHEDY_COMMIT_LONG=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Update Info.plist
+        env:
+          SPARKLE_KEY_PUB: ${{ secrets.PROD_MACOS_SPARKLE_KEY_PUB }}
+        run: |
+          # Version Info
+          /usr/libexec/PlistBuddy -c "Set :SchedyCommit $SCHEDY_COMMIT" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :Beta true" "schedy/Info.plist"
+
+          # Updater
+          /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "schedy/Info.plist"
+
+      - name: Archive Schedy
+        run: |
+          xcodebuild archive -scheme schedy -configuration Release -archivePath ./schedy.xcarchive
+
+      - name: Export Schedy archive
+        run: |
+          xcodebuild -exportArchive -archivePath $(PWD)/schedy.xcarchive -exportOptionsPlist $(PWD)/schedy/exportOptions.plist -exportPath $(PWD)/build/Release
+          mv build/Release/schedy.app build/Release/Schedy.app
+
+      - name: Create DMG
+        run: |
+          npm install --global create-dmg
+          create-dmg \
+          --dmg-title="Schedy Installer" \
+          build/Release/Schedy.app \
+          ./
+          mv ./Schedy*.dmg ./SchedyInstaller.dmg
+
+      - name: Notarize DMG
+        env:
+          PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}
+          PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}
+          PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}
+        run: |
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
+
+          echo "Submit DMG to notarization"
+          xcrun notarytool submit "SchedyInstaller.dmg" --keychain-profile "notarytool-profile" --wait
+
+          echo "Attach Staple"
+          xcrun stapler staple "SchedyInstaller.dmg"
+          xcrun stapler staple "build/Release/Schedy.app"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.SCHEDY_BUILD }}
+          tag_name: ${{ env.SCHEDY_BUILD }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          prerelease: true
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+          files: |
+            SchedyInstaller.dmg
+
+      - name: Generate appcast
+        env:
+          SPARKLE_KEY: ${{ secrets.PROD_MACOS_SPARKLE_KEY }}
+        run: |
+          echo $SPARKLE_KEY > signing.key
+
+          echo "Signing sparkle update"
+          sign_update -f signing.key SchedyInstaller.dmg > sign_update.txt
+          cat sign_update.txt
+
+          echo "Fetching appcast.xml from R2"
+          curl -L https://files.schedy.io/appcast.xml > appcast.xml
+
+          echo "Updating appcast with python script"
+          python3 scripts/update_appcast.py --beta
+          test -f appcast_new.xml
+
+      - name: Prepare R2 Storage
+        run: |
+          mkdir blob
+          cp appcast_new.xml blob/appcast.xml
+
+      - name: Upload to R2
+        uses: ryand56/r2-upload-action@latest
+        with:
+          r2-account-id: ${{ secrets.CF_R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+          r2-bucket: schedy
+          source-dir: blob
+          destination-dir: ./
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SchedyInstaller
+          path: SchedyInstaller.dmg
+
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain build.keychain
