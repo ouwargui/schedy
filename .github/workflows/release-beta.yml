@@ -113,7 +113,7 @@ jobs:
           tag_name: ${{ env.SCHEDY_BUILD }}
           target_commitish: ${{ github.sha }}
           generate_release_notes: true
-          make_latest: "true"
+          prerelease: true
           token: ${{ secrets.GH_RELEASE_TOKEN }}
           files: |
             SchedyInstaller.dmg
