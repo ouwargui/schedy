@@ -40,5 +40,7 @@
 	<string>123</string>
 	<key>CFBundleShortVersionString</key>
 	<string>123</string>
+	<key>Beta</key>
+	<true/>
 </dict>
 </plist>
