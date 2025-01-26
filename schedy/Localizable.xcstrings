@@ -62,6 +62,9 @@
     "Build %@" : {
 
     },
+    "Build %@ (Beta)" : {
+
+    },
     "Calendars" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -181,6 +184,9 @@
           }
         }
       }
+    },
+    "Receive nightly updates" : {
+
     },
     "remove" : {
 

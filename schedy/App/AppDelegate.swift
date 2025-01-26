@@ -104,6 +104,15 @@ extension AppDelegate: SPUUpdaterDelegate, SPUStandardUserDriverDelegate, UNUser
         return true
     }
 
+    func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        let allowedBetaUpdates = UserDefaults.standard.bool(forKey: "allowed-beta-updates")
+        if (allowedBetaUpdates) {
+            return Set(["beta"])
+        } else {
+            return Set([])
+        }
+    }
+
     func updater(_ updater: SPUUpdater, willScheduleUpdateCheckAfterDelay delay: TimeInterval) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { granted, error in
             // Examine granted outcome and error if desired...
