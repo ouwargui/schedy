@@ -11,21 +11,33 @@ import GTMAppAuth
 import GoogleAPIClientForREST_Calendar
 import Sentry
 
+let DEFAULT_TIME_INTERVAL: TimeInterval = 30
+let THREE_HOURS_IN_SECONDS: TimeInterval = 10_800
+
 @MainActor
 class CalendarSyncManager {
-    private let TIMER_INTERVAL: Double = 30
+    private let service: CalendarServiceProtocol
+    private let dataManager: DataManaging
+    private let timerInterval: TimeInterval
+
+    private var timer: Timer?
     private var eventSyncTokens = [String: String]()
     private var calendarSyncToken: String?
-    private var timer: Timer?
-    private var user: GoogleUser
-    private var authorizer: AuthSession {
-        return user.getSession()
-    }
     private var timePassedSinceFirstSync: TimeInterval = 0
 
-    init(user: GoogleUser) {
+    private var user: GoogleUser
+
+    init(
+        user: GoogleUser,
+        service: CalendarServiceProtocol? = nil,
+        dataManager: DataManaging? = nil,
+        timerInterval: TimeInterval = DEFAULT_TIME_INTERVAL
+      ) {
         self.user = user
-    }
+        self.service = service ?? GoogleCalendarService.shared
+        self.dataManager = dataManager ?? SwiftDataManager.shared
+        self.timerInterval = timerInterval
+      }
 
     func startSync() {
         Task {
@@ -36,16 +48,16 @@ class CalendarSyncManager {
             self.user.lastSyncedAt = Date()
         }
 
-        timer = Timer.scheduledTimer(withTimeInterval: self.TIMER_INTERVAL, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             print("syncing")
             Task { @MainActor in
                 await self.performCalendarSync()
                 await self.performEventsSync()
 
-                self.timePassedSinceFirstSync += self.TIMER_INTERVAL
+                self.timePassedSinceFirstSync += self.timerInterval
 
-                if self.timePassedSinceFirstSync >= 10_800 {
+                if self.timePassedSinceFirstSync >= THREE_HOURS_IN_SECONDS {
                     self.deleteOldEvents()
                 }
 
@@ -62,7 +74,7 @@ class CalendarSyncManager {
 
     private func performCalendarSync() async {
         guard let calendars = try? await GoogleCalendarService.shared.fetchUserCalendars(
-            fetcherAuthorizer: self.authorizer,
+            fetcherAuthorizer: user.getSession(),
             syncToken: self.calendarSyncToken
         ) else {
             return
@@ -74,7 +86,7 @@ class CalendarSyncManager {
     }
 
     private func performEventsSync() async {
-        let calendars = self.user.calendars
+        let calendars = user.calendars
 
         await withTaskGroup(of: Void.self) { [weak self] group in
             guard let self = self else { return }
@@ -82,7 +94,7 @@ class CalendarSyncManager {
                 group.addTask { @MainActor in
                     guard let events = try? await GoogleCalendarService.shared.fetchEvents(
                         for: calendar.googleId,
-                        fetcherAuthorizer: self.authorizer,
+                        fetcherAuthorizer: self.user.getSession(),
                         syncToken: self.eventSyncTokens[calendar.googleId]
                     ) else {
                         return
@@ -100,7 +112,7 @@ class CalendarSyncManager {
 
     @MainActor
     private func processCalendars(_ calendars: [GTLRCalendar_CalendarListEntry]) {
-        let storedCalendars = self.user.calendars
+        let storedCalendars = user.calendars
 
         for calendar in calendars {
             if calendar.deleted == true {
@@ -116,7 +128,7 @@ class CalendarSyncManager {
         if let storedCalendar = storedCalendars.first(where: {
             $0.googleId == calendar.identifier!
         }) {
-            SwiftDataManager.shared.delete(model: storedCalendar)
+            self.dataManager.delete(model: storedCalendar)
         }
     }
 
@@ -124,10 +136,10 @@ class CalendarSyncManager {
     private func handleChangedCalendar(storedCalendars: [GoogleCalendar], calendar: GTLRCalendar_CalendarListEntry) {
         if let storedCalendar = storedCalendars.first(where: { $0.googleId == calendar.identifier }) {
             storedCalendar.update(calendar: calendar)
-            SwiftDataManager.shared.update()
+            self.dataManager.update()
         } else {
-            let newCalendar = GoogleCalendar(calendar: calendar, account: self.user)
-            SwiftDataManager.shared.insert(model: newCalendar)
+            let newCalendar = GoogleCalendar(calendar: calendar, account: user)
+            self.dataManager.insert(model: newCalendar)
         }
     }
 
@@ -153,7 +165,7 @@ class CalendarSyncManager {
         if let storedEvent = calendar.events.first(where: {
             $0.googleId == event.identifier!
         }) {
-            SwiftDataManager.shared.delete(model: storedEvent)
+            self.dataManager.delete(model: storedEvent)
         }
     }
 
@@ -161,10 +173,10 @@ class CalendarSyncManager {
     private func handleChangedEvent(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
         if let storedEvent = calendar.events.first(where: { $0.googleId == event.identifier }) {
             storedEvent.update(event: event)
-            SwiftDataManager.shared.update()
+            self.dataManager.update()
         } else {
             let newEvent = GoogleEvent(event: event, calendar: calendar)
-            SwiftDataManager.shared.insert(model: newEvent)
+            self.dataManager.insert(model: newEvent)
         }
 
         return
@@ -179,10 +191,10 @@ class CalendarSyncManager {
             }
         )
 
-        guard let events = SwiftDataManager.shared.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
+        guard let events = self.dataManager.fetchAll(fetchDescriptor: descriptor).unwrapOrNil() else {
             return
         }
 
-        events.forEach(SwiftDataManager.shared.delete)
+        events.forEach(self.dataManager.delete)
     }
 }
