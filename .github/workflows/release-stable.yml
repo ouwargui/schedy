@@ -70,7 +70,7 @@ jobs:
       - name: Build Number
         run: |
           COMMIT_COUNT=$(git rev-list --count HEAD)
-          BUILD=$(( COUNT * 2 + 1 ))
+          BUILD=$(( COMMIT_COUNT * 2 + 1 ))
 
           echo "SCHEDY_BUILD=$BUILD" >> $GITHUB_ENV
           echo "SCHEDY_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
