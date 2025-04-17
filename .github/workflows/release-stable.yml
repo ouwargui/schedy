@@ -39,6 +39,15 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
 
+      - name: Run Tests
+        run: |
+          xcodebuild \
+            -project schedy.xcodeproj \
+            -scheme schedy \
+            -destination 'platform=macOS' \
+            test \
+            -quiet
+
       - name: Setup Sparkle
         env:
           SPARKLE_VERSION: 2.6.3
@@ -51,7 +60,10 @@ jobs:
 
       - name: Build Number
         run: |
-          echo "SCHEDY_BUILD=$(git rev-list --count head)" >> $GITHUB_ENV
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          BUILD=$(( COUNT * 2 + 1 ))
+
+          echo "SCHEDY_BUILD=$BUILD" >> $GITHUB_ENV
           echo "SCHEDY_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "SCHEDY_COMMIT_LONG=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
