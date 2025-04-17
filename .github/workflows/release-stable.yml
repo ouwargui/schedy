@@ -1,11 +1,7 @@
 # Inspired by https://github.com/ghostty-org/ghostty/blob/main/.github/workflows/release-tip.yml
 # thanks mitchell
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 name: Release Stable
 
