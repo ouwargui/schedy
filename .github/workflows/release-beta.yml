@@ -43,14 +43,23 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
 
+      - name: Build for testing
+        run: |
+          xcodebuild \
+            -scheme schedy \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            build-for-testing \
+            -derivedDataPath DerivedData
+
       - name: Run Tests
         run: |
           xcodebuild \
-            -project schedy.xcodeproj \
             -scheme schedy \
+            -configuration Debug \
             -destination 'platform=macOS' \
-            test \
-            -quiet
+            test-without-building \
+            -derivedDataPath DerivedData \
 
       - name: Setup Sparkle
         env:
@@ -86,7 +95,12 @@ jobs:
 
       - name: Archive Schedy
         run: |
-          xcodebuild archive -scheme schedy -configuration Release -archivePath ./schedy.xcarchive
+          xcodebuild \
+            -scheme schedy \
+            -configuration Release \
+            -archivePath ./schedy.xcarchive \
+            archive \
+            -derivedDataPath DerivedData
 
       - name: Export Schedy archive
         run: |
