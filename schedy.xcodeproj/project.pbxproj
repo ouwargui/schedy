@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A120EE5A2DB1AD61002DD54C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A120EE592DB1AD61002DD54C /* XCTest.framework */; };
 		A157B36A2D3B6056002AA282 /* GoogleAPIClientForRESTCore in Frameworks */ = {isa = PBXBuildFile; productRef = A157B3692D3B6056002AA282 /* GoogleAPIClientForRESTCore */; };
 		A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A17459542D011FEC0057BB31 /* GTMAppAuth */; };
 		A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BC2D0A8E3400475CCA /* Sentry */; };
@@ -18,15 +19,37 @@
 		A1B774E02D080D9F005AB4C2 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = A1B774DF2D080D9F005AB4C2 /* Sparkle */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A120EE542DB1AD37002DD54C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A18F75EB2CF935C900DC952A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A18F75F22CF935C900DC952A;
+			remoteInfo = schedy;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		A120EE502DB1AD37002DD54C /* schedyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = schedyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A120EE592DB1AD61002DD54C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		A18F75F32CF935C900DC952A /* schedy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = schedy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A120EE5C2DB1ADA7002DD54C /* Exceptions for "schedy" folder in "schedyTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/CalendarSyncManagerTests.swift,
+				Tests/StringExtensionTests.swift,
+			);
+			target = A120EE4F2DB1AD37002DD54C /* schedyTests */;
+		};
 		A18F760A2CF93ACF00DC952A /* Exceptions for "schedy" folder in "schedy" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Tests/CalendarSyncManagerTests.swift,
+				Tests/StringExtensionTests.swift,
 			);
 			target = A18F75F22CF935C900DC952A /* schedy */;
 		};
@@ -37,6 +60,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				A18F760A2CF93ACF00DC952A /* Exceptions for "schedy" folder in "schedy" target */,
+				A120EE5C2DB1ADA7002DD54C /* Exceptions for "schedy" folder in "schedyTests" target */,
 			);
 			path = schedy;
 			sourceTree = "<group>";
@@ -44,6 +68,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A120EE4D2DB1AD37002DD54C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A120EE5A2DB1AD61002DD54C /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A18F75F02CF935C900DC952A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,10 +95,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A120EE352DB1A7F3002DD54C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A120EE592DB1AD61002DD54C /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A18F75EA2CF935C900DC952A = {
 			isa = PBXGroup;
 			children = (
 				A18F75F52CF935C900DC952A /* schedy */,
+				A120EE352DB1A7F3002DD54C /* Frameworks */,
 				A18F75F42CF935C900DC952A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -75,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				A18F75F32CF935C900DC952A /* schedy.app */,
+				A120EE502DB1AD37002DD54C /* schedyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +124,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A120EE4F2DB1AD37002DD54C /* schedyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A120EE562DB1AD37002DD54C /* Build configuration list for PBXNativeTarget "schedyTests" */;
+			buildPhases = (
+				A120EE4C2DB1AD37002DD54C /* Sources */,
+				A120EE4D2DB1AD37002DD54C /* Frameworks */,
+				A120EE4E2DB1AD37002DD54C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A120EE552DB1AD37002DD54C /* PBXTargetDependency */,
+			);
+			name = schedyTests;
+			packageProductDependencies = (
+			);
+			productName = schedyTests;
+			productReference = A120EE502DB1AD37002DD54C /* schedyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		A18F75F22CF935C900DC952A /* schedy */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A18F76022CF935CB00DC952A /* Build configuration list for PBXNativeTarget "schedy" */;
@@ -123,6 +185,10 @@
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
+					A120EE4F2DB1AD37002DD54C = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = A18F75F22CF935C900DC952A;
+					};
 					A18F75F22CF935C900DC952A = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -153,11 +219,19 @@
 			projectRoot = "";
 			targets = (
 				A18F75F22CF935C900DC952A /* schedy */,
+				A120EE4F2DB1AD37002DD54C /* schedyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A120EE4E2DB1AD37002DD54C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A18F75F12CF935C900DC952A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,6 +242,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A120EE4C2DB1AD37002DD54C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A18F75EF2CF935C900DC952A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -177,7 +258,53 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A120EE552DB1AD37002DD54C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A18F75F22CF935C900DC952A /* schedy */;
+			targetProxy = A120EE542DB1AD37002DD54C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		A120EE572DB1AD37002DD54C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JF8DW7C5A2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ouwargui.schedyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/schedy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/schedy";
+			};
+			name = Debug;
+		};
+		A120EE582DB1AD37002DD54C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JF8DW7C5A2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ouwargui.schedyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/schedy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/schedy";
+			};
+			name = Release;
+		};
 		A18F76002CF935CB00DC952A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -373,6 +500,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A120EE562DB1AD37002DD54C /* Build configuration list for PBXNativeTarget "schedyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A120EE572DB1AD37002DD54C /* Debug */,
+				A120EE582DB1AD37002DD54C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A18F75EE2CF935C900DC952A /* Build configuration list for PBXProject "schedy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

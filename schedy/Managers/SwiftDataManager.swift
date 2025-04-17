@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-struct SwiftDataManager {
+struct SwiftDataManager: DataManaging {
     static let shared = SwiftDataManager()
     var container: ModelContainer
 

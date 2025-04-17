@@ -9,7 +9,7 @@ import Foundation
 import GoogleAPIClientForREST_Calendar
 import GTMAppAuth
 
-class GoogleCalendarService {
+class GoogleCalendarService: CalendarServiceProtocol {
     static let shared = GoogleCalendarService()
     private let service = GTLRCalendarService()
 
