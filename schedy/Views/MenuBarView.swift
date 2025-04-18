@@ -65,13 +65,13 @@ struct MenuBarView: Scene {
                 Divider()
             }
 
-            if self.appDelegate.isUpdateAvailable {
-                Button("Version \(self.appDelegate.updateData?.versionString ?? "") available!") {
-                    self.appDelegate.updaterController.checkForUpdates(nil)
+            if self.appDelegate.appStateManager.isUpdateAvailable {
+                Button("Version \(self.appDelegate.appStateManager.updateData?.versionString ?? "") available!") {
+                    self.appDelegate.appStateManager.updaterController?.checkForUpdates(nil)
                 }
             } else {
                 Button("Check for updates") {
-                    self.appDelegate.updaterController.checkForUpdates(nil)
+                    self.appDelegate.appStateManager.updaterController?.checkForUpdates(nil)
                 }
             }
 

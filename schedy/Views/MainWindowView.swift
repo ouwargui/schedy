@@ -16,14 +16,14 @@ enum SettingsItem: String.LocalizationValue {
 }
 
 struct MainWindowView: View {
-    private let updater: SPUUpdater
+    private let updater: SPUUpdater?
 
     @Environment(\.dismissWindow) var dismissWindow
     @State private var selectedItem: SettingsItem = .accounts
     private let pub = NotificationCenter.default.publisher(
         for: NSNotification.Name("close-settings"))
 
-    init(updater: SPUUpdater) {
+    init(updater: SPUUpdater?) {
         self.updater = updater
     }
 

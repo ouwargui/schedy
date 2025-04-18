@@ -10,16 +10,16 @@ import KeyboardShortcuts
 import Sparkle
 
 struct SettingsView: View {
-    private let updater: SPUUpdater
+    private let updater: SPUUpdater?
     @State private var isShowingClearAppDataAlert = false
     @State private var automaticallyChecksForUpdates: Bool
     @State private var automaticallyDownloadsUpdates: Bool
     @AppStorage("allowed-beta-updates") var allowedBetaUpdates: Bool = false
 
-    init(updater: SPUUpdater) {
+    init(updater: SPUUpdater?) {
         self.updater = updater
-        self.automaticallyChecksForUpdates = updater.automaticallyChecksForUpdates
-        self.automaticallyDownloadsUpdates = updater.automaticallyDownloadsUpdates
+        self.automaticallyChecksForUpdates = updater?.automaticallyChecksForUpdates ?? false
+        self.automaticallyDownloadsUpdates = updater?.automaticallyDownloadsUpdates ?? false
     }
 
     var buildVersion: String {
@@ -54,12 +54,12 @@ struct SettingsView: View {
 
                         Toggle("Automatically check for updates", isOn: self.$automaticallyChecksForUpdates)
                             .onChange(of: self.automaticallyChecksForUpdates) { newValue, _ in
-                                updater.automaticallyChecksForUpdates = newValue
+                                updater?.automaticallyChecksForUpdates = newValue
                             }
 
                         Toggle("Automatically download updates", isOn: self.$automaticallyDownloadsUpdates)
                             .onChange(of: self.automaticallyDownloadsUpdates) { newValue, _ in
-                                updater.automaticallyDownloadsUpdates = newValue
+                                updater?.automaticallyDownloadsUpdates = newValue
                             }
                     }
                 }

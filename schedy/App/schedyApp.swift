@@ -39,11 +39,13 @@ struct SchedyApp: App {
             .modelContainer(SwiftDataManager.shared.container)
 
         Window("Settings", id: "settings") {
-            MainWindowView(updater: self.appDelegate.updaterController.updater)
+            MainWindowView(updater: self.appDelegate.appStateManager.updaterController?.updater)
         }
         .commands {
-            CommandGroup(after: .appInfo) {
-                CheckForUpdatesView(updater: self.appDelegate.updaterController.updater)
+            if let updater = self.appDelegate.appStateManager.updaterController?.updater {
+                CommandGroup(after: .appInfo) {
+                    CheckForUpdatesView(updater: updater)
+                }
             }
 
             SidebarCommands()
