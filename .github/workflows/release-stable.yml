@@ -44,7 +44,8 @@ jobs:
           xcodebuild \
             -scheme schedy \
             -configuration Debug \
-            -destination 'platform=macOS' \
+            -destination 'platform=macOS,arch=arm64' \
+            ONLY_ACTIVE_ARCH=YES
             build-for-testing \
             -derivedDataPath DerivedData
 
@@ -53,7 +54,7 @@ jobs:
           xcodebuild \
             -scheme schedy \
             -configuration Debug \
-            -destination 'platform=macOS' \
+            -destination 'platform=macOS,arch=arm64' \
             test-without-building \
             -derivedDataPath DerivedData \
 
