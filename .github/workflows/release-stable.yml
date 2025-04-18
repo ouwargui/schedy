@@ -85,6 +85,7 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :SchedyCommit $SCHEDY_COMMIT" "schedy/Info.plist"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $SCHEDY_BUILD" "schedy/Info.plist"
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SCHEDY_COMMIT" "schedy/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :Beta false" "schedy/Info.plist"
 
           # Updater
           /usr/libexec/PlistBuddy -c "Set :SUPublicEDKey $SPARKLE_KEY_PUB" "schedy/Info.plist"
