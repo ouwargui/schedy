@@ -133,13 +133,41 @@ jobs:
           xcrun stapler staple "SchedyInstaller.dmg"
           xcrun stapler staple "build/Release/Schedy.app"
 
+      - name: Fetch all tags
+        run: |
+          git fetch --tags --no-recurse-submodules
+
+      - name: Get last tag
+        id: last_tag
+        run: |
+          TAG=$(git tag --sort=-creatordate | head -n1)
+          echo "Last tag is: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          FROM=${{ steps.last_tag.outputs.tag }}
+          if [ -z "$FROM" ]; then
+            RANGE="--pretty=format:'* %s'"
+          else
+            RANGE="$FROM..HEAD --pretty=format:'* %s'"
+          fi
+
+          NOTES=$(git log $RANGE | sed "s/'/’/g")
+          # strip single quotes inside messages, fix for YAML
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ env.SCHEDY_BUILD }}
           tag_name: ${{ env.SCHEDY_BUILD }}
           target_commitish: ${{ github.sha }}
-          generate_release_notes: true
+          generate_release_notes: false
+          body: ${{ steps.release_notes.outputs.notes }}
           prerelease: true
           token: ${{ secrets.GH_RELEASE_TOKEN }}
           files: |
