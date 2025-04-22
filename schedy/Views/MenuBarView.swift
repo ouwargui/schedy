@@ -19,7 +19,7 @@ struct MenuBarView: Scene {
         MenuBarExtra(
             self.viewModel.titleBarEvent?.getMenuBarString(
                 currentTime: self.viewModel.currentTime
-            ) ?? "schedy"
+            ) ?? "Schedy"
         ) {
             if self.viewModel.isThereAnyEvents {
                 if !self.viewModel.todaysPastEvents.isEmpty {
@@ -81,8 +81,10 @@ struct MenuBarView: Scene {
 
             Button("Settings") {
                 NSApplication.shared.setActivationPolicy(.regular)
-                NSApplication.shared.activate()
                 openWindow(id: "settings")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                }
             }.keyboardShortcut(",", modifiers: [.command, .shift])
 
             Button(LocalizedString.capitalized("quit"), action: self.quitApp)
