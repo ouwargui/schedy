@@ -53,14 +53,18 @@ jobs:
             build-for-testing \
             -derivedDataPath DerivedData
 
-      - name: Run Tests
+      - name: Run Tests (with idle & retry)
         run: |
-          xcodebuild \
-            -scheme schedy \
-            -configuration Debug \
-            -destination 'platform=macOS,arch=arm64' \
-            test-without-building \
-            -derivedDataPath DerivedData
+          python3 scripts/run_with_idle_timeout.py \
+            --idle 30 \
+            --timeout 300 \
+            -- \
+            xcodebuild \
+              -scheme schedy \
+              -configuration Debug \
+              -destination 'platform=macOS,arch=arm64' \
+              test-without-building \
+              -derivedDataPath DerivedData
 
       - name: Setup Sparkle
         env:
