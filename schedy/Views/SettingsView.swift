@@ -44,12 +44,12 @@ struct SettingsView: View {
         Spacer()
         VStack {
             HStack {
-                Spacer()
+                VStack(alignment: .leading) {
+                    Form {
+                        KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
+                    }
 
-                Form {
-                    KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
-
-                    VStack(alignment: .leading) {
+                    Form {
                         Toggle("Receive nightly updates", isOn: self.$allowedBetaUpdates)
 
                         Toggle("Automatically check for updates", isOn: self.$automaticallyChecksForUpdates)
@@ -63,6 +63,8 @@ struct SettingsView: View {
                             }
                     }
                 }
+
+                Spacer()
             }
 
             Spacer()
