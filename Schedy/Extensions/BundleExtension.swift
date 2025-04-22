@@ -1,10 +1,3 @@
-//
-//  BundleExtension.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 11/12/24.
-//
-
 import Foundation
 
 extension Bundle {

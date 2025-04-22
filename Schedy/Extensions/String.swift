@@ -1,10 +1,3 @@
-//
-//  String.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 23/01/25.
-//
-
 import Foundation
 
 extension String {

@@ -1,10 +1,3 @@
-//
-//  TestableProtocols.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 17/04/25.
-//
-
 import Foundation
 import GoogleAPIClientForREST_Calendar
 import GTMAppAuth

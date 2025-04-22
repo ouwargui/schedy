@@ -1,10 +1,3 @@
-//
-//  GoogleCalendarService.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 02/12/24.
-//
-
 import Foundation
 import GoogleAPIClientForREST_Calendar
 import GTMAppAuth

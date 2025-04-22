@@ -1,10 +1,3 @@
-//
-//  CalendarSyncManager.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 06/12/24.
-//
-
 import Foundation
 import SwiftData
 import GTMAppAuth

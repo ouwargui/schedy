@@ -1,10 +1,3 @@
-//
-//  GoogleAuthSerice.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 29/11/24.
-//
-
 import GTMAppAuth
 import AppAuth
 import Foundation

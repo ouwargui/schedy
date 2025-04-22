@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 09/12/24.
-//
-
 import SwiftUI
 import KeyboardShortcuts
 import Sparkle

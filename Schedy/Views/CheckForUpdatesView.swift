@@ -1,10 +1,3 @@
-//
-//  CheckForUpdatesView.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 10/12/24.
-//
-
 import SwiftUI
 import Sparkle
 

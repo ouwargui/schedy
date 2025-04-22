@@ -1,10 +1,3 @@
-//
-//  schedyTest.swift
-//  schedyTest
-//
-//  Created by Guilherme D'Alessandro on 17/04/25.
-//
-
 import XCTest
 
 @testable import Schedy

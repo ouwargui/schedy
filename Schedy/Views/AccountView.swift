@@ -1,10 +1,3 @@
-//
-//  AccountView.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 08/12/24.
-//
-
 import Foundation
 import SwiftUI
 

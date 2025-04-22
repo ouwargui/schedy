@@ -1,10 +1,3 @@
-//
-//  CheckForUpdatesViewModel.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 10/12/24.
-//
-
 import Foundation
 import Sparkle
 

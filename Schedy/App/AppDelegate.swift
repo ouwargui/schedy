@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 29/11/24.
-//
-
 import AppAuthCore
 import AppKit
 import Sentry

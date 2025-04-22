@@ -1,10 +1,3 @@
-//
-//  GoogleEvent.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 03/12/24.
-//
-
 import Foundation
 import GoogleAPIClientForREST_Calendar
 import SwiftData

@@ -1,10 +1,3 @@
-//
-//  Result.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 13/12/24.
-//
-
 import Foundation
 import Sentry
 

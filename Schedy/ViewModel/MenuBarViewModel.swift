@@ -1,10 +1,3 @@
-//
-//  MenuBarViewModel.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 07/12/24.
-//
-
 import Foundation
 import SwiftData
 import KeyboardShortcuts

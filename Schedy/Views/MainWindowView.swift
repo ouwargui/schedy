@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  schedy
-//
-//  Created by Guilherme D'Alessandro on 29/11/24.
-//
-
 import Foundation
 import SwiftData
 import SwiftUI
