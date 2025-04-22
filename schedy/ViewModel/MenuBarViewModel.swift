@@ -56,6 +56,10 @@ class MenuBarViewModel: ObservableObject {
     }
 
     var titleBarEvent: GoogleEvent? {
+        if let todaysNextEventsFirst = self.todaysNextEvents.first, todaysNextEventsFirst.getMinutesUntilEvent(currentTime: self.currentTime) < 15 {
+            return todaysNextEventsFirst
+        }
+
         return self.currentEvent ?? self.todaysNextEvents.first
     }
 

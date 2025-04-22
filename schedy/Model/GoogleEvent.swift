@@ -150,17 +150,14 @@ extension GoogleEvent {
         return dateFormatter.string(from: self.end)
     }
 
-    func getTimeUntilEvent(from: Date) -> String {
-        return self.timeUntilEvent(from: from)
-    }
-
-    func getTimeToEnd(to: Date) -> String {
-        return self.timeUntilEnd(to: to)
+    func getMinutesUntilEvent(currentTime: Date) -> Int {
+        let calendar = Calendar.current
+        return calendar.dateComponents([.minute], from: currentTime, to: self.start).minute ?? 0
     }
 
     func getMenuBarString(currentTime: Date) -> String {
         let isOnEvent = self.start <= currentTime && self.end >= currentTime
-        let time = isOnEvent ? self.getTimeToEnd(to: currentTime) : self.getTimeUntilEvent(from: currentTime)
+        let time = isOnEvent ? self.getTimeUntilEndFormatted(to: currentTime) : self.getTimeUntilEventFormatted(from: currentTime)
         let timeToEndString = "\(time) \(LocalizedString.localized("left"))"
         let timeUntilString = "\(LocalizedString.localized("in")) \(time)"
         let stringToUse = isOnEvent ? timeToEndString : timeUntilString
@@ -189,7 +186,7 @@ extension Collection where Element == GoogleEvent {
 }
 
 private extension GoogleEvent {
-    func timeUntilEnd(to toEnd: Date) -> String {
+    func getTimeUntilEndFormatted(to toEnd: Date) -> String {
         let calendar = Calendar.current
 
         let components = calendar.dateComponents([.day, .hour, .minute, .second], from: self.end, to: toEnd)
@@ -214,7 +211,7 @@ private extension GoogleEvent {
         return result.trimmingCharacters(in: .whitespaces)
     }
 
-    func timeUntilEvent(from fromDate: Date) -> String {
+    func getTimeUntilEventFormatted(from fromDate: Date) -> String {
         let calendar = Calendar.current
 
         let components = calendar.dateComponents([.day, .hour, .minute], from: fromDate, to: self.start)
