@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import schedy
+@testable import Schedy
 
 final class StringExtensionTests: XCTestCase {
     func test_truncated_shorterThanLimit_returnsSelf() {

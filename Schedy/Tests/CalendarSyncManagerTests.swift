@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable import schedy
+@testable import Schedy
 import GoogleAPIClientForREST_Calendar
 import GTMAppAuth
 import SwiftData

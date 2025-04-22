@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A18F75F22CF935C900DC952A"
-               BuildableName = "schedy.app"
-               BlueprintName = "schedy"
-               ReferencedContainer = "container:schedy.xcodeproj">
+               BuildableName = "Schedy.app"
+               BlueprintName = "Schedy"
+               ReferencedContainer = "container:Schedy.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A120EE4F2DB1AD37002DD54C"
-               BuildableName = "schedyTests.xctest"
-               BlueprintName = "schedyTests"
-               ReferencedContainer = "container:schedy.xcodeproj">
+               BuildableName = "SchedyTests.xctest"
+               BlueprintName = "SchedyTests"
+               ReferencedContainer = "container:Schedy.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,9 +58,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A18F75F22CF935C900DC952A"
-            BuildableName = "schedy.app"
-            BlueprintName = "schedy"
-            ReferencedContainer = "container:schedy.xcodeproj">
+            BuildableName = "Schedy.app"
+            BlueprintName = "Schedy"
+            ReferencedContainer = "container:Schedy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -81,9 +81,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A18F75F22CF935C900DC952A"
-            BuildableName = "schedy.app"
-            BlueprintName = "schedy"
-            ReferencedContainer = "container:schedy.xcodeproj">
+            BuildableName = "Schedy.app"
+            BlueprintName = "Schedy"
+            ReferencedContainer = "container:Schedy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
@@ -103,9 +103,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "A18F75F22CF935C900DC952A"
-                     BuildableName = "schedy.app"
-                     BlueprintName = "schedy"
-                     ReferencedContainer = "container:schedy.xcodeproj">
+                     BuildableName = "Schedy.app"
+                     BlueprintName = "Schedy"
+                     ReferencedContainer = "container:Schedy.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
