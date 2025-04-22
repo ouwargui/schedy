@@ -25,7 +25,8 @@ struct MenuBarView: Scene {
                 if !self.viewModel.todaysPastEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("earlier today"))",
-                        events: self.viewModel.todaysPastEvents
+                        events: self.viewModel.todaysPastEvents,
+                        currentEvent: self.viewModel.titleBarEvent
                     )
 
                     Divider()
@@ -34,7 +35,8 @@ struct MenuBarView: Scene {
                 if !self.viewModel.currentEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("now"))",
-                        events: self.viewModel.currentEvents
+                        events: self.viewModel.currentEvents,
+                        currentEvent: self.viewModel.titleBarEvent
                     )
 
                     Divider()
@@ -43,18 +45,18 @@ struct MenuBarView: Scene {
                 if !self.viewModel.todaysNextEvents.isEmpty {
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("next")):",
-                        events: self.viewModel.todaysNextEvents
+                        events: self.viewModel.todaysNextEvents,
+                        currentEvent: self.viewModel.titleBarEvent
                     )
 
                     Divider()
                 }
 
                 if !self.viewModel.tomorrowsEvents.isEmpty {
-                    // swiftlint:disable line_length
                     MenuBarItemListView(
                         sectionTitle: "\(LocalizedString.capitalized("tomorrow")) (\(self.viewModel.tomorrowFormatted)):",
-                    // swiftlint:enable line_length
-                        events: self.viewModel.tomorrowsEvents
+                        events: self.viewModel.tomorrowsEvents,
+                        currentEvent: self.viewModel.titleBarEvent
                     )
 
                     Divider()

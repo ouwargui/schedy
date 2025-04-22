@@ -42,11 +42,11 @@ extension GoogleUser {
         return SessionManager.shared.getSession(for: self.email)!
     }
 
-    func getLastSyncRelativeTime() -> String? {
+    func getLastSyncRelativeTime(relativeTo: Date = Date.now) -> String? {
         if let lastSyncedAt = self.lastSyncedAt {
             let formatter = RelativeDateTimeFormatter()
             formatter.unitsStyle = .full
-            let relativeDate = formatter.localizedString(for: lastSyncedAt, relativeTo: Date.now)
+            let relativeDate = formatter.localizedString(for: lastSyncedAt, relativeTo: relativeTo)
             return relativeDate
         }
 
