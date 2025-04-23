@@ -39,8 +39,6 @@ class UpdaterManager: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegat
     }
 
     func standardUserDriverWillHandleShowingUpdate(_ handleShowingUpdate: Bool, forUpdate update: SUAppcastItem, state: SPUUserUpdateState) {
-        guard !handleShowingUpdate else { return }
-
         self.appStateManager.isUpdateAvailable = true
         self.appStateManager.updateData = update
 
@@ -74,10 +72,12 @@ class UpdaterManager: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegat
     }
 
     func standardUserDriverWillFinishUpdateSession() {
-        self.appStateManager.isUpdateAvailable = false
-        self.appStateManager.updateData = nil
         NotificationCenter.default.post(name: NSNotification.Name("close-settings"), object: self)
         NSApp.setActivationPolicy(.accessory)
+    }
+
+    func updater(_ updater: SPUUpdater, willInstallUpdate item: SUAppcastItem) {
+        self.appStateManager.shouldQuit = true
     }
 
     func updaterWillRelaunchApplication(_ updater: SPUUpdater) {

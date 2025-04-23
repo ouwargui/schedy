@@ -9,24 +9,29 @@ import UserNotifications
 class AppStateManager: ObservableObject {
     var shouldQuit = false
     var updaterController: SPUStandardUpdaterController?
-    @State var isUpdateAvailable: Bool = false
-    @State var updateData: SUAppcastItem?
+    @Published var isUpdateAvailable: Bool = false
+    @Published var updateData: SUAppcastItem?
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
-    var shouldQuit = false
     let updaterDelegate: UpdaterManager
     let appStateManager: AppStateManager
 
     override init() {
-        self.appStateManager = AppStateManager()
-        self.updaterDelegate = UpdaterManager(appStateManager: appStateManager)
-        self.appStateManager.updaterController = SPUStandardUpdaterController(
+        let manager = AppStateManager()
+        let sparkleDelegate = UpdaterManager(appStateManager: manager)
+        self.appStateManager = manager
+        self.updaterDelegate = sparkleDelegate
+
+        super.init()
+
+        let controller = SPUStandardUpdaterController(
             startingUpdater: true,
             updaterDelegate: updaterDelegate,
-            userDriverDelegate: nil
+            userDriverDelegate: updaterDelegate
         )
+        self.appStateManager.updaterController = controller
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -77,7 +82,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if self.shouldQuit {
+        if self.appStateManager.shouldQuit {
             return .terminateNow
         } else {
             NotificationCenter.default.post(

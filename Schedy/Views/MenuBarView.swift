@@ -60,15 +60,7 @@ struct MenuBarView: Scene {
                 Divider()
             }
 
-            if self.appDelegate.appStateManager.isUpdateAvailable {
-                Button("Version \(self.appDelegate.appStateManager.updateData?.versionString ?? "") available!") {
-                    self.appDelegate.appStateManager.updaterController?.checkForUpdates(nil)
-                }
-            } else {
-                Button("Check for updates") {
-                    self.appDelegate.appStateManager.updaterController?.checkForUpdates(nil)
-                }
-            }
+            CheckForUpdatesView(appDelegate: self.appDelegate)
 
             Divider()
 
@@ -87,7 +79,7 @@ struct MenuBarView: Scene {
     }
 
     func quitApp() {
-        self.appDelegate.shouldQuit = true
+        self.appDelegate.appStateManager.shouldQuit = true
         NSApplication.shared.terminate(nil)
     }
 }

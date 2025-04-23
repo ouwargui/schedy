@@ -6,6 +6,7 @@ struct SchedyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
+        #if !DEBUG
         SentrySDK.start { options in
             options.dsn = Constants.sentryIngestUrl
             options.debug = false
@@ -24,6 +25,7 @@ struct SchedyApp: App {
         }
 
         SentrySDK.startProfiler()
+        #endif
     }
 
     var body: some Scene {
@@ -35,10 +37,8 @@ struct SchedyApp: App {
             MainWindowView(updater: self.appDelegate.appStateManager.updaterController?.updater)
         }
         .commands {
-            if let updater = self.appDelegate.appStateManager.updaterController?.updater {
-                CommandGroup(after: .appInfo) {
-                    CheckForUpdatesView(updater: updater)
-                }
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(appDelegate: appDelegate)
             }
 
             SidebarCommands()

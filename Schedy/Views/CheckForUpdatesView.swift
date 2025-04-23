@@ -3,17 +3,26 @@ import Sparkle
 
 struct CheckForUpdatesView: View {
     @ObservedObject private var checkForUpdatesViewModel: CheckForUpdatesViewModel
-    private let updater: SPUUpdater
+    @ObservedObject private var appDelegate: AppDelegate
 
-    init(updater: SPUUpdater) {
-        self.updater = updater
-
-        // Create our view model for our CheckForUpdatesView
+    init(appDelegate: AppDelegate) {
+        self.appDelegate = appDelegate
+        let updater = appDelegate.appStateManager.updaterController?.updater
         self.checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
     var body: some View {
-        Button("Check for Updates…", action: updater.checkForUpdates)
-            .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
+        if let updater = self.appDelegate.appStateManager.updaterController?.updater {
+            if self.appDelegate.appStateManager.isUpdateAvailable {
+                Button("Version \(self.appDelegate.appStateManager.updateData?.versionString ?? "") available!") {
+                    updater.checkForUpdates()
+                }
+            } else {
+                Button("Check for updates") {
+                    updater.checkForUpdates()
+                }
+                .disabled(!self.checkForUpdatesViewModel.canCheckForUpdates)
+            }
+        }
     }
 }
