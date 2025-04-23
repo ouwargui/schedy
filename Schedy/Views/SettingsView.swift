@@ -29,10 +29,6 @@ struct SettingsView: View {
         return ""
     }
 
-    var isBeta: Bool {
-        return Bundle.main.isBeta ?? false
-    }
-
     var body: some View {
         Spacer()
         VStack {
@@ -64,7 +60,7 @@ struct SettingsView: View {
 
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    if self.isBeta {
+                    if Bundle.main.isBeta {
                         Text("Build \(self.buildVersion) (Beta)")
                             .font(.system(size: 12))
                             .foregroundStyle(.secondary)

@@ -13,7 +13,7 @@ extension Bundle {
         return infoDictionary?["SchedyCommit"] as? String
     }
 
-    var isBeta: Bool? {
-        return infoDictionary?["Beta"] as? Bool
+    var isBeta: Bool {
+        return infoDictionary?["Beta"] as? Bool ?? false
     }
 }

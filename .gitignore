@@ -2,4 +2,5 @@ archives/**
 releases/**
 build/**
 DerivedData/**
+*.xcarchive/**
 

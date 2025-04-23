@@ -6,26 +6,24 @@ struct SchedyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
-        #if !DEBUG
         SentrySDK.start { options in
             options.dsn = Constants.sentryIngestUrl
+#if DEBUG
+            options.debug = true
+            options.environment = "Debug"
+#else
             options.debug = false
-
-            options.tracesSampler = { context in
-                if context.transactionContext.name == "update-earlier-events" {
-                    return 0.1
-                } else {
-                    return 1
-                }
+            options.environment = Bundle.main.isBeta ? "Beta" : "Production"
+#endif
+            options.tracesSampleRate = 0.1
+            options.configureProfiling = {
+                $0.sessionSampleRate = 0.1
+                $0.lifecycle = .trace
             }
-            options.enableAppLaunchProfiling = true
             options.enableAutoPerformanceTracing = true
             options.enableCrashHandler = true
             options.enableUncaughtNSExceptionReporting = true
         }
-
-        SentrySDK.startProfiler()
-        #endif
     }
 
     var body: some Scene {
