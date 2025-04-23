@@ -214,6 +214,7 @@ jobs:
           curl -sL https://sentry.io/get-cli/ | bash
 
           sentry-cli debug-files upload \
+            --include-sources \
             --auth-token $SENTRY_AUTH_TOKEN \
             --org ouwargui \
             --project schedy-macos \
