@@ -6,6 +6,7 @@ struct SchedyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
+#if !DEBUG
         SentrySDK.start { options in
             options.dsn = Constants.sentryIngestUrl
             if let buildVersion = Bundle.main.buildVersion {
@@ -27,6 +28,7 @@ struct SchedyApp: App {
             options.enableCrashHandler = true
             options.enableUncaughtNSExceptionReporting = true
         }
+#endif
     }
 
     var body: some Scene {

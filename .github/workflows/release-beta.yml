@@ -218,8 +218,9 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          sentry-cli releases new "schedy@$SCHEDY_BUILD+beta" --finalize
-          sentry-cli releases set-commits "$SCHEDY_BUILD" --auto
+          VERSION="schedy@$SCHEDY_BUILD+beta"
+          sentry-cli releases new --org ouwargui --project schedy-macos "$VERSION" --finalize
+          sentry-cli releases set-commits "$VERSION" --auto
 
       - name: Upload dSYM to Sentry
         env:
