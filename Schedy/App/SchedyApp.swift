@@ -8,6 +8,9 @@ struct SchedyApp: App {
     init() {
         SentrySDK.start { options in
             options.dsn = Constants.sentryIngestUrl
+            if let buildVersion = Bundle.main.buildVersion {
+                options.releaseName = Bundle.main.isBeta ? "schedy@\(buildVersion)+beta" : "schedy@\(buildVersion)"
+            }
 #if DEBUG
             options.debug = true
             options.environment = "Debug"

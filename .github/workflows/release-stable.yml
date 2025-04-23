@@ -207,12 +207,22 @@ jobs:
           source-dir: blob
           destination-dir: ./
 
+      - name: Install sentry-cli
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli --version
+
+      - name: Create release on Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          sentry-cli releases new "schedy@$SCHEDY_BUILD+beta" --finalize
+          sentry-cli releases set-commits "$SCHEDY_BUILD" --auto
+
       - name: Upload dSYM to Sentry
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          curl -sL https://sentry.io/get-cli/ | bash
-
           sentry-cli debug-files upload \
             --include-sources \
             --auth-token $SENTRY_AUTH_TOKEN \
