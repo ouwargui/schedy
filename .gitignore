@@ -3,4 +3,4 @@ releases/**
 build/**
 DerivedData/**
 *.xcarchive/**
-
+buildServer.json

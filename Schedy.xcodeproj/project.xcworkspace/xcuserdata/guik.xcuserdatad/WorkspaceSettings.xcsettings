@@ -3,17 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>BuildLocationStyle</key>
-	<string>CustomLocation</string>
+	<string>UseAppPreferences</string>
 	<key>CustomBuildIntermediatesPath</key>
 	<string>Build/Intermediates.noindex</string>
 	<key>CustomBuildLocationType</key>
 	<string>RelativeToWorkspace</string>
 	<key>CustomBuildProductsPath</key>
 	<string>Build/Products</string>
-	<key>DerivedDataCustomLocation</key>
-	<string>DerivedData</string>
 	<key>DerivedDataLocationStyle</key>
-	<string>WorkspaceRelativePath</string>
+	<string>Default</string>
 	<key>ShowSharedSchemesAutomaticallyEnabled</key>
 	<true/>
 </dict>
