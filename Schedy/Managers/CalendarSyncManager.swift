@@ -109,7 +109,7 @@ class CalendarSyncManager {
   }
 
   @MainActor
-  private func processCalendars(_ calendars: [GTLRCalendar_CalendarListEntry]) {
+  func processCalendars(_ calendars: [GTLRCalendar_CalendarListEntry]) {
     let storedCalendars = user.calendars
 
     for calendar in calendars {
@@ -146,7 +146,7 @@ class CalendarSyncManager {
   }
 
   @MainActor
-  private func processEvents(_ events: [GTLRCalendar_Event], for calendar: GoogleCalendar) {
+  func processEvents(_ events: [GTLRCalendar_Event], for calendar: GoogleCalendar) {
     for event in events {
       if event.start?.dateTime == nil || event.end?.dateTime == nil {
         continue
