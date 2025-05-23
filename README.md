@@ -8,25 +8,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ouwargui/schedy/actions/workflows/release-stable.yml">
-    <img alt="Release stable workflow status" src="https://github.com/ouwargui/schedy/actions/workflows/release-stable.yml/badge.svg?branch=main">
-  </a>
-  <a href="https://github.com/ouwargui/schedy/actions/workflows/release-beta.yml">
-    <img alt="Release beta workflow status" src="https://github.com/ouwargui/schedy/actions/workflows/release-beta.yml/badge.svg?branch=main">
-  </a>
-  <a href="https://github.com/ouwargui/schedy/blob/main/LICENSE" target="_blank">
-    <img alt="License: GPL 3.0" src="https://img.shields.io/badge/License-GPL--3.0-success.svg?style=flat-square&color=33CC12" target="_blank" />
-  </a>
+  <a href="https://github.com/ouwargui/schedy/actions/workflows/release-stable.yml"><img alt="Release stable workflow status" src="https://github.com/ouwargui/schedy/actions/workflows/release-stable.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/ouwargui/schedy/actions/workflows/release-beta.yml"><img alt="Release beta workflow status" src="https://github.com/ouwargui/schedy/actions/workflows/release-beta.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/ouwargui/schedy/blob/main/LICENSE" target="_blank"><img alt="License: GPL 3.0" src="https://img.shields.io/badge/License-GPL--3.0-success.svg?style=flat-square&color=33CC12" target="_blank" /></a>
 </p>
 
 <h6 align="center">Follow me on</h6>
 <p align="center">
-  <a aria-label="Follow me on X" href="https://x.com/intent/follow?screen_name=eoqguih" target="_blank">
-    <img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" target="_blank" />
-  </a>&nbsp;
-  <a aria-label="Follow me on GitHub" href="https://github.com/ouwargui" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub-222222?style=for-the-badge&logo=github&logoColor=white" target="_blank" />
-  </a>&nbsp;
+  <a aria-label="Follow me on X" href="https://x.com/intent/follow?screen_name=eoqguih" target="_blank"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" target="_blank" /></a>&nbsp;<a aria-label="Follow me on GitHub" href="https://github.com/ouwargui" target="_blank"><img src="https://img.shields.io/badge/GitHub-222222?style=for-the-badge&logo=github&logoColor=white" target="_blank" /></a>
 </p>
 
 ## Introduction
