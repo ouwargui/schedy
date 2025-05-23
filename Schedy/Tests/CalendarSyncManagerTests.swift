@@ -135,7 +135,6 @@ final class CalendarSyncManagerTests: XCTestCase {
 
     manager.processEvents([newEvent], for: calendar)
 
-    print("[TEST] insertedModels: \(mockData.insertedModels)")
     XCTAssertEqual(mockData.insertedModels.count, 1)
     XCTAssertTrue(mockData.insertedModels.first is GoogleEvent)
   }
@@ -151,7 +150,6 @@ final class CalendarSyncManagerTests: XCTestCase {
 
     manager.processEvents([cancelledEvent], for: calendar)
 
-    print("[TEST] deletedModels: \(mockData.deletedModels)")
     XCTAssertEqual(mockData.deletedModels.count, 1)
     XCTAssertTrue(mockData.deletedModels.first is GoogleEvent)
   }
