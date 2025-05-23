@@ -90,20 +90,8 @@ def main():
             print(f"\n✅ Tests passed on attempt #{attempt}", file=sys.stderr)
             sys.exit(0)
         else:
-            elapsed = time.time() - start_time
-            if elapsed >= args.timeout:
-                print(
-                    f"\n❌ Tests failed and wall-clock timeout ({args.timeout}s) "
-                    "exceeded",
-                    file=sys.stderr
-                )
-                sys.exit(exit_code)
-            else:
-                print(
-                    f"\n⚠️  Tests failed on attempt #{attempt}, "
-                    "retrying…",
-                    file=sys.stderr
-                )
+            print(f"\n❌ Tests failed on attempt #{attempt}", file=sys.stderr)
+            sys.exit(exit_code)
 
 if __name__ == "__main__":
     main()
