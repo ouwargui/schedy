@@ -27,10 +27,9 @@ class GoogleCalendarService: CalendarServiceProtocol {
 
     service.authorizer = fetcherAuthorizer
 
-    // swiftlint:disable line_length
     return try await withCheckedThrowingContinuation {
+      // swiftlint:disable:next closure_parameter_position
       (continuation: CheckedContinuation<GTLRCalendar_Events, Error>) in
-      // swiftlint:enable line_length
       service.executeQuery(query) { (_, result, error) in
         if let error = error {
           print("Error executing query: \(error.localizedDescription)")
@@ -57,10 +56,9 @@ class GoogleCalendarService: CalendarServiceProtocol {
     calendarListQuery.showDeleted = true
     service.authorizer = fetcherAuthorizer
 
-    // swiftlint:disable line_length
     let calendars = try await withCheckedThrowingContinuation {
+      // swiftlint:disable:next closure_parameter_position
       (continuation: CheckedContinuation<GTLRCalendar_CalendarList, Error>) in
-      // swiftlint:enable line_length
       service.executeQuery(calendarListQuery) { (_, result, error) in
         if let error = error {
           continuation.resume(throwing: error)

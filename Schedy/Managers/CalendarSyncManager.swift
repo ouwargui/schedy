@@ -42,7 +42,7 @@ class CalendarSyncManager {
     }
 
     timer = Timer.scheduledTimer(withTimeInterval: self.timerInterval, repeats: true) {
-      [weak self] _ in
+      [weak self] _ in  // swiftlint:disable:this closure_parameter_position
       guard let self = self else { return }
       print("syncing")
       Task { @MainActor in
