@@ -1,5 +1,7 @@
 import argparse
+import os
 import shlex
+import signal
 import subprocess
 import sys
 import threading
@@ -64,7 +66,7 @@ def main():
                         "terminating test runner",
                         file=sys.stderr
                     )
-                    proc.terminate()
+                    os.kill(proc.pid, signal.SIGUSR2)
                     return
                 # idle timeout
                 if now - last_output >= args.idle:
@@ -72,7 +74,7 @@ def main():
                         f"🤐 No output for {args.idle}s; killing test runner",
                         file=sys.stderr
                     )
-                    proc.terminate()
+                    os.kill(proc.pid, signal.SIGUSR1)
                     return
                 time.sleep(0.5)
 
@@ -89,9 +91,23 @@ def main():
         if exit_code == 0:
             print(f"\n✅ Tests passed on attempt #{attempt}", file=sys.stderr)
             sys.exit(0)
-        else:
-            print(f"\n❌ Tests failed on attempt #{attempt}", file=sys.stderr)
-            sys.exit(exit_code)
+
+        # killed by us for idle
+        if exit_code == -signal.SIGUSR1:
+            print(f"\n💤 Idle timeout kill (code {exit_code}); retrying…",
+                  file=sys.stderr)
+            continue  # go back and try again (unless total timeout)
+
+        # killed by us for overall timeout
+        if exit_code == -signal.SIGUSR2:
+            print(f"\n⏱️  Overall timeout kill (code {exit_code}); giving up",
+                  file=sys.stderr)
+            sys.exit(1)
+
+        # any other non-zero is a real test failure
+        print(f"\n❌ Tests failed on attempt #{attempt} "
+              f"(exit code {exit_code})", file=sys.stderr)
+        sys.exit(exit_code)
 
 if __name__ == "__main__":
     main()
