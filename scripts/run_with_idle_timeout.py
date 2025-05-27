@@ -19,6 +19,12 @@ def main():
         default=600,
         help="Total wall-clock seconds after which we give up")
     p.add_argument(
+        "--retries",
+        type=int,
+        default=3,
+        help="Number of retries before giving up (default: 3). Only considered for test fails."
+    )
+    p.add_argument(
         "cmd",
         nargs=argparse.REMAINDER,
         help="Command to run (e.g. xcodebuild …)")
@@ -35,6 +41,7 @@ def main():
 
     start_time = time.time()
     attempt = 0
+    fails = 0
 
     while True:
         attempt += 1
@@ -106,12 +113,20 @@ def main():
                     file=sys.stderr
                 )
             else:
-                print(
-                    f"\n❌ Tests failed on attempt #{attempt}, "
-                    "terminating…",
-                    file=sys.stderr
-                )
-                sys.exit(exit_code)
+                fails += 1
+                if fails >= args.retries:
+                    print(
+                        f"\n❌ Tests failed on attempt #{attempt} "
+                        f"and exceeded retry limit ({args.retries})",
+                        file=sys.stderr
+                    )
+                    sys.exit(exit_code)
+                else:
+                    print(
+                        f"\n⚠️  Tests failed on attempt #{attempt}, "
+                        "retrying…",
+                        file=sys.stderr
+                    )
 
 if __name__ == "__main__":
     main()
