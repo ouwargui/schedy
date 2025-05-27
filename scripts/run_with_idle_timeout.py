@@ -1,6 +1,4 @@
 import argparse
-import os
-import shlex
 import signal
 import subprocess
 import sys
@@ -66,7 +64,7 @@ def main():
                         "terminating test runner",
                         file=sys.stderr
                     )
-                    os.kill(proc.pid, signal.SIGUSR2)
+                    proc.terminate()
                     return
                 # idle timeout
                 if now - last_output >= args.idle:
@@ -74,7 +72,7 @@ def main():
                         f"🤐 No output for {args.idle}s; killing test runner",
                         file=sys.stderr
                     )
-                    os.kill(proc.pid, signal.SIGUSR1)
+                    proc.terminate()
                     return
                 time.sleep(0.5)
 
@@ -91,23 +89,29 @@ def main():
         if exit_code == 0:
             print(f"\n✅ Tests passed on attempt #{attempt}", file=sys.stderr)
             sys.exit(0)
+        else:
+            elapsed = time.time() - start_time
 
-        # killed by us for idle
-        if exit_code == -signal.SIGUSR1:
-            print(f"\n💤 Idle timeout kill (code {exit_code}); retrying…",
-                  file=sys.stderr)
-            continue  # go back and try again (unless total timeout)
-
-        # killed by us for overall timeout
-        if exit_code == -signal.SIGUSR2:
-            print(f"\n⏱️  Overall timeout kill (code {exit_code}); giving up",
-                  file=sys.stderr)
-            sys.exit(1)
-
-        # any other non-zero is a real test failure
-        print(f"\n❌ Tests failed on attempt #{attempt} "
-              f"(exit code {exit_code})", file=sys.stderr)
-        sys.exit(exit_code)
+            if elapsed >= args.timeout:
+                print(
+                    f"\n❌ Tests failed and wall-clock timeout ({args.timeout}s) "
+                    "exceeded",
+                    file=sys.stderr
+                )
+                sys.exit(exit_code)
+            elif exit_code == signal.SIGTERM:
+                print(
+                    f"\n⚠️  Tests terminated on attempt #{attempt}, "
+                    "retrying…",
+                    file=sys.stderr
+                )
+            else:
+                print(
+                    f"\n❌ Tests failed on attempt #{attempt}, "
+                    "terminating…",
+                    file=sys.stderr
+                )
+                sys.exit(exit_code)
 
 if __name__ == "__main__":
     main()
