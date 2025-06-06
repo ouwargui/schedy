@@ -61,6 +61,21 @@ final class CalendarSyncManagerTests: XCTestCase {
     XCTAssertTrue(mockData.insertedModels.first is GoogleEvent)
   }
 
+  func test_processEvents_updatesExistingEvent() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Cal", user: user)
+    let event = MockManager.makeGoogleEvent(id: "evt-1", calendar: calendar)
+    calendar.events = [event]
+    let mockData = MockDataManager()
+    let manager = CalendarSyncManager(user: user, dataManager: mockData)
+    let updatedEvent = MockManager.makeEvent(id: "evt-1", title: "Updated Event")
+
+    manager.processEvents([updatedEvent], for: calendar)
+
+    XCTAssertTrue(mockData.updatedCalled)
+    XCTAssertEqual(event.title, "Updated Event")
+  }
+
   func test_processEvents_deletesCancelledEvent() async throws {
     let user = MockManager.makeUser()
     let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Cal", user: user)
@@ -68,7 +83,7 @@ final class CalendarSyncManagerTests: XCTestCase {
     calendar.events = [event]
     let mockData = MockDataManager()
     let manager = CalendarSyncManager(user: user, dataManager: mockData)
-    let cancelledEvent = MockManager.makeEvent(id: "evt-1")
+    let cancelledEvent = MockManager.makeEvent(id: "evt-1", status: "cancelled")
 
     manager.processEvents([cancelledEvent], for: calendar)
 
