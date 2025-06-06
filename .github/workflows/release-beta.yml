@@ -45,26 +45,35 @@ jobs:
 
       - name: Build for testing
         run: |
-          xcodebuild \
+          set -o pipefail && xcodebuild \
             -scheme schedy \
             -configuration Debug \
             -destination 'platform=macOS,arch=arm64' \
             ONLY_ACTIVE_ARCH=YES \
             build-for-testing \
-            -derivedDataPath DerivedData
+            -derivedDataPath DerivedData | xcbeautify --renderer github-actions
 
       - name: Run Tests (with idle & retry)
         run: |
+          mkdir -p test-results
           python3 scripts/run_with_idle_timeout.py \
             --idle 30 \
             --timeout 300 \
             -- \
-            xcodebuild \
+            set -o pipefail && xcodebuild \
               -scheme schedy \
               -configuration Debug \
               -destination 'platform=macOS,arch=arm64' \
               test-without-building \
-              -derivedDataPath DerivedData
+              -derivedDataPath DerivedData | xcbeautify --renderer github-actions --report junit --report-path test-results/junit.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 3
 
       - name: Setup Sparkle
         env:
@@ -100,16 +109,16 @@ jobs:
 
       - name: Archive Schedy
         run: |
-          xcodebuild \
+          set -o pipefail && xcodebuild \
             -scheme schedy \
             -configuration Release \
             -archivePath ./schedy.xcarchive \
             archive \
-            -derivedDataPath DerivedData
+            -derivedDataPath DerivedData | xcbeautify --renderer github-actions
 
       - name: Export Schedy archive
         run: |
-          xcodebuild -exportArchive -archivePath $(PWD)/schedy.xcarchive -exportOptionsPlist $(PWD)/schedy/exportOptions.plist -exportPath $(PWD)/build/Release
+          set -o pipefail && xcodebuild -exportArchive -archivePath $(PWD)/schedy.xcarchive -exportOptionsPlist $(PWD)/schedy/exportOptions.plist -exportPath $(PWD)/build/Release | xcbeautify --renderer github-actions
           mv build/Release/schedy.app build/Release/Schedy.app
 
       - name: Create DMG
@@ -240,6 +249,6 @@ jobs:
           path: SchedyInstaller.dmg
 
       - name: Clean up keychain and provisioning profile
-        if: ${{ always() }}
+        if: always()
         run: |
           security delete-keychain build.keychain
