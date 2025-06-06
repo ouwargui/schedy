@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "sweetpad-lldb",
+      "request": "attach",
+      "name": "Attach to running app (SweetPad) (App)",
+      "preLaunchTask": "sweetpad: launch"
+    },
+    {
+      "type": "sweetpad-lldb",
+      "request": "attach",
+      "name": "Attach to schedyTests",
+      "preLaunchTask": "sweetpad: launch tests"
+    }
+  ]
+}

@@ -204,7 +204,7 @@ extension GoogleEvent {
     let calendar = Calendar.current
 
     let components = calendar.dateComponents(
-      [.day, .hour, .minute], from: fromDate, to: self.start)
+      [.day, .hour, .minute, .second], from: fromDate, to: self.start)
 
     var result = ""
     if let days = components.day, days > 0 {

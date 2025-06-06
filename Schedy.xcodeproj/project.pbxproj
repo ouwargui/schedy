@@ -40,6 +40,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Tests/CalendarSyncManagerTests.swift,
+				Tests/GoogleEventTests.swift,
+				Tests/Helpers.swift,
 				Tests/StringExtensionTests.swift,
 			);
 			target = A120EE4F2DB1AD37002DD54C /* SchedyTests */;
@@ -49,6 +51,8 @@
 			membershipExceptions = (
 				Info.plist,
 				Tests/CalendarSyncManagerTests.swift,
+				Tests/GoogleEventTests.swift,
+				Tests/Helpers.swift,
 				Tests/StringExtensionTests.swift,
 			);
 			target = A18F75F22CF935C900DC952A /* Schedy */;
