@@ -56,16 +56,12 @@ jobs:
       - name: Run Tests (with idle & retry)
         run: |
           mkdir -p test-results
-          python3 scripts/run_with_idle_timeout.py \
-            --idle 30 \
-            --timeout 300 \
-            -- \
-            set -o pipefail && xcodebuild \
-              -scheme schedy \
-              -configuration Debug \
-              -destination 'platform=macOS,arch=arm64' \
-              test-without-building \
-              -derivedDataPath DerivedData | xcbeautify --renderer github-actions --report junit --report-path test-results/junit.xml
+          set -o pipefail && xcodebuild \
+            -scheme schedy \
+            -configuration Debug \
+            -destination 'platform=macOS,arch=arm64' \
+            test-without-building \
+            -derivedDataPath DerivedData | xcbeautify --renderer github-actions --report junit --report-path ./test-results
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
