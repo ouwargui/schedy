@@ -43,26 +43,15 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
 
-      - name: Build for testing
-        run: |
-          set -o pipefail && xcodebuild \
-            -scheme schedy \
-            -configuration Debug \
-            -destination 'platform=macOS,arch=arm64' \
-            ONLY_ACTIVE_ARCH=YES \
-            build-for-testing \
-            -derivedDataPath DerivedData | xcbeautify --renderer github-actions
-
-      - name: Run Tests (with idle & retry)
+      - name: Run Tests
         run: |
           mkdir -p test-results
           set -o pipefail && xcodebuild \
             -scheme schedy \
             -configuration Debug \
             -destination 'platform=macOS,arch=arm64' \
-            test-without-building \
             -parallel-testing-enabled NO \
-            -derivedDataPath DerivedData | xcbeautify --renderer github-actions --report junit --report-path ./test-results
+            clean test | xcbeautify --renderer github-actions --report junit --report-path ./test-results
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
