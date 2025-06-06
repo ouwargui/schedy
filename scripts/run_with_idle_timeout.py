@@ -48,13 +48,28 @@ def main():
         print(f"\n🚀 Test attempt #{attempt} …", file=sys.stderr)
 
         # Launch the process
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            bufsize=1,
-            universal_newlines=True
-        )
+        # If the command contains shell constructs, use shell=True
+        needs_shell = any(c in ' '.join(cmd) for c in ['&&', '||', '|', '>', '<', ';'])
+        
+        if needs_shell:
+            # Join the command into a single string for shell execution
+            cmd_str = ' '.join(cmd)
+            proc = subprocess.Popen(
+                cmd_str,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+                universal_newlines=True,
+                shell=True
+            )
+        else:
+            proc = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+                universal_newlines=True
+            )
 
         # Shared state for last‐output timestamp
         last_output = time.time()
