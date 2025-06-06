@@ -48,11 +48,11 @@ final class MockManager {
 
   static func makeEvent(
     id: String, start: Date = Date(), end: Date = Date().addingTimeInterval(3600),
-    title: String = "Event"
+    title: String = "Event", status: String = "confirmed"
   ) -> GTLRCalendar_Event {
     let event = GTLRCalendar_Event()
     event.identifier = id
-    event.status = "confirmed"
+    event.status = status
 
     let isoFormatter = ISO8601DateFormatter()
 

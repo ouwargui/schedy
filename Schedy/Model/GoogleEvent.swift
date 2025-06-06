@@ -174,55 +174,53 @@ extension Collection where Element == GoogleEvent {
 }
 
 extension GoogleEvent {
-  fileprivate func getTimeUntilEndFormatted(to toEnd: Date) -> String {
-    let calendar = Calendar.current
+  // A single function to handle all relative time formatting
+  fileprivate func getRelativeTimeString(from startDate: Date, to endDate: Date) -> String {
+    // Get the interval in seconds between the two dates
+    let interval = endDate.timeIntervalSince(startDate)
 
-    let components = calendar.dateComponents(
-      [.day, .hour, .minute, .second], from: self.end, to: toEnd)
+    // Use absolute value since the time could be in the future (positive) or past (negative)
+    let absoluteInterval = abs(interval)
 
-    var result = ""
-    if let days = components.day, days < 0 {
-      result += "\(abs(days))d "
+    // Round up to the nearest second
+    let totalSeconds = Int(ceil(absoluteInterval))
+
+    if totalSeconds <= 0 {
+      return "0s"
     }
 
-    if let hours = components.hour, hours < 0 {
-      result += "\(abs(hours))h "
+    let secondsInMinute = 60
+    let secondsInHour = 60 * secondsInMinute
+    let secondsInDay = 24 * secondsInHour
+
+    let days = totalSeconds / secondsInDay
+    if days > 0 {
+      return "\(days)d"
     }
 
-    if let minutes = components.minute, minutes < 0 {
-      result += "\(abs(minutes))m"
-    } else {
-      if let seconds = components.second {
-        result += "\(abs(seconds))s"
-      }
+    let hours = totalSeconds / secondsInHour
+    if hours > 0 {
+      let remainingMinutes = (totalSeconds % secondsInHour) / secondsInMinute
+      // Use a local variable for the formatted string
+      let formattedString = "\(hours)h \(remainingMinutes)m"
+      return formattedString
     }
 
-    return result.trimmingCharacters(in: .whitespaces)
+    let minutes = totalSeconds / secondsInMinute
+    if minutes > 0 {
+      return "\(minutes)m"
+    }
+
+    return "\(totalSeconds)s"
   }
 
-  fileprivate func getTimeUntilEventFormatted(from fromDate: Date) -> String {
-    let calendar = Calendar.current
+  fileprivate func getTimeUntilEndFormatted(to currentTime: Date) -> String {
+    // For time left in an event, we want time from current to end
+    return getRelativeTimeString(from: currentTime, to: self.end)
+  }
 
-    let components = calendar.dateComponents(
-      [.day, .hour, .minute, .second], from: fromDate, to: self.start)
-
-    var result = ""
-    if let days = components.day, days > 0 {
-      result += "\(abs(days))d "
-    }
-
-    if let hours = components.hour, hours > 0 {
-      result += "\(abs(hours))h "
-    }
-
-    if let minutes = components.minute, minutes > 0 {
-      result += "\(abs(minutes))m"
-    } else {
-      if let seconds = components.second {
-        result += "\(abs(seconds))s"
-      }
-    }
-
-    return result.trimmingCharacters(in: .whitespaces)
+  fileprivate func getTimeUntilEventFormatted(from currentTime: Date) -> String {
+    // For time until an event starts, we want time from current to start
+    return getRelativeTimeString(from: currentTime, to: self.start)
   }
 }
