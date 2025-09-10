@@ -15,7 +15,7 @@ class GoogleEvent {
 
   init(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
     self.googleId = event.identifier!
-    self.title = event.summary!
+    self.title = event.summary ?? event.identifier ?? "Untitled"
     self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
     self.end = ISO8601DateFormatter().date(from: event.end!.dateTime!.stringValue)!
     self.meetLink = event.hangoutLink
@@ -26,7 +26,7 @@ class GoogleEvent {
 
   func update(event: GTLRCalendar_Event) {
     self.googleId = event.identifier!
-    self.title = event.summary!
+    self.title = event.summary ?? event.identifier ?? "Untitled"
     self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
     self.end = ISO8601DateFormatter().date(from: event.end!.dateTime!.stringValue)!
     self.meetLink = event.hangoutLink
