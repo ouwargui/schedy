@@ -12,6 +12,7 @@
 		A17459552D011FEC0057BB31 /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A17459542D011FEC0057BB31 /* GTMAppAuth */; };
 		A18007BD2D0A8E3400475CCA /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BC2D0A8E3400475CCA /* Sentry */; };
 		A18007BF2D0A9CFB00475CCA /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A18007BE2D0A9CFB00475CCA /* SentrySwiftUI */; };
+		A188D5D72E7930BA000A1A66 /* schedy.icon in Resources */ = {isa = PBXBuildFile; fileRef = A188D5D62E7930BA000A1A66 /* schedy.icon */; };
 		A18F761A2CF9535200DC952A /* GoogleAPIClientForREST_Calendar in Frameworks */ = {isa = PBXBuildFile; productRef = A18F76192CF9535200DC952A /* GoogleAPIClientForREST_Calendar */; };
 		A1AE79BE2D06B7E600DD7AA7 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BD2D06B7E600DD7AA7 /* AppAuth */; };
 		A1AE79C02D06B7E600DD7AA7 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1AE79BF2D06B7E600DD7AA7 /* AppAuthCore */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		A120EE502DB1AD37002DD54C /* SchedyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SchedyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A120EE592DB1AD61002DD54C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A188D5D62E7930BA000A1A66 /* schedy.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = schedy.icon; sourceTree = "<group>"; };
 		A18F75F32CF935C900DC952A /* Schedy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schedy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -113,6 +115,7 @@
 				A18F75F52CF935C900DC952A /* Schedy */,
 				A120EE352DB1A7F3002DD54C /* Frameworks */,
 				A18F75F42CF935C900DC952A /* Products */,
+				A188D5D62E7930BA000A1A66 /* schedy.icon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -240,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A188D5D72E7930BA000A1A66 /* schedy.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,8 +446,9 @@
 		A18F76032CF935CB00DC952A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = schedy;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Schedy/schedy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
@@ -478,8 +483,9 @@
 		A18F76042CF935CB00DC952A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = schedy;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Schedy/schedy.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
