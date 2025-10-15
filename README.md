@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://schedy.io/">
-    <img alt="Schedy Logo" height="128" src="Schedy/Assets.xcassets/AppIcon.appiconset/icon_128.png">
+    <img alt="Schedy Logo" height="128" src="schedy.icon/Assets/icon_1024.png">
     <h1 align="center">Schedy</h1>
   </a>
 </p>
