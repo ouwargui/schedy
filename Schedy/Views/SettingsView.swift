@@ -8,6 +8,8 @@ struct SettingsView: View {
   @State private var automaticallyChecksForUpdates: Bool
   @State private var automaticallyDownloadsUpdates: Bool
   @AppStorage("allowed-beta-updates") var allowedBetaUpdates: Bool = false
+  @AppStorage("notifications-enabled") var notificationsEnabled: Bool = false
+  @AppStorage("notification-timing") var notificationTiming: Int = 5
 
   init(updater: SPUUpdater?) {
     self.updater = updater
@@ -36,6 +38,29 @@ struct SettingsView: View {
         VStack(alignment: .leading) {
           Form {
             KeyboardShortcuts.Recorder("Open event URL", name: .openEventUrl)
+          }
+
+          Form {
+            Toggle("Event notifications", isOn: self.$notificationsEnabled)
+              .onChange(of: self.notificationsEnabled) {
+                if self.notificationsEnabled {
+                  NotificationManager.shared.requestAuthorization()
+                  NotificationManager.shared.rescheduleNotifications()
+                } else {
+                  NotificationManager.shared.removeAllEventNotifications()
+                }
+              }
+
+            Picker("Notify me", selection: self.$notificationTiming) {
+              Text("At the time of event").tag(0)
+              Text("1 minute before").tag(1)
+              Text("5 minutes before").tag(5)
+              Text("10 minutes before").tag(10)
+            }
+            .disabled(!self.notificationsEnabled)
+            .onChange(of: self.notificationTiming) {
+              NotificationManager.shared.rescheduleNotifications()
+            }
           }
 
           Form {

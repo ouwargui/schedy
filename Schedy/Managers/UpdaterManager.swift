@@ -5,8 +5,7 @@ import UserNotifications
 
 let UPDATE_NOTIFICATION_IDENTIFIER = "UpdateCheck"
 
-class UpdaterManager: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegate,
-  NSUserNotificationCenterDelegate
+class UpdaterManager: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegate
 {  // swiftlint:disable:this opening_brace
   let appStateManager: AppStateManager
 
@@ -93,22 +92,5 @@ class UpdaterManager: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegat
 
   func updaterWillRelaunchApplication(_ updater: SPUUpdater) {
     self.appStateManager.shouldQuit = true
-  }
-
-  func userNotificationCenter(
-    _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
-    withCompletionHandler completionHandler: @escaping () -> Void
-  ) {
-    if response.notification.request.identifier == UPDATE_NOTIFICATION_IDENTIFIER
-      && response.actionIdentifier == UNNotificationDefaultActionIdentifier  // swiftlint:disable:next opening_brace
-    {
-      // If the notificaton is clicked on, make sure we bring the update in focus
-      // If the app is terminated while the notification is clicked on,
-      // this will launch the application and perform a new update check.
-      // This can be more likely to occur if the notification alert style is Alert rather than Banner
-      self.appStateManager.updaterController?.checkForUpdates(nil)
-    }
-
-    completionHandler()
   }
 }

@@ -38,6 +38,7 @@ class CalendarSyncManager {
       await self.performCalendarSync()
       await self.performEventsSync()
       self.deleteOldEvents()
+      self.scheduleEventNotifications()
       self.user.lastSyncedAt = Date()
     }
 
@@ -55,6 +56,7 @@ class CalendarSyncManager {
           self.deleteOldEvents()
         }
 
+        self.scheduleEventNotifications()
         self.user.lastSyncedAt = Date()
       }
     }
@@ -198,5 +200,24 @@ class CalendarSyncManager {
     }
 
     events.forEach(self.dataManager.delete)
+  }
+
+  @MainActor
+  private func scheduleEventNotifications() {
+    let nextDescriptor = FetchDescriptor<GoogleEvent>(
+      predicate: GoogleEvent.todaysNextPredicate,
+      sortBy: [SortDescriptor(\.start)]
+    )
+
+    let tomorrowDescriptor = FetchDescriptor<GoogleEvent>(
+      predicate: GoogleEvent.tomorrowsPredicate,
+      sortBy: [SortDescriptor(\.start)]
+    )
+
+    let nextEvents = self.dataManager.fetchAll(fetchDescriptor: nextDescriptor).unwrapOrNil() ?? []
+    let tomorrowEvents =
+      self.dataManager.fetchAll(fetchDescriptor: tomorrowDescriptor).unwrapOrNil() ?? []
+
+    NotificationManager.shared.scheduleNotifications(for: nextEvents + tomorrowEvents)
   }
 }

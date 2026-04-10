@@ -1,6 +1,15 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1 minute before" : {
+
+    },
+    "5 minutes before" : {
+
+    },
+    "10 minutes before" : {
+
+    },
     "accounts" : {
 
     },
@@ -53,6 +62,9 @@
     "All users, calendars and events will be deleted" : {
 
     },
+    "At the time of event" : {
+
+    },
     "Automatically check for updates" : {
 
     },
@@ -94,6 +106,9 @@
     "earlier today" : {
 
     },
+    "Event notifications" : {
+
+    },
     "General" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -124,6 +139,9 @@
 
     },
     "Not synced" : {
+
+    },
+    "Notify me" : {
 
     },
     "now" : {

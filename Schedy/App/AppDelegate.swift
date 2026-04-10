@@ -35,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
   }
 
   func applicationDidFinishLaunching(_ notification: Notification) {
+    NotificationManager.shared.setup()
     self.setEventHandlers()
     self.startSyncingUsers()
   }
