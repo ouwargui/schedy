@@ -1,6 +1,5 @@
 import AppAuthCore
 import AppKit
-import Sentry
 import Sparkle
 import SwiftData
 import SwiftUI
@@ -45,10 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let result = SwiftDataManager.shared.fetchAll(
       fetchDescriptor: FetchDescriptor<GoogleUser>())
 
-    if case .failure(let error) = result {
-      SentrySDK.capture(error: error)
-    }
-
     if case .success(let users) = result {
       users.forEach({ user in
         user.startSync()
@@ -69,11 +64,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
   func applicationWillTerminate(_ notification: Notification) {
     let result = SwiftDataManager.shared.fetchAll(
       fetchDescriptor: FetchDescriptor<GoogleUser>())
-
-    if case .failure(let error) = result {
-      SentrySDK.capture(error: error)
-      return
-    }
 
     if case .success(let users) = result {
       users.forEach({ user in

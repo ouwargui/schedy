@@ -1,5 +1,4 @@
 import Foundation
-import SentrySwiftUI
 import SwiftData
 import SwiftUI
 

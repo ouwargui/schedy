@@ -32,8 +32,6 @@
 	<string>https://files.schedy.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>tckWNC2xZo2Qig1VL7y9VfYOkWYvh9iPqSeS5wwmP2E=</string>
-	<key>SentryDSN</key>
-	<string>https://9c3d6ee2586dbfa3a58e08fdeff5fa64@o4508453036359680.ingest.us.sentry.io/4508453145018368</string>
 	<key>SchedyCommit</key>
 	<string></string>
 	<key>CFBundleVersion</key>

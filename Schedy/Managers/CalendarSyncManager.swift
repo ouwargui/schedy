@@ -1,7 +1,6 @@
 import Foundation
 import GTMAppAuth
 import GoogleAPIClientForREST_Calendar
-import Sentry
 import SwiftData
 
 let DEFAULT_TIME_INTERVAL: TimeInterval = 30
