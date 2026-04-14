@@ -1,5 +1,4 @@
 import Foundation
-import SentrySwiftUI
 import SwiftUI
 
 struct MenuBarItemListView: View {
@@ -12,10 +11,8 @@ struct MenuBarItemListView: View {
 
     Divider()
 
-    SentryTracedView("Menu bar: \(sectionTitle) section") {
-      ForEach(self.events) { event in
-        MenuBarItemView(event: event, currentEvent: self.currentEvent)
-      }
+    ForEach(self.events) { event in
+      MenuBarItemView(event: event, currentEvent: self.currentEvent)
     }
   }
 }

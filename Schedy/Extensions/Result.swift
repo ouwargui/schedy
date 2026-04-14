@@ -1,5 +1,4 @@
 import Foundation
-import Sentry
 
 // We're already checking if the result is a failure
 // swiftlint:disable force_try
@@ -14,7 +13,7 @@ extension Result {
 
   func unwrapOrNil() -> Success? {
     if case .failure(let failure) = self {
-      SentrySDK.capture(error: failure)
+      print("Error: \(failure.localizedDescription)")
       return nil
     }
 

@@ -3,15 +3,6 @@ import Foundation
 import KeyboardShortcuts
 
 class Constants {
-  static var sentryIngestUrl: String {
-    guard let sentryIngestUrl = Bundle.main.object(forInfoDictionaryKey: "SentryDSN") as? String
-    else {
-      fatalError("Sentry DSN not found on Info.plist")
-    }
-
-    return sentryIngestUrl
-  }
-
   static var clientId: String {
     guard let clientId = Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String else {
       fatalError("Google Client ID not found on Info.plist")

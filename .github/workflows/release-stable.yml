@@ -202,30 +202,6 @@ jobs:
           source-dir: blob
           destination-dir: ./
 
-      - name: Install sentry-cli
-        run: |
-          curl -sL https://sentry.io/get-cli/ | bash
-          sentry-cli --version
-
-      - name: Create release on Sentry
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: |
-          VERSION="schedy@$SCHEDY_BUILD"
-          sentry-cli releases new --org ouwargui --project schedy-macos "$VERSION" --finalize
-          sentry-cli releases set-commits "$VERSION" --auto
-
-      - name: Upload dSYM to Sentry
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: |
-          sentry-cli debug-files upload \
-            --include-sources \
-            --auth-token $SENTRY_AUTH_TOKEN \
-            --org ouwargui \
-            --project schedy-macos \
-            $(PWD)/schedy.xcarchive/dSYMs/Schedy.app.dSYM
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
