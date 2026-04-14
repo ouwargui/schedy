@@ -6,7 +6,7 @@ import SwiftUI
 struct MenuBarView: Scene {
   @Environment(\.openWindow) private var openWindow
   @EnvironmentObject private var appDelegate: AppDelegate
-  @ObservedObject private var viewModel: MenuBarViewModel = MenuBarViewModel()
+  @StateObject private var viewModel: MenuBarViewModel = MenuBarViewModel()
 
   var body: some Scene {
     MenuBarExtra(
