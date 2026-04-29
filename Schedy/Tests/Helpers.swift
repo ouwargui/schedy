@@ -48,7 +48,11 @@ final class MockManager {
 
   static func makeEvent(
     id: String, start: Date = Date(), end: Date = Date().addingTimeInterval(3600),
-    title: String = "Event", status: String = "confirmed"
+    title: String = "Event", status: String = "confirmed",
+    responseStatus: GoogleEventResponseStatus? = nil,
+    responseStatusRaw: String? = nil,
+    attendeeIsOrganizer: Bool = false,
+    attendeeEmail: String = "user@example.com"
   ) -> GTLRCalendar_Event {
     let event = GTLRCalendar_Event()
     event.identifier = id
@@ -72,14 +76,36 @@ final class MockManager {
 
     event.summary = title
     event.htmlLink = "https://event"
+
+    if let responseStatus = responseStatus?.rawValue ?? responseStatusRaw {
+      let attendee = GTLRCalendar_EventAttendee()
+      attendee.email = attendeeEmail
+      attendee.selfProperty = NSNumber(value: true)
+      attendee.responseStatus = responseStatus
+      attendee.organizer = NSNumber(value: attendeeIsOrganizer)
+      event.attendees = [attendee]
+    }
+
     return event
   }
 
   static func makeGoogleEvent(
     id: String, start: Date = Date(), end: Date = Date().addingTimeInterval(3600),
     title: String = "Event",
+    responseStatus: GoogleEventResponseStatus? = nil,
+    attendeeEmail: String = "user@example.com",
     calendar: GoogleCalendar
   ) -> GoogleEvent {
-    GoogleEvent(event: makeEvent(id: id, start: start, end: end, title: title), calendar: calendar)
+    GoogleEvent(
+      event: makeEvent(
+        id: id,
+        start: start,
+        end: end,
+        title: title,
+        responseStatus: responseStatus,
+        attendeeEmail: attendeeEmail
+      ),
+      calendar: calendar
+    )
   }
 }

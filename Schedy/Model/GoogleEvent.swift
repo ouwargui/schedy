@@ -2,6 +2,25 @@ import Foundation
 import GoogleAPIClientForREST_Calendar
 import SwiftData
 
+enum GoogleEventResponseStatus: String, CaseIterable, Identifiable {
+  case accepted
+  case tentative
+  case declined
+
+  var id: String { self.rawValue }
+
+  var title: String {
+    switch self {
+    case .accepted:
+      return "Accept"
+    case .tentative:
+      return "Maybe"
+    case .declined:
+      return "Decline"
+    }
+  }
+}
+
 @Model
 class GoogleEvent {
   var googleId: String
@@ -11,9 +30,14 @@ class GoogleEvent {
   var meetLink: String?
   var htmlLink: String
   var eventDescription: String?
+  var attendeeResponseStatus: String?
+  var invitationAttendeeEmail: String?
+  var canRespondToInvitation: Bool = false
   var calendar: GoogleCalendar
 
   init(event: GTLRCalendar_Event, calendar: GoogleCalendar) {
+    let currentUserAttendee = Self.getCurrentUserAttendee(event: event, calendar: calendar)
+
     self.googleId = event.identifier!
     self.title = event.summary ?? event.identifier ?? "Untitled"
     self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
@@ -21,10 +45,15 @@ class GoogleEvent {
     self.meetLink = event.hangoutLink
     self.htmlLink = event.htmlLink!
     self.eventDescription = event.descriptionProperty
+    self.attendeeResponseStatus = currentUserAttendee?.responseStatus
+    self.invitationAttendeeEmail = currentUserAttendee?.email
+    self.canRespondToInvitation = Self.canRespondToInvitation(attendee: currentUserAttendee)
     self.calendar = calendar
   }
 
   func update(event: GTLRCalendar_Event) {
+    let currentUserAttendee = Self.getCurrentUserAttendee(event: event, calendar: self.calendar)
+
     self.googleId = event.identifier!
     self.title = event.summary ?? event.identifier ?? "Untitled"
     self.start = ISO8601DateFormatter().date(from: event.start!.dateTime!.stringValue)!
@@ -32,6 +61,9 @@ class GoogleEvent {
     self.meetLink = event.hangoutLink
     self.htmlLink = event.htmlLink!
     self.eventDescription = event.descriptionProperty
+    self.attendeeResponseStatus = currentUserAttendee?.responseStatus
+    self.invitationAttendeeEmail = currentUserAttendee?.email
+    self.canRespondToInvitation = Self.canRespondToInvitation(attendee: currentUserAttendee)
   }
 }
 
@@ -90,6 +122,34 @@ extension GoogleEvent {
 }
 
 extension GoogleEvent {
+  static func getCurrentUserAttendee(
+    event: GTLRCalendar_Event,
+    calendar: GoogleCalendar
+  ) -> GTLRCalendar_EventAttendee? {
+    let accountEmail = calendar.account.email.lowercased()
+
+    return event.attendees?.first(where: { attendee in
+      if attendee.selfProperty?.boolValue == true {
+        return true
+      }
+
+      return attendee.email?.lowercased() == accountEmail
+    })
+  }
+
+  static func canRespondToInvitation(attendee: GTLRCalendar_EventAttendee?) -> Bool {
+    guard let attendee else { return false }
+    guard attendee.responseStatus != nil else { return false }
+    guard attendee.email?.isEmpty == false else { return false }
+
+    return attendee.organizer?.boolValue != true
+  }
+
+  var responseStatus: GoogleEventResponseStatus? {
+    guard let attendeeResponseStatus else { return nil }
+    return GoogleEventResponseStatus(rawValue: attendeeResponseStatus)
+  }
+
   func isHappening() -> Bool {
     self.start < Date() && self.end > Date()
   }

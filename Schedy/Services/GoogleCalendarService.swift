@@ -74,4 +74,47 @@ class GoogleCalendarService: CalendarServiceProtocol {
 
     return calendars
   }
+
+  func updateEventResponse(
+    eventId: String,
+    calendarId: String,
+    attendeeEmail: String,
+    responseStatus: GoogleEventResponseStatus,
+    fetcherAuthorizer: AuthSession
+  ) async throws -> GTLRCalendar_Event {
+    let attendee = GTLRCalendar_EventAttendee()
+    attendee.email = attendeeEmail
+    attendee.responseStatus = responseStatus.rawValue
+    attendee.selfProperty = NSNumber(value: true)
+
+    let event = GTLRCalendar_Event()
+    event.attendees = [attendee]
+    event.attendeesOmitted = NSNumber(value: true)
+
+    let query = GTLRCalendarQuery_EventsPatch.query(
+      withObject: event,
+      calendarId: calendarId,
+      eventId: eventId
+    )
+
+    service.authorizer = fetcherAuthorizer
+
+    return try await withCheckedThrowingContinuation {
+      // swiftlint:disable:next closure_parameter_position
+      (continuation: CheckedContinuation<GTLRCalendar_Event, Error>) in
+      service.executeQuery(query) { (_, result, error) in
+        if let error = error {
+          continuation.resume(throwing: error)
+          return
+        }
+
+        guard let event = result as? GTLRCalendar_Event else {
+          continuation.resume(throwing: NSError(domain: "", code: -1))
+          return
+        }
+
+        continuation.resume(returning: event)
+      }
+    }
+  }
 }

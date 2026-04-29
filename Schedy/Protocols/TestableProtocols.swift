@@ -14,6 +14,14 @@ protocol CalendarServiceProtocol {
     fetcherAuthorizer: AuthSession,
     syncToken: String?
   ) async throws -> GTLRCalendar_Events
+
+  func updateEventResponse(
+    eventId: String,
+    calendarId: String,
+    attendeeEmail: String,
+    responseStatus: GoogleEventResponseStatus,
+    fetcherAuthorizer: AuthSession
+  ) async throws -> GTLRCalendar_Event
 }
 
 @MainActor
