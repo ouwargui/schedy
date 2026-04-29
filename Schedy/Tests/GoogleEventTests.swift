@@ -4,6 +4,73 @@ import XCTest
 @testable import Schedy
 
 class GoogleEventTests: XCTestCase {
+  func test_responseStatus_usesCurrentUserAttendeeResponse() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Calendar", user: user)
+    let event = MockManager.makeGoogleEvent(
+      id: "evt-1",
+      responseStatus: .tentative,
+      calendar: calendar
+    )
+
+    XCTAssertEqual(event.responseStatus, .tentative)
+    XCTAssertEqual(event.invitationAttendeeEmail, "user@example.com")
+    XCTAssertTrue(event.canRespondToInvitation)
+  }
+
+  func test_invitationAttendeeEmail_usesSelfAttendeeEmailForAliasInvites() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Calendar", user: user)
+    let event = MockManager.makeGoogleEvent(
+      id: "evt-1",
+      responseStatus: .tentative,
+      attendeeEmail: "alias@example.com",
+      calendar: calendar
+    )
+
+    XCTAssertEqual(event.responseStatus, .tentative)
+    XCTAssertEqual(event.invitationAttendeeEmail, "alias@example.com")
+    XCTAssertTrue(event.canRespondToInvitation)
+  }
+
+  func test_canRespondToInvitation_isFalseWithoutCurrentUserAttendee() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Calendar", user: user)
+    let event = MockManager.makeGoogleEvent(id: "evt-1", calendar: calendar)
+
+    XCTAssertNil(event.responseStatus)
+    XCTAssertNil(event.invitationAttendeeEmail)
+    XCTAssertFalse(event.canRespondToInvitation)
+  }
+
+  func test_canRespondToInvitation_isTrueForNeedsActionInvite() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Calendar", user: user)
+    let event = GoogleEvent(
+      event: MockManager.makeEvent(id: "evt-1", responseStatusRaw: "needsAction"),
+      calendar: calendar
+    )
+
+    XCTAssertNil(event.responseStatus)
+    XCTAssertTrue(event.canRespondToInvitation)
+  }
+
+  func test_canRespondToInvitation_isFalseForOrganizerAttendee() async throws {
+    let user = MockManager.makeUser()
+    let calendar = MockManager.makeGoogleCalendar(id: "cal-1", name: "Test Calendar", user: user)
+    let event = GoogleEvent(
+      event: MockManager.makeEvent(
+        id: "evt-1",
+        responseStatus: .accepted,
+        attendeeIsOrganizer: true
+      ),
+      calendar: calendar
+    )
+
+    XCTAssertEqual(event.responseStatus, .accepted)
+    XCTAssertFalse(event.canRespondToInvitation)
+  }
+
   func test_getMenuBarString_showsFutureRelativeDateWithDays() async throws {
     let user = MockManager.makeUser()
 

@@ -1,7 +1,10 @@
+import AppKit
 import Foundation
 import KeyboardShortcuts
 import SwiftData
 import SwiftUI
+
+let MENU_BAR_REFRESH_INTERVAL: TimeInterval = 1
 
 @MainActor
 class MenuBarViewModel: ObservableObject {
@@ -12,7 +15,10 @@ class MenuBarViewModel: ObservableObject {
   @Published var todaysNextEvents: [GoogleEvent] = []
   @Published var todaysEvents: [GoogleEvent] = []
   @Published var tomorrowsEvents: [GoogleEvent] = []
+  @Published private var eventIdsUpdatingResponse = Set<String>()
   private var timer: Timer?
+  private var isMenuOpen = false
+  private var lastMenuBarTitle: String?
 
   var tomorrow: Date {
     return Calendar.current.date(byAdding: .day, value: 1, to: self.currentTime)!
@@ -50,8 +56,18 @@ class MenuBarViewModel: ObservableObject {
   }
 
   var titleBarEvent: GoogleEvent? {
+    self.getTitleBarEvent(currentTime: self.currentTime)
+  }
+
+  func menuBarTitle(currentTime: Date) -> String {
+    self.getTitleBarEvent(currentTime: currentTime)?.getMenuBarString(
+      currentTime: currentTime
+    ) ?? "Schedy"
+  }
+
+  private func getTitleBarEvent(currentTime: Date) -> GoogleEvent? {
     if let todaysNextEventsFirst = self.todaysNextEvents.first,
-      todaysNextEventsFirst.getMinutesUntilEvent(currentTime: self.currentTime) < 15
+      todaysNextEventsFirst.getMinutesUntilEvent(currentTime: currentTime) < 15
     {  // swiftlint:disable:this opening_brace
       return todaysNextEventsFirst
     }
@@ -70,15 +86,75 @@ class MenuBarViewModel: ObservableObject {
         }
       }
 
-    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+    Task {
+      self.update()
+    }
+
+    self.observeMenuTracking()
+
+    timer = Timer.scheduledTimer(withTimeInterval: MENU_BAR_REFRESH_INTERVAL, repeats: true) {
+      [weak self] _ in
       guard let self = self else { return }
       Task {
-        await self.update()
+        if self.isMenuOpen {
+          self.updateMenuBarTitle()
+        } else {
+          self.update()
+        }
+      }
+    }
+  }
+
+  func isUpdatingResponse(for event: GoogleEvent) -> Bool {
+    self.eventIdsUpdatingResponse.contains(self.responseUpdateKey(for: event))
+  }
+
+  func updateResponse(
+    for event: GoogleEvent,
+    to responseStatus: GoogleEventResponseStatus,
+    appDelegate: AppDelegate
+  ) {
+    let key = self.responseUpdateKey(for: event)
+    guard !self.eventIdsUpdatingResponse.contains(key) else { return }
+
+    self.eventIdsUpdatingResponse.insert(key)
+
+    Task { @MainActor in
+      defer {
+        self.eventIdsUpdatingResponse.remove(key)
+      }
+
+      guard let attendeeEmail = event.invitationAttendeeEmail else {
+        print("Failed to update event RSVP: missing attendee email")
+        return
+      }
+
+      let hasPermission = await self.ensureCalendarWriteAccess(
+        for: event.calendar.account,
+        appDelegate: appDelegate
+      )
+
+      guard hasPermission else { return }
+
+      do {
+        let updatedEvent = try await GoogleCalendarService.shared.updateEventResponse(
+          eventId: event.googleId,
+          calendarId: event.calendar.googleId,
+          attendeeEmail: attendeeEmail,
+          responseStatus: responseStatus,
+          fetcherAuthorizer: event.calendar.account.getSession()
+        )
+
+        event.update(event: updatedEvent)
+        SwiftDataManager.shared.update()
+      } catch let error {
+        print("Failed to update event RSVP: \(error.localizedDescription)")
       }
     }
   }
 
   deinit {
+    NotificationCenter.default.removeObserver(self)
     timer?.invalidate()
     timer = nil
   }
@@ -90,6 +166,71 @@ class MenuBarViewModel: ObservableObject {
     self.updateTodaysEvents()
     self.updateTodaysNextEvents()
     self.updateTomorrowsEvents()
+    self.lastMenuBarTitle = self.menuBarTitle(currentTime: self.currentTime)
+  }
+
+  private func updateMenuBarTitle() {
+    let title = self.menuBarTitle(currentTime: Date())
+
+    MenuBarStatusItemUpdater.updateTitle(title, matchingPreviousTitle: self.lastMenuBarTitle)
+    self.lastMenuBarTitle = title
+  }
+
+  private func observeMenuTracking() {
+    NotificationCenter.default.addObserver(
+      forName: NSMenu.didBeginTrackingNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] _ in
+      Task { @MainActor in
+        self?.isMenuOpen = true
+      }
+    }
+
+    NotificationCenter.default.addObserver(
+      forName: NSMenu.didEndTrackingNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] _ in
+      Task { @MainActor in
+        self?.isMenuOpen = false
+        self?.update()
+      }
+    }
+  }
+
+  private func responseUpdateKey(for event: GoogleEvent) -> String {
+    "\(event.calendar.googleId):\(event.googleId)"
+  }
+
+  private func ensureCalendarWriteAccess(
+    for user: GoogleUser,
+    appDelegate: AppDelegate
+  ) async -> Bool {
+    if GoogleAuthService.shared.hasCalendarWriteAccess(user: user) {
+      return true
+    }
+
+    guard self.confirmCalendarWriteAccessRequest() else {
+      return false
+    }
+
+    return await GoogleAuthService.shared.requestCalendarWriteAccess(
+      user: user,
+      appDelegate: appDelegate
+    )
+  }
+
+  private func confirmCalendarWriteAccessRequest() -> Bool {
+    let alert = NSAlert()
+    alert.messageText = "Allow Schedy to update invitations?"
+    alert.informativeText =
+      "Schedy needs permission to update your Google Calendar RSVP when you accept, maybe, or decline an invitation."
+    alert.alertStyle = .informational
+    alert.addButton(withTitle: "Continue")
+    alert.addButton(withTitle: "Cancel")
+
+    return alert.runModal() == .alertFirstButtonReturn
   }
 
   private func updateEarlierEvents() {

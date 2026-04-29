@@ -22,6 +22,8 @@ class Constants {
 
   static let clientSecret: String = ""
 
+  static let calendarEventsScope = "https://www.googleapis.com/auth/calendar.events"
+
   static let scopes: [String] = [
     "https://www.googleapis.com/auth/calendar.readonly",
     "https://www.googleapis.com/auth/calendar.events.readonly",

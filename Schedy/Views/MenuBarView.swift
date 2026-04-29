@@ -9,16 +9,16 @@ struct MenuBarView: Scene {
 
   var body: some Scene {
     MenuBarExtra(
-      self.viewModel.titleBarEvent?.getMenuBarString(
-        currentTime: self.viewModel.currentTime
-      ) ?? "Schedy"
+      self.viewModel.menuBarTitle(currentTime: self.viewModel.currentTime)
     ) {
       if self.viewModel.isThereAnyEvents {
         if !self.viewModel.todaysPastEvents.isEmpty {
           MenuBarItemListView(
             sectionTitle: "\(LocalizedString.capitalized("earlier today"))",
             events: self.viewModel.todaysPastEvents,
-            currentEvent: self.viewModel.titleBarEvent
+            currentEvent: self.viewModel.titleBarEvent,
+            isUpdatingResponse: self.viewModel.isUpdatingResponse,
+            updateResponse: self.updateResponse
           )
 
           Divider()
@@ -28,7 +28,9 @@ struct MenuBarView: Scene {
           MenuBarItemListView(
             sectionTitle: "\(LocalizedString.capitalized("now"))",
             events: self.viewModel.currentEvents,
-            currentEvent: self.viewModel.titleBarEvent
+            currentEvent: self.viewModel.titleBarEvent,
+            isUpdatingResponse: self.viewModel.isUpdatingResponse,
+            updateResponse: self.updateResponse
           )
 
           Divider()
@@ -38,7 +40,9 @@ struct MenuBarView: Scene {
           MenuBarItemListView(
             sectionTitle: "\(LocalizedString.capitalized("next")):",
             events: self.viewModel.todaysNextEvents,
-            currentEvent: self.viewModel.titleBarEvent
+            currentEvent: self.viewModel.titleBarEvent,
+            isUpdatingResponse: self.viewModel.isUpdatingResponse,
+            updateResponse: self.updateResponse
           )
 
           Divider()
@@ -49,7 +53,9 @@ struct MenuBarView: Scene {
             sectionTitle:
               "\(LocalizedString.capitalized("tomorrow")) (\(self.viewModel.tomorrowFormatted)):",
             events: self.viewModel.tomorrowsEvents,
-            currentEvent: self.viewModel.titleBarEvent
+            currentEvent: self.viewModel.titleBarEvent,
+            isUpdatingResponse: self.viewModel.isUpdatingResponse,
+            updateResponse: self.updateResponse
           )
 
           Divider()
@@ -81,5 +87,13 @@ struct MenuBarView: Scene {
   func quitApp() {
     self.appDelegate.appStateManager.shouldQuit = true
     NSApplication.shared.terminate(nil)
+  }
+
+  func updateResponse(event: GoogleEvent, responseStatus: GoogleEventResponseStatus) {
+    self.viewModel.updateResponse(
+      for: event,
+      to: responseStatus,
+      appDelegate: self.appDelegate
+    )
   }
 }
