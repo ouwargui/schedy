@@ -81,6 +81,8 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         }
 
         content.sound = .default
+        content.interruptionLevel = .timeSensitive
+        content.relevanceScore = 1.0
 
         var userInfo: [String: String] = [
           "eventId": info.id,
@@ -181,8 +183,11 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
   ) {
-    // Show notification banner even when app is in foreground
-    // (menu bar apps are effectively always in foreground)
-    completionHandler([.banner, .sound])
+    if notification.request.identifier.hasPrefix(EVENT_NOTIFICATION_PREFIX) {
+      // Event reminders should stay visible until the user interacts with them.
+      completionHandler([.alert, .sound])
+    } else {
+      completionHandler([.banner, .sound])
+    }
   }
 }
