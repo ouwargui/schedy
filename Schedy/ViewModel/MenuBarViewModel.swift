@@ -94,8 +94,8 @@ class MenuBarViewModel: ObservableObject {
 
     timer = Timer.scheduledTimer(withTimeInterval: MENU_BAR_REFRESH_INTERVAL, repeats: true) {
       [weak self] _ in
-      guard let self = self else { return }
-      Task {
+      Task { @MainActor in
+        guard let self else { return }
         if self.isMenuOpen {
           self.updateMenuBarTitle()
         } else {

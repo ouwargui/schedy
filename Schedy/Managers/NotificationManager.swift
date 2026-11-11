@@ -184,8 +184,8 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
   ) {
     if notification.request.identifier.hasPrefix(EVENT_NOTIFICATION_PREFIX) {
-      // Event reminders should stay visible until the user interacts with them.
-      completionHandler([.alert, .sound])
+      // Keep event reminders in Notification Center as well as showing a banner.
+      completionHandler([.banner, .list, .sound])
     } else {
       completionHandler([.banner, .sound])
     }

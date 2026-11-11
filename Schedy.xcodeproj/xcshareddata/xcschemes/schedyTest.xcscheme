@@ -6,28 +6,39 @@
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A18F75F22CF935C900DC952A"
+               BuildableName = "Schedy.app"
+               BlueprintName = "Schedy"
+               ReferencedContainer = "container:Schedy.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:schedyTest.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-      </TestPlans>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
       <Testables>
          <TestableReference
             skipped = "NO"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A120EE262DB199F1002DD54C"
-               BuildableName = "schedyTest.xctest"
-               BlueprintName = "schedyTest"
-               ReferencedContainer = "container:schedy.xcodeproj">
+               BlueprintIdentifier = "A120EE4F2DB1AD37002DD54C"
+               BuildableName = "SchedyTests.xctest"
+               BlueprintName = "SchedyTests"
+               ReferencedContainer = "container:Schedy.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

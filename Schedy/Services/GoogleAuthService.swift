@@ -118,6 +118,7 @@ struct GoogleAuthService {
       } else {
         appDelegate.currentAuthorizationFlow = OIDAuthState.authState(
           byPresenting: request,
+          externalUserAgent: DefaultBrowserUserAgent(),
           callback: callback
         )
       }
@@ -127,5 +128,19 @@ struct GoogleAuthService {
   @MainActor
   func signOut(user: GoogleUser) {
     SessionManager.shared.deleteSession(for: user)
+  }
+}
+
+// A menu bar RSVP can start OAuth while the app has no window to present it from.
+private final class DefaultBrowserUserAgent: NSObject, OIDExternalUserAgent {
+  func present(
+    _ request: OIDExternalUserAgentRequest, session: OIDExternalUserAgentSession
+  ) -> Bool {
+    NSWorkspace.shared.open(request.externalUserAgentRequestURL())
+  }
+
+  func dismiss(animated: Bool, completion: @escaping () -> Void) {
+    // The browser owns its tab; AppDelegate handles the redirect back to Schedy.
+    completion()
   }
 }

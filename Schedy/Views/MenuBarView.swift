@@ -74,7 +74,7 @@ struct MenuBarView: Scene {
         NSApplication.shared.setActivationPolicy(.regular)
         openWindow(id: "settings")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-          NSApplication.shared.activate(ignoringOtherApps: true)
+          NSApplication.shared.activate()
         }
       }.keyboardShortcut(",", modifiers: [.command, .shift])
 
